@@ -65,7 +65,7 @@
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 20px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('BulSU WebRTC P2P Stream', canvas.width / 2, canvas.height / 2 + 100);
+      ctx.fillText('Campus WebRTC P2P Stream', canvas.width / 2, canvas.height / 2 + 100);
 
       ctx.font = '14px sans-serif';
       ctx.fillStyle = '#94a3b8';

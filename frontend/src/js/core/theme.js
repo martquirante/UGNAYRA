@@ -6,7 +6,7 @@
   'use strict';
 
   var THEME_LABELS = {
-    light: 'BulSU Daylight',
+    light: 'Daylight',
     dark: 'Midnight Sapphire',
     system: 'System Match'
   };
@@ -76,7 +76,7 @@
     $('.theme-option-card').removeClass('is-selected').attr('aria-checked', 'false');
     $('.theme-option-card[data-theme-choice="' + choice + '"]').addClass('is-selected').attr('aria-checked', 'true');
 
-    var label = THEME_LABELS[choice] || 'BulSU Daylight';
+    var label = THEME_LABELS[choice] || 'Daylight';
     var icon = THEME_ICONS[choice] || 'sun';
     $('#active-theme-name').text(label);
     var $pill = $('#active-theme-pill');

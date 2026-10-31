@@ -314,7 +314,7 @@
       $(idInputSel).attr('placeholder', 'Enter faculty ID');
       $(deptLabelSel).text('College / Department');
       deptPlaceholder = 'Select your college or program';
-      deptSearchPlaceholder = 'Search BulSU college, campus, or program...';
+      deptSearchPlaceholder = 'Search college, campus, or program...';
       $(yearGroupSel).removeClass('hidden');
       $(extraRowSel).removeClass('is-single-col');
       $(yearLabelSel).text('Academic Rank');
@@ -326,7 +326,7 @@
       $(idInputSel).attr('placeholder', 'Enter employee ID');
       $(deptLabelSel).text('Administrative Office / Unit');
       deptPlaceholder = 'Select your office or unit';
-      deptSearchPlaceholder = 'Search BulSU office, unit, or campus...';
+      deptSearchPlaceholder = 'Search office, unit, or campus...';
       $(yearGroupSel).addClass('hidden');
       $(extraRowSel).addClass('is-single-col');
       $(secLabelSel).text('Building / Unit');

@@ -64,7 +64,7 @@ const ANTI_TAMPER_HEADER = `
     // 3. Official Institutional Security Warning in DevTools Console
     try {
       console.log(
-        '%cUGNAYRA %c— Official BulSU Social Network\\n%cSTOP! This browser feature is reserved for system administrators. Pasting or executing scripts here violates the BulSU Acceptable Use Policy and will be logged.',
+        '%cUGNAYRA %c— Official Campus Social Network\\n%cSTOP! This browser feature is reserved for system administrators. Pasting or executing scripts here violates the Acceptable Use Policy and will be logged.',
         'color:#173b70;font-size:24px;font-weight:bold;font-family:sans-serif;',
         'color:#c89d0a;font-size:16px;font-weight:600;font-family:sans-serif;',
         'color:#dc2626;font-size:12px;line-height:1.6;font-family:sans-serif;'
@@ -272,7 +272,6 @@ function generateProductionVercelConfig() {
     "version": 2,
     "cleanUrls": true,
     "trailingSlash": false,
-    "public": false,
     "headers": [
       {
         "source": "/(.*)",

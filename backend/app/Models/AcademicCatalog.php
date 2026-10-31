@@ -154,11 +154,11 @@ class AcademicCatalog
                 ['code' => 'COM',        'name' => 'COM — College of Medicine',                                   'unit_type' => 'college',         'campus' => 'Main Campus (Malolos)', 'sort_order' => 150],
                 ['code' => 'GS',         'name' => 'GS — Graduate School',                                        'unit_type' => 'graduate',        'campus' => 'Main Campus (Malolos)', 'sort_order' => 160],
                 ['code' => 'LHS',        'name' => 'LHS — Laboratory High School',                                'unit_type' => 'basic_ed',        'campus' => 'Main Campus (Malolos)', 'sort_order' => 170],
-                ['code' => 'SARMIENTO',  'name' => 'BulSU Sarmiento Campus (San Jose del Monte)',                 'unit_type' => 'external_campus', 'campus' => 'Sarmiento Campus',      'sort_order' => 210],
-                ['code' => 'BUSTOS',     'name' => 'BulSU Bustos Campus',                                         'unit_type' => 'external_campus', 'campus' => 'Bustos Campus',         'sort_order' => 220],
-                ['code' => 'MENESES',    'name' => 'BulSU Meneses Campus (Bulakan)',                              'unit_type' => 'external_campus', 'campus' => 'Meneses Campus',        'sort_order' => 230],
-                ['code' => 'HAGONOY',    'name' => 'BulSU Hagonoy Campus',                                        'unit_type' => 'external_campus', 'campus' => 'Hagonoy Campus',        'sort_order' => 240],
-                ['code' => 'SAN_RAFAEL', 'name' => 'BulSU San Rafael Campus',                                     'unit_type' => 'external_campus', 'campus' => 'San Rafael Campus',     'sort_order' => 250],
+                ['code' => 'SARMIENTO',  'name' => 'Sarmiento Campus (San Jose del Monte)',                 'unit_type' => 'external_campus', 'campus' => 'Sarmiento Campus',      'sort_order' => 210],
+                ['code' => 'BUSTOS',     'name' => 'Bustos Campus',                                         'unit_type' => 'external_campus', 'campus' => 'Bustos Campus',         'sort_order' => 220],
+                ['code' => 'MENESES',    'name' => 'Meneses Campus (Bulakan)',                              'unit_type' => 'external_campus', 'campus' => 'Meneses Campus',        'sort_order' => 230],
+                ['code' => 'HAGONOY',    'name' => 'Hagonoy Campus',                                        'unit_type' => 'external_campus', 'campus' => 'Hagonoy Campus',        'sort_order' => 240],
+                ['code' => 'SAN_RAFAEL', 'name' => 'San Rafael Campus',                                     'unit_type' => 'external_campus', 'campus' => 'San Rafael Campus',     'sort_order' => 250],
                 ['code' => 'ADMIN',      'name' => 'University Administrative & Student Support Offices',         'unit_type' => 'office',          'campus' => 'University-Wide',       'sort_order' => 300],
             ],
             'programs' => [
@@ -266,11 +266,11 @@ class AcademicCatalog
                 ['unit_code' => 'LHS',  'code' => 'JHS',       'name' => 'Laboratory Junior High School (Grades 7-10)',                     'applicable_roles' => 'student,teacher', 'campuses' => 'Laboratory High School', 'sort_order' => 40],
 
                 // External Campuses (Direct Faculty / Personnel Affiliation)
-                ['unit_code' => 'SARMIENTO',  'code' => 'CAMP-SARM', 'name' => 'BulSU Sarmiento Campus Department',                         'applicable_roles' => 'teacher,personnel', 'campuses' => 'Sarmiento Campus', 'sort_order' => 10],
-                ['unit_code' => 'BUSTOS',     'code' => 'CAMP-BUST', 'name' => 'BulSU Bustos Campus Department',                            'applicable_roles' => 'teacher,personnel', 'campuses' => 'Bustos Campus', 'sort_order' => 10],
-                ['unit_code' => 'MENESES',    'code' => 'CAMP-MENE', 'name' => 'BulSU Meneses Campus Department',                           'applicable_roles' => 'teacher,personnel', 'campuses' => 'Meneses Campus', 'sort_order' => 10],
-                ['unit_code' => 'HAGONOY',    'code' => 'CAMP-HAGO', 'name' => 'BulSU Hagonoy Campus Department',                           'applicable_roles' => 'teacher,personnel', 'campuses' => 'Hagonoy Campus', 'sort_order' => 10],
-                ['unit_code' => 'SAN_RAFAEL', 'code' => 'CAMP-SANR', 'name' => 'BulSU San Rafael Campus Department',                        'applicable_roles' => 'teacher,personnel', 'campuses' => 'San Rafael Campus', 'sort_order' => 10],
+                ['unit_code' => 'SARMIENTO',  'code' => 'CAMP-SARM', 'name' => 'Sarmiento Campus Department',                         'applicable_roles' => 'teacher,personnel', 'campuses' => 'Sarmiento Campus', 'sort_order' => 10],
+                ['unit_code' => 'BUSTOS',     'code' => 'CAMP-BUST', 'name' => 'Bustos Campus Department',                            'applicable_roles' => 'teacher,personnel', 'campuses' => 'Bustos Campus', 'sort_order' => 10],
+                ['unit_code' => 'MENESES',    'code' => 'CAMP-MENE', 'name' => 'Meneses Campus Department',                           'applicable_roles' => 'teacher,personnel', 'campuses' => 'Meneses Campus', 'sort_order' => 10],
+                ['unit_code' => 'HAGONOY',    'code' => 'CAMP-HAGO', 'name' => 'Hagonoy Campus Department',                           'applicable_roles' => 'teacher,personnel', 'campuses' => 'Hagonoy Campus', 'sort_order' => 10],
+                ['unit_code' => 'SAN_RAFAEL', 'code' => 'CAMP-SANR', 'name' => 'San Rafael Campus Department',                        'applicable_roles' => 'teacher,personnel', 'campuses' => 'San Rafael Campus', 'sort_order' => 10],
 
                 // University Administrative & Student Support Offices (Personnel)
                 ['unit_code' => 'ADMIN', 'code' => 'OFF-REG',   'name' => 'Office of the University Registrar',                             'applicable_roles' => 'personnel', 'campuses' => 'University-Wide', 'sort_order' => 10],

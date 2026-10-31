@@ -638,14 +638,14 @@
   pointer-events: auto;
 }
 
-/* Offline State: BulSU Crimson Ruby */
+/* Offline State: Crimson Ruby */
 .ug-network-bar.is-offline {
   background: linear-gradient(135deg, rgba(220, 38, 38, 0.98) 0%, rgba(185, 28, 28, 0.98) 100%);
   border-bottom: 1px solid rgba(254, 202, 202, 0.35);
   box-shadow: 0 4px 24px -2px rgba(220, 38, 38, 0.45);
 }
 
-/* Online Restored State: BulSU Royal Sapphire (3s auto-dismiss) */
+/* Online Restored State: Royal Sapphire (3s auto-dismiss) */
 .ug-network-bar.is-online {
   background: linear-gradient(135deg, rgba(37, 99, 235, 0.98) 0%, rgba(29, 78, 216, 0.98) 100%);
   border-bottom: 1px solid rgba(191, 219, 254, 0.35);

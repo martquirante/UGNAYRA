@@ -282,10 +282,10 @@
       year: 'numeric'
     });
 
-    $('#rec-full-name').text(me.full_name || 'BulSU Member');
+    $('#rec-full-name').text(me.full_name || 'Campus Member');
     $('#rec-school-id').text(me.school_id_number || 'Not provided');
     $('#rec-role').text(me.role ? (me.role.charAt(0).toUpperCase() + me.role.slice(1)) : 'Student');
-    $('#rec-department').text(me.department || 'Bulacan State University');
+    $('#rec-department').text(me.department || 'Academic Department');
     var yrSec = [me.year_or_grade, me.section].filter(Boolean).join(' - ');
     $('#rec-year-section').text(yrSec || 'General Enrollment');
     $('#rec-email').text(me.email || '—');
@@ -461,17 +461,17 @@
 
     var yrSec = [me.year_or_grade, me.section].filter(Boolean).join(' - ') || 'General Enrollment';
     var roleLabel = me.role ? (me.role.charAt(0).toUpperCase() + me.role.slice(1)) : 'Student';
-    var themeLabel = prefs.theme === 'dark' ? 'Midnight Sapphire (Dark)' : (prefs.theme === 'light' ? 'BulSU Daylight (Light)' : 'System Match (Auto)');
+    var themeLabel = prefs.theme === 'dark' ? 'Midnight Sapphire (Dark)' : (prefs.theme === 'light' ? 'Daylight (Light)' : 'System Match (Auto)');
 
     var lines = [
       '========================================================================',
       '         UGNAYRA — OFFICIAL CAMPUS ACCOUNT RECORD SUMMARY',
-      '            Bulacan State University Social Platform',
+      '            School-Based Social Networking Platform',
       '========================================================================',
       '',
       'Issued Date:        ' + formattedDate,
       'Institutional Role: ' + roleLabel,
-      'Campus Status:      BulSU Verified & Protected',
+      'Campus Status:      Verified & Protected',
       ''
     ];
 
@@ -480,10 +480,10 @@
         '------------------------------------------------------------------------',
         '1. UNIVERSITY ACADEMIC & ENROLLMENT DETAILS',
         '------------------------------------------------------------------------',
-        '  • Full Name:            ' + (me.full_name || 'BulSU Member'),
-        '  • BulSU Student ID:     ' + (me.school_id_number || 'N/A'),
+        '  • Full Name:            ' + (me.full_name || 'Campus Member'),
+        '  • Student ID Number:    ' + (me.school_id_number || 'N/A'),
         '  • Campus Role:          ' + roleLabel,
-        '  • Program / Department: ' + (me.department || 'Bulacan State University'),
+        '  • Program / Department: ' + (me.department || 'Academic Department'),
         '  • Year & Section:       ' + yrSec,
         '  • Institutional Email:  ' + (me.email || '—'),
         '  • Campus Username:      @' + (me.username || 'user'),
@@ -510,7 +510,7 @@
 
     lines.push(
       '========================================================================',
-      '       UGNAYRA — BulSU School-Based Social Networking Platform',
+      '       UGNAYRA — School-Based Social Networking Platform',
       '========================================================================'
     );
 

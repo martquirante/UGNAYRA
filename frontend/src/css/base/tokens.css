@@ -130,8 +130,8 @@
 }
 
 /* ==========================================================================
-   UGNAYRA Design System — Dark Mode Theme (Midnight Sapphire & BulSU Gold)
-   Crafted for BulSU Academic Prestige, Late-Night Study Comfort & WCAG AAA
+   UGNAYRA Design System — Dark Mode Theme (Midnight Sapphire & Gold)
+   Crafted for Academic Prestige, Late-Night Study Comfort & WCAG AAA
    ========================================================================== */
 html[data-theme="dark"] {
   /* Brand Primary — Midnight Navy & Electric Royal Blue */
@@ -144,7 +144,7 @@ html[data-theme="dark"] {
   --color-blue-100: rgba(59, 130, 246, 0.2);
   --color-blue-50: rgba(59, 130, 246, 0.1);
 
-  /* Brand Highlight — Luminous BulSU Gold (Crisp, warm contrast on dark surfaces) */
+  /* Brand Highlight — Luminous Academic Gold (Crisp, warm contrast on dark surfaces) */
   --color-yellow-600: #d97706;
   --color-yellow-500: #f59e0b;
   --color-yellow-400: #fbbf24;
