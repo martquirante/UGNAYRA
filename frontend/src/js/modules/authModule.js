@@ -34,10 +34,6 @@
     onboarding: {
       heading: 'Complete your profile',
       subheading: 'Your Google account is verified. Enter your campus details to continue.'
-    },
-    google_chooser: {
-      heading: 'Sign in with Google',
-      subheading: 'Choose your Google account to access your UGNAYRA workspace.'
     }
   };
 
@@ -144,89 +140,112 @@
     }, HERO_CYCLE_MS);
   }
 
-  var DEFAULT_GOOGLE_ACCOUNTS = [
-    {
-      name: 'Raymart Quirante',
-      email: 'martquirante04@gmail.com',
-      avatar: 'https://sjunqjdivlpgcjfhmfqd.supabase.co/storage/v1/object/public/ugnayra-media/avatars/20261031_193709_327e166f43007bd9.jpg',
-      isCampus: false,
-      signedIn: true
-    },
-    {
-      name: 'Raymart Quirante (Campus)',
-      email: 'raymart.quirante@bulsu.edu.ph',
-      avatar: '',
-      isCampus: true,
-      signedIn: false
+  var googleScriptPromise = null;
+
+  function loadGoogleClientScript() {
+    if (window.google && window.google.accounts) {
+      return Promise.resolve(window.google);
     }
-  ];
-
-  function getSavedGoogleAccounts() {
-    try {
-      var raw = localStorage.getItem('ugnayra_google_accounts');
-      if (raw) {
-        var list = JSON.parse(raw);
-        if (Array.isArray(list) && list.length) {
-          return list;
+    if (googleScriptPromise) {
+      return googleScriptPromise;
+    }
+    googleScriptPromise = new Promise(function (resolve, reject) {
+      var existing = document.querySelector('script[src*="accounts.google.com/gsi/client"]');
+      if (existing) {
+        if (window.google && window.google.accounts) {
+          resolve(window.google);
+          return;
         }
+        existing.addEventListener('load', function () { resolve(window.google); });
+        existing.addEventListener('error', function () { reject(new Error('Failed to load Google API script')); });
+        return;
       }
-    } catch (_e) {}
-    return DEFAULT_GOOGLE_ACCOUNTS;
-  }
-
-  function saveGoogleAccount(account) {
-    try {
-      var list = getSavedGoogleAccounts();
-      list = list.filter(function (item) {
-        return (item.email || '').toLowerCase() !== (account.email || '').toLowerCase();
-      });
-      list.unshift(account);
-      list = list.slice(0, 5);
-      localStorage.setItem('ugnayra_google_accounts', JSON.stringify(list));
-    } catch (_e) {}
-  }
-
-  function renderGoogleAccountList() {
-    var $list = $('#google-account-list');
-    if (!$list.length) return;
-
-    var accounts = getSavedGoogleAccounts();
-    var html = '';
-
-    accounts.forEach(function (acc) {
-      var initial = (acc.name || acc.email || 'G').charAt(0).toUpperCase();
-      var avatarClass = 'google-account-avatar' + (acc.isCampus ? ' is-campus' : '');
-      var avatarContent = acc.avatar
-        ? '<img src="' + fmt.escapeHtml(acc.avatar) + '" alt="' + fmt.escapeHtml(acc.name) + '" />'
-        : initial;
-
-      html +=
-        '<button type="button" class="google-account-item js-select-google-account" ' +
-        'data-email="' + fmt.escapeHtml(acc.email) + '" ' +
-        'data-name="' + fmt.escapeHtml(acc.name) + '" ' +
-        'data-avatar="' + fmt.escapeHtml(acc.avatar || '') + '">' +
-          '<div class="' + avatarClass + '">' + avatarContent + '</div>' +
-          '<div class="google-account-meta">' +
-            '<div class="google-account-name">' + fmt.escapeHtml(acc.name) + '</div>' +
-            '<div class="google-account-email">' + fmt.escapeHtml(acc.email) + '</div>' +
-          '</div>' +
-          (acc.signedIn ? '<span class="google-account-badge">Signed in</span>' : '') +
-        '</button>';
+      var s = document.createElement('script');
+      s.src = 'https://accounts.google.com/gsi/client';
+      s.async = true;
+      s.defer = true;
+      s.onload = function () { resolve(window.google); };
+      s.onerror = function () { reject(new Error('Failed to load Google API script')); };
+      document.head.appendChild(s);
     });
+    return googleScriptPromise;
+  }
 
-    html +=
-      '<button type="button" class="google-account-item js-open-add-google" id="google-use-another-account-btn">' +
-        '<div class="google-account-avatar is-add">' +
-          '<i data-lucide="user-plus" class="icon-sm"></i>' +
-        '</div>' +
-        '<div class="google-account-meta">' +
-          '<div class="google-account-name">Use another account</div>' +
-          '<div class="google-account-email">Enter a different Google account</div>' +
-        '</div>' +
-      '</button>';
+  function launchOfficialGoogleOAuth(clientId, $btn) {
+    if ($btn && $btn.length) {
+      UI.setButtonLoading($btn, true, 'Connecting to Google API...');
+    }
 
-    $list.html(html);
-    UI.refreshIcons($list[0]);
+    loadGoogleClientScript()
+      .then(function () {
+        if (!window.google || !window.google.accounts) {
+          throw new Error('Google Identity Services script not available.');
+        }
+
+        // 1. Google OAuth 2.0 Token Client (Official Google Account Chooser Popup)
+        if (window.google.accounts.oauth2 && typeof window.google.accounts.oauth2.initTokenClient === 'function') {
+          var tokenClient = window.google.accounts.oauth2.initTokenClient({
+            client_id: clientId,
+            scope: 'openid email profile',
+            prompt: 'select_account',
+            callback: function (response) {
+              if ($btn && $btn.length) UI.setButtonLoading($btn, false);
+              if (response && response.access_token) {
+                verifyGoogleWithBackend({ google_access_token: response.access_token }, $btn);
+              } else if (response && response.error) {
+                console.warn('Google API returned an error:', response);
+                if (response.error !== 'popup_closed_by_user') {
+                  UI.toast(response.error_description || response.error || 'Google authorization could not be completed.', 'warning');
+                }
+              }
+            },
+            error_callback: function (err) {
+              if ($btn && $btn.length) UI.setButtonLoading($btn, false);
+              console.warn('Google OAuth popup error, attempting direct redirect:', err);
+              redirectToGoogleOAuth(clientId);
+            }
+          });
+
+          tokenClient.requestAccessToken({ prompt: 'select_account' });
+          return;
+        }
+
+        // 2. Google Identity One Tap / Credential Prompt
+        if (window.google.accounts.id && typeof window.google.accounts.id.initialize === 'function') {
+          window.google.accounts.id.initialize({
+            client_id: clientId,
+            callback: function (response) {
+              if ($btn && $btn.length) UI.setButtonLoading($btn, false);
+              if (response && response.credential) {
+                verifyGoogleWithBackend({ google_id_token: response.credential }, $btn);
+              }
+            }
+          });
+          window.google.accounts.id.prompt();
+          return;
+        }
+
+        // 3. Direct Browser Redirect to Google OAuth Endpoint
+        redirectToGoogleOAuth(clientId);
+      })
+      .catch(function (err) {
+        console.warn('Error launching Google API, redirecting directly:', err);
+        redirectToGoogleOAuth(clientId);
+      });
+  }
+
+  function redirectToGoogleOAuth(clientId) {
+    var redirectUrl = window.location.origin + '/';
+    var nonce = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    var googleAuthUrl =
+      'https://accounts.google.com/o/oauth2/v2/auth?' +
+      'client_id=' + encodeURIComponent(clientId) +
+      '&redirect_uri=' + encodeURIComponent(redirectUrl) +
+      '&response_type=token%20id_token' +
+      '&scope=openid%20email%20profile' +
+      '&prompt=select_account' +
+      '&nonce=' + nonce;
+    window.location.href = googleAuthUrl;
   }
 
   function setAuthMode(mode) {
@@ -243,12 +262,10 @@
     var $loginForm = $('#login-form');
     var $regForm = $('#register-form');
     var $onboardForm = $('#google-onboarding-form');
-    var $chooserPanel = $('#google-chooser-panel');
 
     $loginForm.addClass('hidden').removeClass('is-entering');
     $regForm.addClass('hidden').removeClass('is-entering');
     $onboardForm.addClass('hidden').removeClass('is-entering');
-    $chooserPanel.addClass('hidden').removeClass('is-entering');
 
     Validator.clearFormErrors($loginForm);
     Validator.clearFormErrors($regForm);
@@ -258,12 +275,6 @@
     var $activeForm = $loginForm;
     if (targetMode === 'register') $activeForm = $regForm;
     else if (targetMode === 'onboarding') $activeForm = $onboardForm;
-    else if (targetMode === 'google_chooser') {
-      $activeForm = $chooserPanel;
-      renderGoogleAccountList();
-      $('#google-chooser-loader').removeClass('is-active');
-      $('#google-add-account-drawer').addClass('hidden');
-    }
 
     $activeForm.removeClass('hidden');
     if ($activeForm[0]) {
@@ -312,7 +323,6 @@
         window.UgnayraApp.mountAuthenticatedShell();
       })
       .catch(function (err) {
-        $('#google-chooser-loader').removeClass('is-active');
         UI.toast(err.message || 'Unable to sign in with Google.', 'error');
       })
       .finally(function () {
@@ -330,45 +340,6 @@
       providerStatusCache = (res && res.data) || {};
       return providerStatusCache;
     });
-  }
-
-  function launchGoogleIdentityPopup(clientId, $btn) {
-    function startPrompt() {
-      if (!window.google || !window.google.accounts || !window.google.accounts.id) {
-        UI.toast('Unable to load Google Sign-In script. Check your connection.', 'error');
-        return;
-      }
-      window.google.accounts.id.initialize({
-        client_id: clientId,
-        callback: function (response) {
-          if (response && response.credential) {
-            verifyGoogleWithBackend({ google_id_token: response.credential }, $btn);
-          }
-        }
-      });
-      window.google.accounts.id.prompt();
-    }
-
-    if (window.google && window.google.accounts && window.google.accounts.id) {
-      startPrompt();
-      return;
-    }
-
-    UI.setButtonLoading($btn, true, 'Loading Google...');
-    $.ajax({
-      url: 'https://accounts.google.com/gsi/client',
-      dataType: 'script',
-      cache: true,
-      timeout: 8000
-    })
-      .done(function () {
-        UI.setButtonLoading($btn, false);
-        startPrompt();
-      })
-      .fail(function () {
-        UI.setButtonLoading($btn, false);
-        UI.toast('Could not load Google Sign-In client.', 'error');
-      });
   }
 
   function loadAcademicCatalog() {
@@ -493,6 +464,28 @@
         return $target;
       }
 
+      // Pre-initialize Google Identity Services API
+      getProviderStatus().then(function (status) {
+        var clientId = (status && status.google_client_id) || '1093667864037-45r4ollo6jaqaso55547ckmhma6bgt2v.apps.googleusercontent.com';
+        loadGoogleClientScript().then(function () {
+          if (window.google && window.google.accounts && window.google.accounts.id) {
+            try {
+              window.google.accounts.id.initialize({
+                client_id: clientId,
+                callback: function (response) {
+                  if (response && response.credential) {
+                    verifyGoogleWithBackend({ google_id_token: response.credential }, $('.js-google-auth-btn').first());
+                  }
+                },
+                auto_select: false,
+                cancel_on_tap_outside: true
+              });
+              window.google.accounts.id.prompt();
+            } catch (_e) {}
+          }
+        });
+      });
+
       try {
         var params = new URLSearchParams(window.location.search || '');
         if (params.get('mode') === 'register') {
@@ -535,18 +528,18 @@
     setAuthMode('login');
   });
 
-  // Continue with Google Handler (Direct Google OAuth Redirect & Account Chooser)
+  // Continue with Google Handler (Direct Google OAuth 2.0 API & Identity Services)
   $(document).on('click', '.js-google-auth-btn', function () {
     var $btn = $(this);
-    UI.setButtonLoading($btn, true, 'Connecting to Google...');
+    UI.setButtonLoading($btn, true, 'Connecting to Google API...');
 
     getProviderStatus()
       .then(function (status) {
-        UI.setButtonLoading($btn, false);
-        var redirectUrl = window.location.origin + '/';
+        var clientId = (status && status.google_client_id) || '1093667864037-45r4ollo6jaqaso55547ckmhma6bgt2v.apps.googleusercontent.com';
 
-        // 1. Supabase Hosted Google OAuth Redirect
-        if (status.supabase_google_enabled && status.supabase_oauth_url) {
+        // Supabase Hosted Google OAuth Redirect if enabled
+        if (status && status.supabase_google_enabled && status.supabase_oauth_url) {
+          var redirectUrl = window.location.origin + '/';
           window.location.href =
             status.supabase_oauth_url +
             '&redirect_to=' +
@@ -555,106 +548,13 @@
           return;
         }
 
-        // 2. Direct Google OAuth 2.0 Authorization Redirect (Live Client ID)
-        if (status.google_client_id) {
-          var nonce = Math.random().toString(36).substring(2) + Date.now().toString(36);
-          window.location.href =
-            'https://accounts.google.com/o/oauth2/v2/auth?client_id=' +
-            encodeURIComponent(status.google_client_id) +
-            '&redirect_uri=' +
-            encodeURIComponent(redirectUrl) +
-            '&response_type=token%20id_token' +
-            '&scope=openid%20email%20profile' +
-            '&prompt=select_account' +
-            '&nonce=' +
-            nonce;
-          return;
-        }
-
-        // 3. Dedicated Pixel-Perfect Google Account Chooser (Local Dev / Zero External Keys Required)
-        setAuthMode('google_chooser');
+        // Launch Official Google API Identity & OAuth Client
+        launchOfficialGoogleOAuth(clientId, $btn);
       })
       .catch(function () {
-        UI.setButtonLoading($btn, false);
-        setAuthMode('google_chooser');
+        var fallbackClientId = '1093667864037-45r4ollo6jaqaso55547ckmhma6bgt2v.apps.googleusercontent.com';
+        launchOfficialGoogleOAuth(fallbackClientId, $btn);
       });
-  });
-
-  // Cancel Google Account Chooser -> Return to Sign In
-  $(document).on('click', '.js-cancel-google-chooser', function () {
-    setAuthMode('login');
-  });
-
-  // Select an account from the Google Account Chooser
-  $(document).on('click', '.js-select-google-account', function () {
-    var $item = $(this);
-    var email = ($item.attr('data-email') || '').trim();
-    var name = ($item.attr('data-name') || '').trim();
-    var avatar = ($item.attr('data-avatar') || '').trim();
-    if (!email) return;
-
-    $('#google-chooser-loader').addClass('is-active');
-
-    saveGoogleAccount({
-      name: name,
-      email: email,
-      avatar: avatar,
-      isCampus: (email.indexOf('.edu') !== -1 || email.indexOf('campus') !== -1),
-      signedIn: true
-    });
-
-    setTimeout(function () {
-      verifyGoogleWithBackend({
-        dev_email: email,
-        dev_full_name: name,
-        avatar_url: avatar
-      }, null);
-    }, 280);
-  });
-
-  // Toggle "Use another account" drawer
-  $(document).on('click', '.js-open-add-google', function () {
-    var $drawer = $('#google-add-account-drawer');
-    $drawer.removeClass('hidden');
-    UI.refreshIcons($drawer[0]);
-    setTimeout(function () {
-      $('#google-input-email').trigger('focus');
-    }, 60);
-  });
-
-  $(document).on('click', '.js-cancel-add-google', function () {
-    $('#google-add-account-drawer').addClass('hidden');
-    Validator.clearFormErrors($('#google-add-account-form'));
-  });
-
-  // Submit "Use another account" in Google Chooser
-  $(document).on('submit', '#google-add-account-form', function (e) {
-    e.preventDefault();
-    var $f = $(this);
-    var check = Validator.validateForm($f, {
-      dev_email: { required: true, email: true, requiredMessage: 'Enter a valid Google email.' },
-      dev_full_name: { required: true, minLength: 2, maxLength: 120, requiredMessage: 'Enter your full name.' }
-    });
-    if (!check.valid) return;
-
-    var email = check.values.dev_email;
-    var name = check.values.dev_full_name;
-
-    $('#google-chooser-loader').addClass('is-active');
-    saveGoogleAccount({
-      name: name,
-      email: email,
-      avatar: '',
-      isCampus: (email.indexOf('.edu') !== -1),
-      signedIn: true
-    });
-
-    setTimeout(function () {
-      verifyGoogleWithBackend({
-        dev_email: email,
-        dev_full_name: name
-      }, null);
-    }, 280);
   });
 
   // Dynamic Role Field Labels on Registration & Google Onboarding

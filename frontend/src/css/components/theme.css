@@ -976,50 +976,6 @@ html[data-theme="dark"] .google-verified-change:hover {
   color: #93c5fd !important;
 }
 
-/* Google Account Chooser in Dark Mode */
-html[data-theme="dark"] .google-chooser-title {
-  color: #f8fafc !important;
-}
-
-html[data-theme="dark"] .google-chooser-subtitle {
-  color: #94a3b8 !important;
-}
-
-html[data-theme="dark"] .google-chooser-subtitle strong {
-  color: #60a5fa !important;
-}
-
-html[data-theme="dark"] .google-chooser-brand {
-  border-bottom-color: #1e2b44 !important;
-}
-
-html[data-theme="dark"] .google-account-list {
-  background-color: #0b1120 !important;
-  border-color: #1e2b44 !important;
-}
-
-html[data-theme="dark"] .google-account-item {
-  border-bottom-color: #1e2b44 !important;
-}
-
-html[data-theme="dark"] .google-account-name {
-  color: #f1f5f9 !important;
-}
-
-html[data-theme="dark"] .google-account-email {
-  color: #94a3b8 !important;
-}
-
-html[data-theme="dark"] .google-account-avatar.is-add {
-  background-color: #131c2e !important;
-  border-color: #334155 !important;
-  color: #94a3b8 !important;
-}
-
-html[data-theme="dark"] .google-chooser-consent {
-  color: #64748b !important;
-}
-
 html[data-theme="dark"] .pw-validation-box {
   background-color: #0b1120 !important;
   border-color: #1e2b44 !important;

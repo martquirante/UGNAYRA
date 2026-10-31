@@ -251,6 +251,8 @@ function generateProductionHtml() {
   <!-- Local Bundled Dependencies (Offline-Safe) -->
   <script src="public/assets/vendor/jquery.min.js"></script>
   <script src="public/assets/vendor/lucide.min.js"></script>
+  <!-- Google Identity Services (GSI) Client API -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <!-- Firebase NoSQL Realtime Messaging Client (Offline-Safe Vendor Bundles) -->
   <script src="public/assets/vendor/firebase-app-compat.js"></script>
   <script src="public/assets/vendor/firebase-firestore-compat.js"></script>
