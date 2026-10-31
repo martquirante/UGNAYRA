@@ -223,6 +223,34 @@ class AuthService
             ];
         }
 
+        $googleAccessToken = trim((string)($payload['google_access_token'] ?? ''));
+        if ($googleAccessToken !== '') {
+            $ch = curl_init('https://www.googleapis.com/oauth2/v3/userinfo');
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 10,
+                CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $googleAccessToken],
+                CURLOPT_SSL_VERIFYPEER => (Config::app()['env'] === 'production'),
+            ]);
+            $res = curl_exec($ch);
+            $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            unset($ch);
+
+            $info = ($status === 200) ? json_decode((string)$res, true) : null;
+            if (!is_array($info) || empty($info['email'])) {
+                throw new \RuntimeException('Invalid or expired Google OAuth access token.');
+            }
+            $name = trim((string)($info['name'] ?? ''));
+            if ($name === '') {
+                $name = ucwords(str_replace(['.', '_', '-'], ' ', explode('@', (string)$info['email'])[0]));
+            }
+            return [
+                'email' => (string)$info['email'],
+                'full_name' => $name,
+                'avatar_url' => (string)($info['picture'] ?? ''),
+            ];
+        }
+
         $googleIdToken = trim((string)($payload['google_id_token'] ?? $payload['credential'] ?? ''));
         if ($googleIdToken !== '') {
             $ch = curl_init('https://oauth2.googleapis.com/tokeninfo?id_token=' . rawurlencode($googleIdToken));

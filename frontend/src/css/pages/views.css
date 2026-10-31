@@ -994,6 +994,242 @@
   }
 }
 
+/* ==========================================================================
+   Google Account Chooser (Authentic accounts.google.com Experience)
+   ========================================================================== */
+.auth-card[data-auth-mode="google_chooser"] {
+  max-width: 480px;
+  padding: 28px 32px 32px;
+}
+
+.google-chooser-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 8px;
+}
+
+/* Material Linear Loading Bar */
+.google-loader-bar {
+  position: absolute;
+  top: -28px;
+  left: -32px;
+  right: -32px;
+  height: 4px;
+  background-color: rgba(66, 133, 244, 0.15);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 160ms ease, visibility 160ms ease;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.google-loader-bar.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.google-loader-indicator {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #4285F4 0%, #34A853 50%, #FBBC05 75%, #EA4335 100%);
+  animation: googleLoaderSlide 1.2s infinite cubic-bezier(0.65, 0.815, 0.735, 0.395);
+  transform-origin: 0% 50%;
+}
+
+@keyframes googleLoaderSlide {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0%); }
+  100% { transform: translateX(100%); }
+}
+
+.google-chooser-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.google-logo-svg {
+  flex-shrink: 0;
+}
+
+.google-chooser-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.google-chooser-title {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: 1.28rem;
+  font-weight: 700;
+  color: var(--color-ink-900);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.google-chooser-subtitle {
+  font-size: 0.875rem;
+  color: var(--color-ink-500);
+  margin: 2px 0 0;
+}
+
+/* Account List */
+.google-account-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: var(--color-surface);
+  margin-bottom: 16px;
+}
+
+.google-account-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 150ms ease, transform 120ms ease;
+  position: relative;
+}
+
+.google-account-item:last-child {
+  border-bottom: none;
+}
+
+.google-account-item:hover,
+.google-account-item:focus-visible {
+  background-color: var(--color-ink-50);
+  outline: none;
+}
+
+[data-theme="dark"] .google-account-item:hover,
+[data-theme="dark"] .google-account-item:focus-visible {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.google-account-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1a73e8, #0d47a1);
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.google-account-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.google-account-avatar.is-campus {
+  background: linear-gradient(135deg, #173B70, #0a192f);
+}
+
+.google-account-avatar.is-add {
+  background-color: var(--color-surface);
+  border: 1px dashed var(--color-ink-300);
+  color: var(--color-ink-600);
+}
+
+.google-account-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.google-account-name {
+  font-size: 0.935rem;
+  font-weight: 600;
+  color: var(--color-ink-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.google-account-email {
+  font-size: 0.815rem;
+  color: var(--color-ink-500);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.google-account-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #1a73e8;
+  background-color: rgba(26, 115, 232, 0.08);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+[data-theme="dark"] .google-account-badge {
+  color: #8ab4f8;
+  background-color: rgba(138, 180, 248, 0.15);
+}
+
+/* Add Account Drawer */
+.google-add-account-drawer {
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: var(--color-ink-50);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  animation: authFadeUp 200ms ease-out both;
+}
+
+[data-theme="dark"] .google-add-account-drawer {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.google-drawer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.google-chooser-consent {
+  font-size: 0.775rem;
+  color: var(--color-ink-500);
+  line-height: 1.45;
+  margin-bottom: 18px;
+}
+
+.google-chooser-consent p {
+  margin: 0;
+}
+
+.google-chooser-footer {
+  display: flex;
+  align-items: center;
+}
+
 /* --------------------------------------------------------------------------
    2. CAMPUS FEED, PINNED BANNER & POST COMPOSER
    -------------------------------------------------------------------------- */

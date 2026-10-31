@@ -12,9 +12,11 @@
 
   function parseRoute() {
     // 1. If someone arrives via legacy hash (e.g. /#profile or bookmarks), cleanly convert to HTML5 path
+    // Skip if the hash contains OAuth parameters (access_token, id_token, error)
     if (window.location.hash) {
       var rawHash = window.location.hash.replace(/^#\/?/, '');
-      if (rawHash) {
+      var isOAuthHash = /^(?:access_token|id_token|error|token_type)=/.test(rawHash);
+      if (rawHash && !isOAuthHash) {
         var cleanPath = '/' + rawHash;
         try {
           window.history.replaceState(null, '', cleanPath);
