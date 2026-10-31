@@ -270,7 +270,7 @@ function generateProductionVercelConfig() {
   const vercelConfig = {
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "version": 2,
-    "cleanUrls": true,
+    "cleanUrls": false,
     "trailingSlash": false,
     "headers": [
       {
@@ -301,7 +301,7 @@ function generateProductionVercelConfig() {
         "destination": "https://your-ugnayra-backend.onrender.com/api/v1/:path*"
       },
       {
-        "source": "/(.*)",
+        "source": "/((?!.*\\.[\\w]+$).*)",
         "destination": "/index.html"
       }
     ]

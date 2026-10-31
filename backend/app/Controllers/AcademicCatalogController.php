@@ -12,12 +12,12 @@ class AcademicCatalogController
 {
     /**
      * GET /api/v1/academics/catalog
-     * Returns BulSU academic units, courses/programs, and year/rank levels from DB.
+     * Returns academic units, courses/programs, and year/rank levels from DB.
      */
     public function index(Request $request): void
     {
         $catalog = AcademicCatalog::getCatalog();
-        JsonResponse::success($catalog, 'BulSU academic catalog retrieved.', 200);
+        JsonResponse::success($catalog, 'Academic catalog retrieved.', 200);
     }
 }
 

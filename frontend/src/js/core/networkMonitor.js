@@ -1,8 +1,8 @@
 /**
  * UGNAYRA — Real-Time Campus Network & Internet Connectivity Monitor
- * Hand-crafted, human-designed top utility banner for BulSU campus network:
+ * Hand-crafted, human-designed top utility banner for campus network:
  * - Crimson Red on disconnect (persistent while offline, with status beacon and retry action)
- * - BulSU Royal Blue on reconnect (lasts exactly 3 seconds with micro-drain timer, then smoothly auto-dismisses)
+ * - Royal Blue on reconnect (lasts exactly 3 seconds with micro-drain timer, then smoothly auto-dismisses)
  */
 (function (window, $) {
   'use strict';

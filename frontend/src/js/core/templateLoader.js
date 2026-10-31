@@ -8,7 +8,7 @@
 
   var templateCache = {};
 
-  var TEMPLATE_REV = 'v=37';
+  var TEMPLATE_REV = 'v=38';
 
   var VIEWS = Object.freeze({
     AUTH: 'src/pages/auth/auth.html?' + TEMPLATE_REV,

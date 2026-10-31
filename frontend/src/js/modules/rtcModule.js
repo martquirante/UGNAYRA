@@ -46,7 +46,7 @@
     canvas.height = 480;
     var ctx = canvas.getContext('2d');
 
-    // Draw animated BulSU consultation screen
+    // Draw animated consultation screen
     var step = 0;
     var animTimer = setInterval(function () {
       if (!activeCall.peerConnection) {

@@ -59,7 +59,7 @@ class AcademicCatalog
                 if (!empty($units) && !empty($programs) && !empty($years)) {
                     $payload = [
                         'source' => 'database_pdo',
-                        'institution' => 'Bulacan State University',
+                        'institution' => 'University Academic System',
                         'units' => $units,
                         'programs' => $programs,
                         'year_levels' => $years,
@@ -94,7 +94,7 @@ class AcademicCatalog
                 ]);
 
                 if (is_array($programs) && is_array($years)) {
-                    $seed = self::canonicalBulsuSeed();
+                    $seed = self::canonicalCatalogSeed();
                     if (empty($units)) {
                         $sb->queryTable('academic_units', [], 'POST', $seed['units']);
                         $units = $seed['units'];
@@ -110,7 +110,7 @@ class AcademicCatalog
 
                     $payload = [
                         'source' => 'supabase_db',
-                        'institution' => 'Bulacan State University',
+                        'institution' => 'University Academic System',
                         'units' => $units,
                         'programs' => $programs,
                         'year_levels' => $years,
@@ -121,10 +121,10 @@ class AcademicCatalog
             }
         }
 
-        $fallback = self::canonicalBulsuSeed();
+        $fallback = self::canonicalCatalogSeed();
         $payload = [
             'source' => 'canonical_seed',
-            'institution' => 'Bulacan State University',
+            'institution' => 'University Academic System',
             'units' => $fallback['units'],
             'programs' => $fallback['programs'],
             'year_levels' => $fallback['year_levels'],
@@ -133,7 +133,7 @@ class AcademicCatalog
         return $payload;
     }
 
-    public static function canonicalBulsuSeed(): array
+    public static function canonicalCatalogSeed(): array
     {
         return [
             'units' => [

@@ -1,7 +1,7 @@
 /**
  * UGNAYRA — Authentication Controller (Mounts src/pages/auth/auth.html)
  * Handles Sign In, Sign Up, Google OAuth + Mandatory Institutional Onboarding
- * (MCPA-style profile completion), BulSU Campus Hero Carousel & Animated API Icons.
+ * (MCPA-style profile completion), Campus Hero Carousel & Animated API Icons.
  */
 (function (window, $) {
   'use strict';
@@ -380,7 +380,7 @@
       startHeroCycle();
       updatePasswordChecklistUI('');
 
-      // Hydrate BulSU comboboxes immediately at 0ms, then sync DB catalog seamlessly
+      // Hydrate comboboxes immediately at 0ms, then sync DB catalog seamlessly
       var initRegRole = $('#register-form input[name="role"]:checked').val() || 'student';
       var initOnbRole = $('#google-onboarding-form input[name="role"]:checked').val() || 'student';
       syncRoleLabels(initRegRole, 'reg', false);

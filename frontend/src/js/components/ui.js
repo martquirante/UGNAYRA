@@ -554,8 +554,8 @@
     hydrateApiIcons($combo[0]);
   }
 
-  // Canonical zero-latency BulSU catalog fallback while /api/v1/academics/catalog syncs from DB
-  var DEFAULT_BULSU_CATALOG = {
+  // Canonical zero-latency catalog fallback while /api/v1/academics/catalog syncs from DB
+  var DEFAULT_CAMPUS_CATALOG = {
     units: [
       { code: 'CICT', name: 'CICT — College of Information and Communications Technology', unit_type: 'college', campus: 'Main Campus (Malolos)' },
       { code: 'COE', name: 'COE — College of Engineering', unit_type: 'college', campus: 'Main Campus (Malolos)' },
@@ -696,17 +696,17 @@
 
   /**
    * Builds role-tailored Course/Department and Year/Rank option arrays
-   * from the database-backed BulSU academic catalog response.
+   * from the database-backed academic catalog response.
    */
   function buildAcademicOptions(catalogData, role) {
     var r = role || 'student';
     var hasRemote = catalogData && Array.isArray(catalogData.programs) && catalogData.programs.length > 0;
-    var data = hasRemote ? catalogData : DEFAULT_BULSU_CATALOG;
-    var units = Array.isArray(data.units) ? data.units : DEFAULT_BULSU_CATALOG.units;
-    var programs = Array.isArray(data.programs) ? data.programs : DEFAULT_BULSU_CATALOG.programs;
+    var data = hasRemote ? catalogData : DEFAULT_CAMPUS_CATALOG;
+    var units = Array.isArray(data.units) ? data.units : DEFAULT_CAMPUS_CATALOG.units;
+    var programs = Array.isArray(data.programs) ? data.programs : DEFAULT_CAMPUS_CATALOG.programs;
     var yearLevels = Array.isArray(data.year_levels) && data.year_levels.length
       ? data.year_levels
-      : DEFAULT_BULSU_CATALOG.year_levels;
+      : DEFAULT_CAMPUS_CATALOG.year_levels;
 
     var unitNameMap = {};
     units.forEach(function (u) {
@@ -770,7 +770,7 @@
         });
       });
     } else {
-      // Student: Official BulSU Degree Courses / Programs grouped by College
+      // Student: Official Degree Courses / Programs grouped by College
       programs.forEach(function (p) {
         var roles = String(p.applicable_roles || '');
         if (roles.indexOf('student') === -1) return;
