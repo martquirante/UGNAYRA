@@ -466,7 +466,7 @@
 
       // Pre-initialize Google Identity Services API
       getProviderStatus().then(function (status) {
-        var clientId = (status && status.google_client_id) || '1093667864037-45r4ollo6jaqaso55547ckmhma6bgt2v.apps.googleusercontent.com';
+        var clientId = (status && status.google_client_id) || '1093667864037-eih9sneu550m2q418ar7a2erl9c90ue1.apps.googleusercontent.com';
         loadGoogleClientScript().then(function () {
           if (window.google && window.google.accounts && window.google.accounts.id) {
             try {
@@ -535,7 +535,7 @@
 
     getProviderStatus()
       .then(function (status) {
-        var clientId = (status && status.google_client_id) || '1093667864037-45r4ollo6jaqaso55547ckmhma6bgt2v.apps.googleusercontent.com';
+        var clientId = (status && status.google_client_id) || '1093667864037-eih9sneu550m2q418ar7a2erl9c90ue1.apps.googleusercontent.com';
 
         // Supabase Hosted Google OAuth Redirect if enabled
         if (status && status.supabase_google_enabled && status.supabase_oauth_url) {
@@ -552,7 +552,7 @@
         launchOfficialGoogleOAuth(clientId, $btn);
       })
       .catch(function () {
-        var fallbackClientId = '1093667864037-45r4ollo6jaqaso55547ckmhma6bgt2v.apps.googleusercontent.com';
+        var fallbackClientId = '1093667864037-eih9sneu550m2q418ar7a2erl9c90ue1.apps.googleusercontent.com';
         launchOfficialGoogleOAuth(fallbackClientId, $btn);
       });
   });
