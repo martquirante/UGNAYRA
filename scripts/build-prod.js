@@ -294,16 +294,6 @@ function generateProductionVercelConfig() {
           { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }
         ]
       }
-    ],
-    "rewrites": [
-      {
-        "source": "/api/v1/:path*",
-        "destination": "https://your-ugnayra-backend.onrender.com/api/v1/:path*"
-      },
-      {
-        "source": "/((?!.*\\.[\\w]+$).*)",
-        "destination": "/index.html"
-      }
     ]
   };
 
