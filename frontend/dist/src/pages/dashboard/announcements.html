@@ -1,0 +1,28 @@
+<!-- ==========================================================================
+     UGNAYRA — Official School Announcements View
+     (frontend/src/pages/dashboard/announcements.html)
+     ========================================================================== -->
+<div class="feed-column-wrap" style="max-width:780px;" id="announcements-view-root">
+  <header class="page-header-bar">
+    <div>
+      <h1 class="heading-xl">School Announcements</h1>
+      <p class="text-secondary">
+        Verified institutional notices, academic schedules, and campus advisories.
+      </p>
+    </div>
+    <button type="button" class="btn btn-primary hidden" id="open-publish-ann-btn">
+      <i data-lucide="megaphone" class="icon-sm"></i><span>Publish Bulletin</span>
+    </button>
+  </header>
+
+  <div class="filter-tabs mb-4" role="tablist" aria-label="Announcement categories">
+    <button type="button" class="filter-chip is-active js-ann-filter" data-category="all">All Bulletins</button>
+    <button type="button" class="filter-chip js-ann-filter" data-category="academic">Academic</button>
+    <button type="button" class="filter-chip js-ann-filter" data-category="urgent_notice">Urgent Notices</button>
+    <button type="button" class="filter-chip js-ann-filter" data-category="campus_events">Campus Events</button>
+    <button type="button" class="filter-chip js-ann-filter" data-category="administrative">Administrative</button>
+    <button type="button" class="filter-chip js-ann-filter" data-category="student_affairs">Student Affairs</button>
+  </div>
+
+  <div id="announcements-list-box" class="post-stream"></div>
+</div>

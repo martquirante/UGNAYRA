@@ -1,0 +1,194 @@
+/* ==========================================================================
+   UGNAYRA Design System — Tokens & Foundational Variables
+   Identity: Deep Navy (#173B70) · Royal Blue (#2864A8) · Warm Yellow (#F5C518)
+             Controlled Accent: Muted Red (#D94B45)
+   ========================================================================== */
+
+:root {
+  /* Brand Primary — Navy & Royal Blue */
+  --color-navy-950: #0f274a;
+  --color-navy-900: #173b70;
+  --color-navy-800: #1e4b8f;
+  --color-blue-700: #2864a8;
+  --color-blue-600: #3174bf;
+  --color-blue-500: #4689d6;
+  --color-blue-100: #dbeafe;
+  --color-blue-50: #eff5fc;
+
+  /* Brand Highlight — Warm Academic Yellow (Always pair with dark navy/charcoal ink) */
+  --color-yellow-600: #c89d0a;
+  --color-yellow-500: #e0b10f;
+  --color-yellow-400: #f5c518;
+  --color-yellow-200: #fae38c;
+  --color-yellow-100: #fef4c7;
+  --color-yellow-50: #fffbeb;
+
+  /* Controlled Accent — Muted Red (Alerts, Unread Badges, Urgent, Destructive) */
+  --color-red-700: #b83833;
+  --color-red-600: #d94b45;
+  --color-red-500: #e35d57;
+  --color-red-100: #fde2e1;
+  --color-red-50: #fef3f2;
+
+  /* Semantic Status (Supporting Academic Context) */
+  --color-green-700: #1b7a46;
+  --color-green-600: #229456;
+  --color-green-50: #edfaf2;
+
+  /* Neutral Canvas, Surfaces & Ink */
+  --color-canvas: #f7f8fa;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #f1f4f9;
+  --color-surface-hover: #f4f6fa;
+  --color-surface-active: #eaf0f8;
+
+  --color-border-subtle: #e5e9f0;
+  --color-border-default: #d5dce6;
+  --color-border-strong: #b8c4d4;
+
+  --color-ink-900: #202938;
+  --color-ink-700: #374357;
+  --color-ink-500: #5a667a;
+  --color-ink-400: #788497;
+  --color-ink-inverse: #ffffff;
+
+  /* Typography System */
+  --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.8125rem;    /* 13px */
+  --text-base: 0.9375rem;  /* 15px — optimal social feed reading size */
+  --text-md: 1rem;         /* 16px */
+  --text-lg: 1.125rem;     /* 18px */
+  --text-xl: 1.25rem;      /* 20px */
+  --text-2xl: 1.5rem;      /* 24px */
+  --text-3xl: 1.875rem;    /* 30px */
+
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.55;
+  --leading-relaxed: 1.65;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Strict 4px / 8px Spacing Scale */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+
+  /* Restrained Architectural Radii (No excessive cartoon rounding) */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Restrained Elevation Tokens */
+  --shadow-xs: 0 1px 2px rgba(23, 59, 112, 0.04);
+  --shadow-sm: 0 2px 6px rgba(23, 59, 112, 0.06), 0 1px 2px rgba(23, 59, 112, 0.03);
+  --shadow-md: 0 6px 16px rgba(23, 59, 112, 0.08), 0 2px 4px rgba(23, 59, 112, 0.04);
+  --shadow-lg: 0 16px 36px rgba(23, 59, 112, 0.14), 0 4px 10px rgba(23, 59, 112, 0.06);
+
+  /* Focus Ring (WCAG 2.2 AA) */
+  --focus-ring: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-blue-700);
+
+  /* Layout Dimensions */
+  --shell-max-width: 1320px;
+  --left-rail-width: 256px;
+  --right-rail-width: 312px;
+  --feed-max-width: 640px;
+  --mobile-header-height: 56px;
+  --mobile-nav-height: 60px;
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 140ms;
+  --duration-normal: 200ms;
+  --duration-smooth: 360ms;
+
+  /* Z-Index Scale */
+  --z-sticky: 20;
+  --z-header: 30;
+  --z-dropdown: 40;
+  --z-drawer: 50;
+  --z-modal: 60;
+  --z-toast: 70;
+}
+
+/* ==========================================================================
+   UGNAYRA Design System — Dark Mode Theme (Midnight Sapphire & BulSU Gold)
+   Crafted for BulSU Academic Prestige, Late-Night Study Comfort & WCAG AAA
+   ========================================================================== */
+html[data-theme="dark"] {
+  /* Brand Primary — Midnight Navy & Electric Royal Blue */
+  --color-navy-950: #0a1324;
+  --color-navy-900: #0f1f3d;
+  --color-navy-800: #1b386b;
+  --color-blue-700: #3b82f6;
+  --color-blue-600: #60a5fa;
+  --color-blue-500: #93c5fd;
+  --color-blue-100: rgba(59, 130, 246, 0.2);
+  --color-blue-50: rgba(59, 130, 246, 0.1);
+
+  /* Brand Highlight — Luminous BulSU Gold (Crisp, warm contrast on dark surfaces) */
+  --color-yellow-600: #d97706;
+  --color-yellow-500: #f59e0b;
+  --color-yellow-400: #fbbf24;
+  --color-yellow-200: rgba(251, 191, 36, 0.25);
+  --color-yellow-100: rgba(251, 191, 36, 0.16);
+  --color-yellow-50: rgba(251, 191, 36, 0.08);
+
+  /* Controlled Accent — Vibrant Red */
+  --color-red-700: #ef4444;
+  --color-red-600: #f87171;
+  --color-red-500: #fca5a5;
+  --color-red-100: rgba(248, 113, 113, 0.2);
+  --color-red-50: rgba(248, 113, 113, 0.1);
+
+  /* Semantic Status */
+  --color-green-700: #10b981;
+  --color-green-600: #34d399;
+  --color-green-50: rgba(52, 211, 153, 0.12);
+
+  /* Surfaces & Velvet Midnight Canvas */
+  --color-canvas: #0b1120;
+  --color-surface: #131c2e;
+  --color-surface-subtle: #18243c;
+  --color-surface-hover: #1e2c48;
+  --color-surface-active: #253658;
+
+  /* Borders & Dividers */
+  --color-border-subtle: #1c2b44;
+  --color-border-default: #253856;
+  --color-border-strong: #3b5278;
+
+  /* Typography / Ink System (WCAG AAA Contrast) */
+  --color-ink-900: #f8fafc;
+  --color-ink-700: #cbd5e1;
+  --color-ink-500: #94a3b8;
+  --color-ink-400: #64748b;
+  --color-ink-inverse: #ffffff;
+
+  /* Restrained Elevation & Ambient Midnight Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.7), 0 4px 12px rgba(0, 0, 0, 0.45);
+
+  /* Focus Ring */
+  --focus-ring: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-blue-600);
+}

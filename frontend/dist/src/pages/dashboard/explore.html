@@ -1,0 +1,36 @@
+<!-- ==========================================================================
+     UGNAYRA — Explore & Campus Directory View
+     (frontend/src/pages/dashboard/explore.html)
+     ========================================================================== -->
+<div class="feed-column-wrap" style="max-width:820px;" id="explore-view-root">
+  <header class="page-header-bar">
+    <div>
+      <h1 class="heading-xl">Explore &amp; Campus Directory</h1>
+      <p class="text-secondary">
+        Discover classmates, faculty members, subject communities, posts, and official bulletins.
+      </p>
+    </div>
+  </header>
+
+  <section class="panel mb-4" style="padding:14px;" aria-label="Search filters">
+    <div class="input-wrapper has-left-icon">
+      <i data-lucide="search" class="icon-md input-icon-left"></i>
+      <input
+        type="search"
+        id="explore-search-input"
+        class="form-input"
+        placeholder="Search by student/teacher name, department, topic, community, or announcement..."
+      />
+    </div>
+
+    <div class="filter-tabs mt-3" role="tablist">
+      <button type="button" class="filter-chip is-active js-explore-type" data-type="all">All Results</button>
+      <button type="button" class="filter-chip js-explore-type" data-type="people">Students &amp; Faculty</button>
+      <button type="button" class="filter-chip js-explore-type" data-type="communities">Communities</button>
+      <button type="button" class="filter-chip js-explore-type" data-type="posts">Posts</button>
+      <button type="button" class="filter-chip js-explore-type" data-type="announcements">Announcements</button>
+    </div>
+  </section>
+
+  <div id="explore-results-container"></div>
+</div>

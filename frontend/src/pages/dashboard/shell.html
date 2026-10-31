@@ -1,0 +1,185 @@
+<!-- ==========================================================================
+     UGNAYRA — Authenticated Application Shell (frontend/src/pages/dashboard/shell.html)
+     Desktop 3-Column / Adaptive 2-Column + Native-Feel Mobile Top & Bottom Nav
+     ========================================================================== -->
+
+<!-- Mobile Sticky Top Bar -->
+<header class="mobile-topbar">
+  <a href="/feed" class="mobile-brand">
+    <img src="public/assets/logos/ugnayra-mark.png" alt="UGNAYRA" class="mobile-brand-mark" />
+    <img src="public/assets/logos/ugnayra-wordmark.png" alt="UGNAYRA" class="mobile-brand-wordmark" />
+  </a>
+
+  <div class="mobile-topbar-actions">
+    <a href="/explore" class="btn-icon" aria-label="Search campus">
+      <i data-lucide="search" class="icon-md"></i>
+    </a>
+    <a href="/notifications" class="btn-icon icon-badge-btn" aria-label="Notifications">
+      <i data-lucide="bell" class="icon-md"></i>
+      <span class="unread-pill js-notif-badge hidden">0</span>
+    </a>
+    <button type="button" class="btn-icon" id="open-mobile-drawer-btn" aria-label="Open menu">
+      <i data-lucide="menu" class="icon-md"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Main Responsive Shell Grid -->
+<div class="shell-container" id="shell-grid">
+  <!-- Left Navigation Rail -->
+  <aside class="left-rail" aria-label="Primary navigation">
+    <div>
+      <a href="/home" class="brand-block">
+        <img src="public/assets/logos/ugnayra-mark.png" alt="UGNAYRA Mark" class="brand-block-mark" />
+        <div class="brand-block-text">
+          <span class="brand-block-title">UGNAYRA</span>
+          <span class="brand-block-subtitle">School-Based Social Networking Platform</span>
+        </div>
+      </a>
+
+      <div class="rail-search-box">
+        <i data-lucide="search" class="icon-sm rail-search-icon"></i>
+        <input
+          type="search"
+          id="rail-quick-search"
+          class="rail-search-input"
+          placeholder="Search campus..."
+          aria-label="Quick campus search"
+          autocomplete="off"
+        />
+        <span class="rail-search-shortcut">/</span>
+        <div id="quick-search-popover" class="quick-search-popover hidden" role="listbox"></div>
+      </div>
+
+      <nav class="primary-nav">
+        <a href="/home" class="nav-item" data-nav="home">
+          <span class="nav-item-left"><i data-lucide="layout-grid" class="icon-md"></i><span>Home</span></span>
+        </a>
+        <a href="/feed" class="nav-item" data-nav="feed">
+          <span class="nav-item-left"><i data-lucide="newspaper" class="icon-md"></i><span>News Feed</span></span>
+        </a>
+        <a href="/explore" class="nav-item" data-nav="explore">
+          <span class="nav-item-left"><i data-lucide="compass" class="icon-md"></i><span>Explore</span></span>
+        </a>
+        <a href="/messages" class="nav-item" data-nav="messages">
+          <span class="nav-item-left"><i data-lucide="messages-square" class="icon-md"></i><span>Messages</span></span>
+          <span class="unread-pill js-msg-badge hidden">0</span>
+        </a>
+        <a href="/communities" class="nav-item" data-nav="communities">
+          <span class="nav-item-left"><i data-lucide="users" class="icon-md"></i><span>Communities</span></span>
+        </a>
+        <a href="/announcements" class="nav-item" data-nav="announcements">
+          <span class="nav-item-left"><i data-lucide="megaphone" class="icon-md"></i><span>Announcements</span></span>
+        </a>
+        <a href="/notifications" class="nav-item" data-nav="notifications">
+          <span class="nav-item-left"><i data-lucide="bell" class="icon-md"></i><span>Notifications</span></span>
+          <span class="unread-pill js-notif-badge hidden">0</span>
+        </a>
+        <a href="/profile" class="nav-item" data-nav="profile">
+          <span class="nav-item-left"><i data-lucide="user" class="icon-md"></i><span>Profile</span></span>
+        </a>
+        <a href="/settings" class="nav-item" data-nav="settings">
+          <span class="nav-item-left"><i data-lucide="settings" class="icon-md"></i><span>Settings</span></span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="rail-account-card" id="rail-account-card"></div>
+  </aside>
+
+  <!-- Center Main Stage (Populated with HTML Page Views) -->
+  <main class="main-stage" id="main-stage" tabindex="-1"></main>
+
+  <!-- Right Campus Context Rail -->
+  <aside class="right-rail" id="right-rail" aria-label="Campus updates and online classmates">
+    <section class="rail-widget">
+      <div class="rail-widget-header">
+        <h2 class="rail-widget-title">Online Classmates &amp; Faculty</h2>
+      </div>
+      <div id="right-rail-online-list">
+        <p class="text-xs-muted">Checking active members...</p>
+      </div>
+    </section>
+
+    <section class="rail-widget">
+      <div class="rail-widget-header">
+        <h2 class="rail-widget-title">School Bulletins</h2>
+        <a href="/announcements" class="text-xs-muted" style="color:var(--color-blue-700);font-weight:600;">View all</a>
+      </div>
+      <div id="right-rail-bulletins-list">
+        <p class="text-xs-muted">Loading bulletins...</p>
+      </div>
+    </section>
+
+    <section class="rail-widget">
+      <div class="rail-widget-header">
+        <h2 class="rail-widget-title">Suggested Communities</h2>
+        <a href="/communities" class="text-xs-muted" style="color:var(--color-blue-700);font-weight:600;">Browse</a>
+      </div>
+      <div id="right-rail-communities-list">
+        <p class="text-xs-muted">Loading communities...</p>
+      </div>
+    </section>
+  </aside>
+</div>
+
+<!-- Mobile Safe-Area Bottom Navigation -->
+<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+  <div class="mobile-bottom-nav-inner">
+    <a href="/feed" class="mobile-tab" data-nav="feed">
+      <i data-lucide="newspaper" class="icon-md"></i><span>Feed</span>
+    </a>
+    <a href="/explore" class="mobile-tab" data-nav="explore">
+      <i data-lucide="compass" class="icon-md"></i><span>Explore</span>
+    </a>
+    <a href="/communities" class="mobile-tab" data-nav="communities">
+      <i data-lucide="users" class="icon-md"></i><span>Groups</span>
+    </a>
+    <a href="/announcements" class="mobile-tab" data-nav="announcements">
+      <i data-lucide="megaphone" class="icon-md"></i><span>Bulletins</span>
+    </a>
+    <a href="/profile" class="mobile-tab" data-nav="profile">
+      <i data-lucide="user" class="icon-md"></i><span>Profile</span>
+    </a>
+  </div>
+</nav>
+
+<!-- Mobile Floating Overlay Chat Action Button (Bottom-Right corner above Nav Bar) -->
+<a href="/messages" class="mobile-fab-chat" id="mobile-floating-chat-btn" aria-label="Messages">
+  <span class="mobile-fab-chat-icon" data-api-icon="lucide:message-circle" aria-hidden="true">
+    <i data-lucide="message-circle" class="icon-md"></i>
+  </span>
+  <span class="unread-pill js-msg-badge hidden">0</span>
+</a>
+
+<!-- Mobile Slide-Over Menu Drawer -->
+<div id="mobile-drawer-wrap" class="hidden">
+  <div class="mobile-drawer-backdrop" id="close-mobile-drawer-backdrop"></div>
+  <aside class="mobile-drawer" aria-label="Account menu">
+    <div>
+      <div class="flex items-center justify-between mb-4">
+        <span class="heading-md">Campus Menu</span>
+        <button type="button" class="btn-icon" id="close-mobile-drawer-btn" aria-label="Close menu">
+          <i data-lucide="x" class="icon-md"></i>
+        </button>
+      </div>
+      <div class="primary-nav">
+        <a href="/home" class="nav-item js-drawer-link">
+          <span class="nav-item-left"><i data-lucide="layout-grid" class="icon-md"></i><span>Campus Home</span></span>
+        </a>
+        <a href="/messages" class="nav-item js-drawer-link">
+          <span class="nav-item-left"><i data-lucide="messages-square" class="icon-md"></i><span>Messages</span></span>
+        </a>
+        <a href="/notifications" class="nav-item js-drawer-link">
+          <span class="nav-item-left"><i data-lucide="bell" class="icon-md"></i><span>Notifications</span></span>
+        </a>
+        <a href="/settings" class="nav-item js-drawer-link">
+          <span class="nav-item-left"><i data-lucide="settings" class="icon-md"></i><span>Settings</span></span>
+        </a>
+      </div>
+    </div>
+    <button type="button" class="btn btn-danger-outline w-full js-logout-btn">
+      <i data-lucide="log-out" class="icon-sm"></i><span>Sign Out</span>
+    </button>
+  </aside>
+</div>

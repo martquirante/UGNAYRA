@@ -1,0 +1,32 @@
+# ==============================================================================
+# UGNAYRA — Backend Docker Ignore
+# Prevents local secrets (.env), keys, logs, and uploads from entering images
+# ==============================================================================
+.git
+.gitignore
+.env
+.env.*
+*.env
+*.env.*
+.secrets
+.secrets.*
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.db
+storage/logs/*
+!storage/logs/.gitkeep
+storage/rate_limits/*
+!storage/rate_limits/.gitkeep
+storage/uploads/*
+!storage/uploads/.gitkeep
+storage/sessions/*
+public/uploads/*
+!public/uploads/.gitkeep
+tests/
+README.md
+

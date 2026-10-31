@@ -1,0 +1,24 @@
+<!-- ==========================================================================
+     UGNAYRA — Notifications Center View
+     (frontend/src/pages/dashboard/notifications.html)
+     ========================================================================== -->
+<div class="feed-column-wrap" style="max-width:700px;" id="notifications-view-root">
+  <header class="page-header-bar">
+    <div>
+      <h1 class="heading-xl">Notifications</h1>
+      <p class="text-secondary">
+        Recent activity across your posts, messages, communities, and advisories.
+      </p>
+    </div>
+    <button type="button" class="btn btn-secondary btn-sm" id="mark-all-notifs-read-btn">
+      <i data-lucide="check-check" class="icon-sm"></i><span>Mark all as read</span>
+    </button>
+  </header>
+
+  <div class="filter-tabs mb-4" role="tablist" aria-label="Notification filters">
+    <button type="button" class="filter-chip is-active js-notif-filter" data-filter="all">All Activity</button>
+    <button type="button" class="filter-chip js-notif-filter" data-filter="unread">Unread Only</button>
+  </div>
+
+  <div id="notifications-list-panel"></div>
+</div>

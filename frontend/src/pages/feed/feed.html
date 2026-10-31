@@ -1,0 +1,97 @@
+<!-- ==========================================================================
+     UGNAYRA — Campus Home & News Feed View (frontend/src/pages/feed/feed.html)
+     Semantic HTML5 separated from JavaScript logic (feedModule.js)
+     ========================================================================== -->
+<div class="feed-column-wrap" id="feed-view-root">
+  <header class="page-header-bar">
+    <div>
+      <h1 class="heading-xl" id="feed-page-heading">News Feed</h1>
+      <p class="text-secondary" id="feed-page-subheading">
+        Chronological updates across departments, faculty, and student communities.
+      </p>
+    </div>
+  </header>
+
+  <!-- Pinned Urgent / Official Bulletin Slot -->
+  <div id="pinned-bulletin-slot"></div>
+
+  <!-- Post Composer -->
+  <section class="composer-card" aria-label="Create campus post">
+    <form id="campus-composer-form" novalidate>
+      <div class="composer-top">
+        <span id="composer-author-avatar"></span>
+        <div class="flex-1">
+          <textarea
+            id="composer-content"
+            name="content"
+            class="composer-textarea"
+            rows="3"
+            maxlength="5000"
+            data-char-limit="5000"
+            data-counter-target="#composer-char-counter"
+            placeholder="Share an academic update, question, or campus activity..."
+          ></textarea>
+        </div>
+      </div>
+
+      <div id="composer-image-previews" class="composer-preview-grid hidden"></div>
+
+      <div class="composer-toolbar">
+        <div class="composer-tools-left">
+          <label class="btn btn-secondary btn-sm" for="composer-image-input" style="cursor:pointer;">
+            <i data-lucide="image" class="icon-sm" style="color:var(--color-blue-700);"></i>
+            <span>Photo</span>
+          </label>
+          <input
+            type="file"
+            id="composer-image-input"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            multiple
+            class="sr-only"
+          />
+
+          <div class="ug-combobox composer-destination-combo" id="composer-dest-combo" data-searchable="false">
+            <input type="hidden" id="composer-community-select" name="community_id" value="" />
+            <button
+              type="button"
+              class="ug-combobox-trigger composer-dest-trigger has-left-icon"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-label="Select post destination"
+            >
+              <i data-lucide="globe" class="icon-xs input-icon-left"></i>
+              <span class="ug-combobox-value" data-placeholder="Campus Feed (Everyone)">Campus Feed (Everyone)</span>
+              <span class="ug-combobox-chevron" aria-hidden="true">
+                <i data-lucide="chevron-down" class="icon-xs"></i>
+              </span>
+            </button>
+            <div class="ug-combobox-popover hidden" role="listbox">
+              <div class="ug-combobox-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span id="composer-char-counter" class="text-xs-muted tabular-nums">0 / 5000</span>
+          <button type="submit" class="btn btn-primary btn-sm" id="composer-submit-btn">
+            <i data-lucide="send" class="icon-xs"></i><span>Publish</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <!-- Feed Filter Tabs -->
+  <div class="filter-tabs mb-4" role="tablist" aria-label="Feed filters">
+    <button type="button" class="filter-chip is-active js-feed-filter" data-filter="all">All Campus</button>
+    <button type="button" class="filter-chip js-feed-filter" data-filter="teachers">Faculty &amp; Personnel</button>
+    <button type="button" class="filter-chip js-feed-filter" data-filter="communities">My Communities</button>
+    <button type="button" class="filter-chip js-feed-filter" data-filter="media">Media Updates</button>
+  </div>
+
+  <!-- Dynamic Posts Stream -->
+  <div id="feed-posts-list" class="post-stream"></div>
+
+  <!-- Cursor Pagination Slot -->
+  <div id="feed-pagination-slot" class="flex justify-center mt-4"></div>
+</div>

@@ -1,0 +1,97 @@
+# ==============================================================================
+# UGNAYRA — Git Ignore Rules
+# Strictly blocks all .env files, API keys, secrets, certificates, and runtime data
+# ==============================================================================
+
+# 1. Environment Variables & Secret Files (All Directories)
+.env
+.env.*
+*.env
+*.env.*
+.envrc
+.secrets
+.secrets.*
+secrets/
+**/secrets/
+*secret*.json
+*credentials*.json
+service-account*.json
+
+# Keep documented safe templates (no real credentials)
+!.env.example
+!**/.env.example
+!*.env.example
+
+# 2. Private Keys, Certificates & Keystores
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
+
+# 3. Local Databases, Dumps & Off-Provider Backup Artifacts
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.dump
+*.bak
+*.sql.gz
+backups/
+azure-backups/
+
+# 4. PHP / Composer Dependencies & Runtime Storage
+backend/vendor/
+backend/composer.lock
+backend/storage/logs/*
+!backend/storage/logs/.gitkeep
+backend/storage/rate_limits/*
+!backend/storage/rate_limits/.gitkeep
+backend/storage/uploads/*
+backend/storage/uploads/**/*
+!backend/storage/uploads/**/.gitkeep
+!backend/storage/uploads/.gitkeep
+backend/storage/sessions/*
+backend/storage/sessions/**/*
+!backend/storage/sessions/**/.gitkeep
+!backend/storage/sessions/.gitkeep
+backend/public/uploads/*
+backend/public/uploads/**/*
+!backend/public/uploads/**/.gitkeep
+!backend/public/uploads/.gitkeep
+
+# 5. Frontend Local Overrides, Cloud CLI State & Node Dependencies
+frontend/src/js/core/config.local.js
+**/config.local.js
+**/config.secret.*
+.vercel/
+.supabase/
+.render/
+.azure/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 6. Python Runtime Artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 7. OS & Editor Artifacts
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+.idea/
+.vscode/*
+!.vscode/extensions.json

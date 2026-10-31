@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Prevent Directory Browsing
+    Options -Indexes
+
+    # Block access to hidden dotfiles and sensitive source code files
+    <FilesMatch "(^\.|\.(env|json|lock|sql|md|log|git|yml|yaml|ini|bak|swp))$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>

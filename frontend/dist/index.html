@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>UGNAYRA — Bulacan State University Social Platform</title>
+
+  <!-- Favicon & Brand Icons -->
+  <link rel="icon" type="image/png" href="public/assets/logos/ugnayra-mark.png" />
+  <link rel="apple-touch-icon" href="public/assets/logos/ugnayra-mark.png" />
+  <meta name="theme-color" content="#173B70" />
+
+  <!-- Preload Critical Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Instant Zero-Flash Theme Pre-Hydration -->
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem('ugnayra_theme') || 'system';
+        var isSystemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var effective = (savedTheme === 'dark' || (savedTheme === 'system' && isSystemDark)) ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', effective);
+      } catch (_e) {}
+    })();
+  </script>
+
+  <!-- Production Minified Master Stylesheet (Single Compact File) -->
+  <link rel="stylesheet" href="css/ugnayra.bundle.min.css?v=prod" />
+</head>
+<body>
+  <div id="app" class="app-root">
+    <!-- Initial Accessible Boot State before AJAX Session Verification -->
+    <div style="min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;">
+      <img src="public/assets/logos/ugnayra-mark.png" alt="UGNAYRA" style="width:60px;height:60px;background:transparent;" />
+      <div style="display:flex;align-items:center;gap:10px;color:var(--color-navy-900, #173B70);font-weight:600;font-size:1rem;">
+        <span class="spinner" aria-hidden="true"></span>
+        <span>Loading UGNAYRA...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Local Bundled Dependencies (Offline-Safe) -->
+  <script src="public/assets/vendor/jquery.min.js"></script>
+  <script src="public/assets/vendor/lucide.min.js"></script>
+  <!-- Firebase NoSQL Realtime Messaging Client (Offline-Safe Vendor Bundles) -->
+  <script src="public/assets/vendor/firebase-app-compat.js"></script>
+  <script src="public/assets/vendor/firebase-firestore-compat.js"></script>
+
+  <!-- Production Minified & Obfuscated Application Bundle (Zero Raw Code Exposed) -->
+  <script src="js/ugnayra.bundle.min.js?v=prod"></script>
+</body>
+</html>

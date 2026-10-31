@@ -1,0 +1,27 @@
+<!-- ==========================================================================
+     UGNAYRA — School Communities Directory & Space Views
+     (frontend/src/pages/communities/communities.html)
+     ========================================================================== -->
+<div id="communities-directory-root">
+  <header class="page-header-bar">
+    <div>
+      <h1 class="heading-xl">School Communities</h1>
+      <p class="text-secondary">
+        Course hubs, department spaces, student organizations, and collaborative study groups.
+      </p>
+    </div>
+    <button type="button" class="btn btn-primary" id="open-create-community-btn">
+      <i data-lucide="plus" class="icon-sm"></i><span>Create Community</span>
+    </button>
+  </header>
+
+  <div class="filter-tabs mb-4" role="tablist" aria-label="Community categories">
+    <button type="button" class="filter-chip is-active js-comm-filter" data-filter="all">All Communities</button>
+    <button type="button" class="filter-chip js-comm-filter" data-filter="joined">Joined</button>
+    <button type="button" class="filter-chip js-comm-filter" data-filter="academic">Academic Courses</button>
+    <button type="button" class="filter-chip js-comm-filter" data-filter="organization">Organizations</button>
+    <button type="button" class="filter-chip js-comm-filter" data-filter="study_group">Study Groups</button>
+  </div>
+
+  <div id="communities-grid" class="cards-grid-2"></div>
+</div>

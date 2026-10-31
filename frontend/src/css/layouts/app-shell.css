@@ -1,0 +1,790 @@
+/* ==========================================================================
+   UGNAYRA Design System — Responsive Application Shell & Navigation
+   Desktop: Persistent Left Rail + Purpose-Sized Main Stage + Contextual Right Rail
+   Mobile:  Compact Sticky Header + Native-Feel Safe-Area Bottom Navigation
+   ========================================================================== */
+
+.app-root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   Mobile Top Bar (Visible < 1024px)
+   -------------------------------------------------------------------------- */
+.mobile-topbar {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  height: var(--mobile-header-height);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding: 0 var(--space-4);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.mobile-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.mobile-brand-mark {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.mobile-brand-wordmark {
+  height: 18px;
+  width: auto;
+  object-fit: contain;
+}
+
+.mobile-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.icon-badge-btn {
+  position: relative;
+}
+
+.icon-badge-btn .unread-pill {
+  position: absolute;
+  top: 3px;
+  right: 2px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  font-size: 10px;
+}
+
+/* --------------------------------------------------------------------------
+   Main Shell Grid (Desktop >= 1024px)
+   -------------------------------------------------------------------------- */
+.shell-container {
+  width: 100%;
+  max-width: var(--shell-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-5);
+  display: grid;
+  grid-template-columns: var(--left-rail-width) minmax(0, 1fr) var(--right-rail-width);
+  gap: var(--space-6);
+  align-items: start;
+  flex: 1;
+}
+
+/* Adaptive Two-Column Mode (Messages, Explore, Communities, Profile, Settings) */
+.shell-container.layout-wide {
+  grid-template-columns: var(--left-rail-width) minmax(0, 1fr);
+}
+
+.shell-container.layout-wide .right-rail {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Left Navigation Rail
+   -------------------------------------------------------------------------- */
+.left-rail {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  padding: var(--space-5) 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.brand-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+}
+
+.brand-block-mark {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.brand-block-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brand-block-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: var(--color-navy-900);
+  line-height: 1.1;
+}
+
+.brand-block-subtitle {
+  font-size: 10.5px;
+  font-weight: var(--weight-medium);
+  color: var(--color-ink-500);
+  line-height: 1.25;
+  margin-top: 2px;
+}
+
+/* Quick Campus Search Trigger inside Left Rail */
+.rail-search-box {
+  margin: var(--space-3) 0;
+  position: relative;
+}
+
+.rail-search-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 34px 0 36px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--color-ink-900);
+  transition: border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.rail-search-input:focus {
+  outline: none;
+  border-color: var(--color-blue-700);
+  box-shadow: 0 0 0 3px rgba(40, 100, 168, 0.12);
+}
+
+.rail-search-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-ink-400);
+  pointer-events: none;
+}
+
+.rail-search-shortcut {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 2px 5px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--color-ink-400);
+  background-color: var(--color-surface-subtle);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xs);
+  pointer-events: none;
+}
+
+/* Primary Nav List */
+.primary-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  height: 42px;
+  padding: 0 12px 0 14px;
+  border-radius: var(--radius-md);
+  color: var(--color-ink-700);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+  text-decoration: none;
+}
+
+.nav-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.nav-item:hover {
+  background-color: var(--color-surface);
+  color: var(--color-navy-900);
+}
+
+/* Signature UGNAYRA Active State: Deep Navy Ink + Warm Yellow Vertical Indicator */
+.nav-item.is-active {
+  background-color: var(--color-surface);
+  color: var(--color-navy-900);
+  font-weight: var(--weight-semibold);
+  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.nav-item.is-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background-color: var(--color-yellow-400);
+}
+
+/* Authenticated User Footer Card in Left Rail */
+.rail-account-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 10px 12px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.rail-account-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.rail-account-meta {
+  min-width: 0;
+}
+
+.rail-account-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink-900);
+}
+
+.rail-account-role {
+  font-size: 11px;
+  color: var(--color-ink-500);
+}
+
+/* --------------------------------------------------------------------------
+   Center Stage & Right Contextual Rail
+   -------------------------------------------------------------------------- */
+.main-stage {
+  padding: var(--space-5) 0 var(--space-10);
+  min-width: 0;
+  width: 100%;
+}
+
+.feed-column-wrap {
+  max-width: var(--feed-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.right-rail {
+  position: sticky;
+  top: 0;
+  max-height: 100dvh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding: var(--space-5) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.rail-widget {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-xs);
+}
+
+.rail-widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.rail-widget-title {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-navy-900);
+}
+
+/* Quick Search Dropdown Popover */
+.quick-search-popover {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  width: 340px;
+  max-height: 420px;
+  overflow-y: auto;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-dropdown);
+  padding: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   Mobile Bottom Navigation & Slide-Over Menu (< 1024px)
+   -------------------------------------------------------------------------- */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-header);
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border-subtle);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.mobile-bottom-nav-inner {
+  height: var(--mobile-nav-height);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+}
+
+.mobile-tab {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: var(--color-ink-500);
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+}
+
+.mobile-tab.is-active {
+  color: var(--color-navy-900);
+  font-weight: var(--weight-semibold);
+}
+
+.mobile-tab.is-active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 28px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background-color: var(--color-yellow-400);
+}
+
+/* Mobile Floating Overlay Chat Action Button (Bottom-Right corner above Nav Bar) */
+.mobile-fab-chat {
+  display: none;
+  position: fixed;
+  right: 18px;
+  bottom: calc(var(--mobile-nav-height, 60px) + env(safe-area-inset-bottom, 0px) + 14px);
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-navy-900);
+  color: #ffffff;
+  align-items: center;
+  justify-content: center;
+  z-index: 45;
+  text-decoration: none;
+  box-shadow:
+    0 10px 24px rgba(23, 59, 112, 0.36),
+    0 2px 6px rgba(23, 59, 112, 0.20),
+    inset 0 0 0 1.5px rgba(245, 197, 24, 0.5);
+  animation: ugFabFloat 3.4s ease-in-out infinite;
+  transform-origin: center center;
+  will-change: transform, box-shadow;
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-fab-chat:hover,
+.mobile-fab-chat:focus-visible {
+  background-color: var(--color-blue-700);
+  box-shadow:
+    0 14px 30px rgba(23, 59, 112, 0.44),
+    0 4px 10px rgba(23, 59, 112, 0.26),
+    inset 0 0 0 2px var(--color-yellow-400);
+  outline: none;
+}
+
+.mobile-fab-chat:active {
+  transform: scale(0.92) !important;
+  box-shadow: 0 4px 12px rgba(23, 59, 112, 0.3);
+}
+
+.mobile-fab-chat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  font-size: 26px;
+  color: #ffffff;
+  animation: ugFabIconWobble 4.2s ease-in-out infinite;
+}
+
+.mobile-fab-chat-icon svg,
+.mobile-fab-chat-icon .api-icon-svg {
+  width: 26px;
+  height: 26px;
+  stroke: #ffffff;
+  color: #ffffff;
+  display: block;
+  stroke-width: 2.1;
+  fill: none;
+}
+
+.mobile-fab-chat .unread-pill {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+@keyframes ugFabFloat {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow:
+      0 10px 24px rgba(23, 59, 112, 0.36),
+      0 2px 6px rgba(23, 59, 112, 0.20),
+      inset 0 0 0 1.5px rgba(245, 197, 24, 0.5);
+  }
+  50% {
+    transform: translateY(-6px);
+    box-shadow:
+      0 16px 30px rgba(23, 59, 112, 0.44),
+      0 5px 12px rgba(23, 59, 112, 0.24),
+      inset 0 0 0 2px rgba(245, 197, 24, 0.9);
+  }
+}
+
+@keyframes ugFabIconWobble {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  28% {
+    transform: rotate(-7deg) scale(1.08);
+  }
+  58% {
+    transform: rotate(5deg) scale(1.04);
+  }
+}
+
+/* Mobile Navigation Drawer */
+.mobile-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 39, 74, 0.45);
+  z-index: var(--z-drawer);
+}
+
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(300px, 84vw);
+  background-color: var(--color-surface);
+  z-index: calc(var(--z-drawer) + 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-4);
+  padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  box-shadow: var(--shadow-lg);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+
+/* Tablet Landscape / Compact Laptop (1024px - 1179px): Hide Right Rail on Feed */
+@media (max-width: 1179px) {
+  .shell-container {
+    grid-template-columns: 232px minmax(0, 1fr);
+    gap: var(--space-5);
+  }
+  .right-rail {
+    display: none;
+  }
+  .quick-search-popover {
+    width: 300px;
+  }
+}
+
+/* Tablet Portrait & Mobile (< 1024px): Native App-Like Shell */
+@media (max-width: 1023px) {
+  .mobile-topbar {
+    display: flex;
+  }
+  .mobile-bottom-nav {
+    display: block;
+  }
+  .mobile-fab-chat {
+    display: flex;
+  }
+  body.in-mobile-chat-thread .mobile-bottom-nav,
+  body.in-mobile-chat-thread .mobile-fab-chat {
+    display: none !important;
+  }
+  .left-rail,
+  .right-rail {
+    display: none !important;
+  }
+  .shell-container,
+  .shell-container.layout-wide {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0 var(--space-4);
+  }
+  .main-stage {
+    padding: var(--space-4) 0 calc(var(--mobile-nav-height) + env(safe-area-inset-bottom, 0px) + 24px);
+  }
+  body.in-mobile-chat-thread .main-stage {
+    padding: 0;
+  }
+  body.in-mobile-chat-thread .shell-container {
+    padding: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .shell-container {
+    padding: 0 var(--space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-fab-chat,
+  .mobile-fab-chat-icon {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   UGNAYRA — Campus Real-Time Network & Connectivity Monitor Bar
+   Non-vibe-coded, human-crafted top utility banner:
+   - Crimson Red when offline (persistent)
+   - Royal Blue when online (stays 3 seconds with micro-drain timer, then dismisses)
+   ========================================================================== */
+.ug-network-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 44px;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  box-sizing: border-box;
+  font-family: var(--font-sans, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1), opacity 240ms ease;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  user-select: none;
+}
+
+.ug-network-bar.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Offline State: BulSU Crimson Ruby */
+.ug-network-bar.is-offline {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.98) 0%, rgba(185, 28, 28, 0.98) 100%);
+  border-bottom: 1px solid rgba(254, 202, 202, 0.35);
+  box-shadow: 0 4px 24px -2px rgba(220, 38, 38, 0.45);
+}
+
+/* Online Restored State: BulSU Royal Sapphire (3s auto-dismiss) */
+.ug-network-bar.is-online {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.98) 0%, rgba(29, 78, 216, 0.98) 100%);
+  border-bottom: 1px solid rgba(191, 219, 254, 0.35);
+  box-shadow: 0 4px 24px -2px rgba(37, 99, 235, 0.45);
+}
+
+.ug-network-bar-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  max-width: 100%;
+}
+
+.ug-net-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ug-net-svg {
+  display: block;
+  stroke: #ffffff;
+}
+
+.ug-net-beacon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.ug-net-beacon.is-offline {
+  background-color: #fecaca;
+  box-shadow: 0 0 0 0 rgba(254, 202, 202, 0.7);
+  animation: ug-beacon-pulse 1.8s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.ug-net-beacon.is-online {
+  background-color: #86efac;
+  box-shadow: 0 0 8px rgba(134, 239, 172, 0.8);
+}
+
+@keyframes ug-beacon-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(254, 202, 202, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(254, 202, 202, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(254, 202, 202, 0);
+  }
+}
+
+.ug-net-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ug-net-retry-btn {
+  margin-left: 8px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 180ms ease;
+  line-height: 1.4;
+  outline: none;
+}
+
+.ug-net-retry-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.ug-net-retry-btn:active {
+  transform: translateY(0);
+}
+
+.ug-net-retry-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Micro-Drain Progress Timer Bar for 3-Second Online Auto-Dismiss */
+.ug-network-bar-timer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.85);
+  width: 100%;
+  transform-origin: left center;
+  display: none;
+}
+
+@keyframes ug-net-bar-drain {
+  0% {
+    transform: scaleX(1);
+    opacity: 0.95;
+  }
+  90% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+}
+
+/* Page Shifting so No Headers or Rails are Obscured */
+body.ug-network-bar-active {
+  padding-top: 44px;
+  transition: padding-top 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.ug-network-bar-active .mobile-topbar {
+  top: 44px;
+}
+
+body.ug-network-bar-active .left-rail,
+body.ug-network-bar-active .right-rail {
+  top: calc(var(--space-4) + 44px);
+  height: calc(100vh - 44px - var(--space-8));
+}
+

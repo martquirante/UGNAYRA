@@ -1,0 +1,803 @@
+<!-- ==========================================================================
+     UGNAYRA — Institutional Authentication View (frontend/src/pages/auth/auth.html)
+     Semantic HTML5 strictly decoupled from controller logic (authModule.js)
+     ========================================================================== -->
+<div class="auth-screen" id="auth-view-root">
+  <!-- LEFT EDITORIAL CAMPUS BRIEF PANE -->
+  <section class="auth-hero-pane" aria-label="About UGNAYRA">
+    <!-- BulSU Campus Photography Stage with Crossfade, Scrim & Architectural Dot Matrix -->
+    <div class="auth-bg-stage" aria-hidden="true">
+      <div
+        class="auth-bg-photo is-active"
+        data-hero-bg="0"
+        style="background-image: url('public/assets/images/bulsu-main-gate.jpg');"
+      ></div>
+      <div
+        class="auth-bg-photo"
+        data-hero-bg="1"
+        style="background-image: url('public/assets/images/bulsu-elibrary.jpg');"
+      ></div>
+      <div
+        class="auth-bg-photo"
+        data-hero-bg="2"
+        style="background-image: url('public/assets/images/bulsu-sarmiento-wide.jpg');"
+      ></div>
+      <div
+        class="auth-bg-photo"
+        data-hero-bg="3"
+        style="background-image: url('public/assets/images/bulsu-sarmiento-gate.jpg');"
+      ></div>
+      <div class="auth-bg-scrim"></div>
+    </div>
+
+    <div class="auth-hero-content">
+      <!-- Pure Transparent Brand Lockup (Zero Background Box) -->
+      <div class="auth-hero-brand">
+        <img
+          src="public/assets/logos/ugnayra-mark.png"
+          alt="UGNAYRA Emblem"
+          class="auth-hero-mark"
+        />
+        <div class="auth-hero-brand-text">
+          <span class="auth-hero-title">UGNAYRA</span>
+          <span class="auth-hero-subtitle">School-Based Social Networking Platform</span>
+        </div>
+      </div>
+
+      <!-- Concise Web Application Brief (Zero Sample Data / Zero Fake Posts) -->
+      <div class="auth-hero-brief">
+        <p class="auth-hero-eyebrow">
+          <span class="auth-eyebrow-rule" aria-hidden="true"></span>
+          <span>Campus Academic Network</span>
+        </p>
+        <h1 class="auth-hero-headline">
+          One verified space for our campus community.
+        </h1>
+        <p class="auth-hero-lead">
+          UGNAYRA connects students, faculty, and school personnel in a dedicated academic network built for coursework updates, subject communities, direct messaging, and official advisories.
+        </p>
+
+        <ul class="auth-brief-list" aria-label="Core platform capabilities">
+          <li class="auth-brief-item">
+            <span class="auth-brief-icon" data-api-icon="line-md:text-box-multiple-twotone">
+              <i data-lucide="newspaper" class="icon-md"></i>
+            </span>
+            <div class="auth-brief-text">
+              <strong>Academic Feed</strong>
+              <span>Share class updates, study notes, and project milestones across campus.</span>
+            </div>
+          </li>
+          <li class="auth-brief-item">
+            <span class="auth-brief-icon" data-api-icon="line-md:chat-round-dots-twotone">
+              <i data-lucide="messages-square" class="icon-md"></i>
+            </span>
+            <div class="auth-brief-text">
+              <strong>Subject Communities &amp; Direct Chat</strong>
+              <span>Collaborate inside dedicated course, department, and organization spaces.</span>
+            </div>
+          </li>
+          <li class="auth-brief-item">
+            <span class="auth-brief-icon" data-api-icon="line-md:bell-twotone-loop">
+              <i data-lucide="megaphone" class="icon-md"></i>
+            </span>
+            <div class="auth-brief-text">
+              <strong>Official Campus Advisories</strong>
+              <span>Receive prioritized bulletins directly from faculty and school offices.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Bottom Institutional Line & Interactive Background Photo Dots -->
+      <div class="auth-hero-bottom">
+        <p class="auth-hero-footer">
+          Exclusively for students, faculty members, and authorized school personnel.
+        </p>
+        <div class="auth-slide-dots" role="tablist" aria-label="Campus background photos">
+          <button
+            type="button"
+            class="auth-slide-dot is-active js-hero-dot"
+            data-slide="0"
+            role="tab"
+            aria-selected="true"
+            aria-label="BulSU Main Gate"
+          ></button>
+          <button
+            type="button"
+            class="auth-slide-dot js-hero-dot"
+            data-slide="1"
+            role="tab"
+            aria-selected="false"
+            aria-label="BulSU E-Library"
+          ></button>
+          <button
+            type="button"
+            class="auth-slide-dot js-hero-dot"
+            data-slide="2"
+            role="tab"
+            aria-selected="false"
+            aria-label="BulSU Sarmiento Campus"
+          ></button>
+          <button
+            type="button"
+            class="auth-slide-dot js-hero-dot"
+            data-slide="3"
+            role="tab"
+            aria-selected="false"
+            aria-label="BulSU Sarmiento Entrance"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT AUTHENTICATION CANVAS (DOTTED GRID BACKGROUND) -->
+  <main class="auth-form-pane">
+    <!-- Floating Campus Theme Switcher Pill -->
+    <button
+      type="button"
+      class="auth-theme-toggle js-auth-theme-toggle"
+      id="auth-theme-toggle-btn"
+      aria-label="Switch campus theme"
+      title="Switch campus theme"
+    >
+      <span class="auth-theme-toggle-icon" id="auth-theme-toggle-icon">
+        <i data-lucide="moon" class="icon-xs"></i>
+      </span>
+      <span class="auth-theme-toggle-label" id="auth-theme-toggle-label">Midnight Sapphire</span>
+    </button>
+
+    <!-- Mobile & Tablet Photographic Brand Header -->
+    <header class="auth-mobile-header">
+      <div class="auth-mobile-banner-bg" aria-hidden="true"></div>
+      <div class="auth-mobile-banner-inner">
+        <img
+          src="public/assets/logos/ugnayra-mark.png"
+          alt="UGNAYRA"
+          class="auth-mobile-mark"
+        />
+        <div>
+          <h2 class="auth-mobile-title">UGNAYRA</h2>
+          <p class="auth-mobile-subtitle">School-Based Social Networking Platform</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="auth-card" id="auth-card" data-auth-mode="login">
+      <!-- Dynamic Form Heading -->
+      <div class="auth-form-intro" id="auth-form-intro">
+        <h2 class="auth-form-heading" id="auth-mode-heading">Sign in</h2>
+        <p class="auth-form-subheading" id="auth-mode-subheading">
+          Enter your institutional credentials to access your campus workspace.
+        </p>
+      </div>
+
+      <!-- ==================================================================
+           1. SIGN IN FORM (DEFAULT VIEW — NO TOP MODE TABS)
+           ================================================================== -->
+      <form id="login-form" class="auth-form-panel is-entering" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="login-identifier">Email or Username</label>
+          <div class="input-wrapper has-left-icon">
+            <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:email-twotone">
+              <i data-lucide="mail" class="icon-sm"></i>
+            </span>
+            <input
+              type="text"
+              id="login-identifier"
+              name="identifier"
+              class="form-input"
+              placeholder="Enter your email or username"
+              autocomplete="username"
+              required
+            />
+          </div>
+          <div class="form-error"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <div class="input-wrapper has-left-icon">
+            <span class="input-icon-left auth-api-field-icon" data-api-icon="lucide:lock-keyhole">
+              <i data-lucide="lock" class="icon-sm"></i>
+            </span>
+            <input
+              type="password"
+              id="login-password"
+              name="password"
+              class="form-input has-right-action"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            />
+            <button
+              type="button"
+              class="input-action-right js-toggle-password"
+              aria-label="Show password"
+            >
+              <span class="auth-eye-icon" data-api-icon="line-md:watch-twotone">
+                <i data-lucide="eye" class="icon-sm"></i>
+              </span>
+            </button>
+          </div>
+          <div class="form-error"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit-btn w-full" id="login-submit-btn">
+          <span>Sign In</span>
+          <span class="auth-btn-arrow" data-api-icon="line-md:arrow-right">
+            <i data-lucide="arrow-right" class="icon-sm"></i>
+          </span>
+        </button>
+
+        <div class="auth-divider" role="separator">
+          <span>or continue with</span>
+        </div>
+
+        <button type="button" class="btn-google-oauth js-google-auth-btn">
+          <span class="google-api-icon" data-api-icon="logos:google-icon">
+            <i data-lucide="globe" class="icon-sm"></i>
+          </span>
+          <span>Continue with Google</span>
+        </button>
+
+        <p class="auth-switch-prompt">
+          Don&rsquo;t have an account?
+          <button type="button" class="auth-switch-link js-switch-auth" data-mode="register">
+            Sign up here
+          </button>
+        </p>
+      </form>
+
+      <!-- ==================================================================
+           2. CREATE ACCOUNT FORM (SHOWN ONLY VIA "Sign up here")
+           ================================================================== -->
+      <form id="register-form" class="auth-form-panel hidden" novalidate>
+        <button type="button" class="btn-google-oauth js-google-auth-btn">
+          <span class="google-api-icon" data-api-icon="logos:google-icon">
+            <i data-lucide="globe" class="icon-sm"></i>
+          </span>
+          <span>Continue with Google</span>
+        </button>
+
+        <div class="auth-divider" role="separator">
+          <span>or sign up with email</span>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label">Campus Role</span>
+          <div class="role-selector">
+            <label class="role-option">
+              <input type="radio" name="role" value="student" checked />
+              <span class="role-card">
+                <span class="role-card-icon" data-api-icon="line-md:clipboard-check-twotone">
+                  <i data-lucide="book-open" class="icon-md"></i>
+                </span>
+                <span class="role-card-title">Student</span>
+              </span>
+            </label>
+            <label class="role-option">
+              <input type="radio" name="role" value="teacher" />
+              <span class="role-card">
+                <span class="role-card-icon" data-api-icon="line-md:briefcase-check-twotone">
+                  <i data-lucide="graduation-cap" class="icon-md"></i>
+                </span>
+                <span class="role-card-title">Teacher</span>
+              </span>
+            </label>
+            <label class="role-option">
+              <input type="radio" name="role" value="personnel" />
+              <span class="role-card">
+                <span class="role-card-icon" data-api-icon="line-md:account">
+                  <i data-lucide="user-check" class="icon-md"></i>
+                </span>
+                <span class="role-card-title">Personnel</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-fullname">Full Name</label>
+          <div class="input-wrapper has-left-icon">
+            <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:person-twotone">
+              <i data-lucide="user" class="icon-sm"></i>
+            </span>
+            <input
+              type="text"
+              id="reg-fullname"
+              name="full_name"
+              class="form-input"
+              placeholder="Enter your full name"
+              autocomplete="name"
+              data-restrict="name"
+              maxlength="120"
+              required
+            />
+          </div>
+          <div class="form-error"></div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="reg-username">Username</label>
+            <div class="input-wrapper has-left-icon">
+              <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:at">
+                <i data-lucide="at-sign" class="icon-sm"></i>
+              </span>
+              <input
+                type="text"
+                id="reg-username"
+                name="username"
+                class="form-input"
+                placeholder="Enter your username"
+                autocomplete="username"
+                data-restrict="username"
+                maxlength="30"
+                required
+              />
+            </div>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-school-id" id="reg-school-id-label">
+              Student ID <span class="form-label-optional">Numbers only &middot; Optional</span>
+            </label>
+            <div class="input-wrapper has-left-icon">
+              <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:clipboard-check-twotone">
+                <i data-lucide="hash" class="icon-sm"></i>
+              </span>
+              <input
+                type="text"
+                id="reg-school-id"
+                name="school_id_number"
+                class="form-input"
+                placeholder="Enter student ID"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                data-restrict="digits"
+                maxlength="12"
+              />
+            </div>
+            <div class="form-error"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Institutional Email</label>
+          <div class="input-wrapper has-left-icon">
+            <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:email-twotone">
+              <i data-lucide="mail" class="icon-sm"></i>
+            </span>
+            <input
+              type="email"
+              id="reg-email"
+              name="email"
+              class="form-input"
+              placeholder="Enter your institutional email"
+              inputmode="email"
+              autocomplete="email"
+              data-restrict="email"
+              maxlength="150"
+              required
+            />
+          </div>
+          <div class="form-error"></div>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label" id="reg-dept-label">Course / Program</span>
+          <div class="ug-combobox" id="reg-department-combo" data-searchable="true">
+            <input type="hidden" id="reg-department" name="department" value="" />
+            <button
+              type="button"
+              class="ug-combobox-trigger has-left-icon"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-labelledby="reg-dept-label"
+            >
+              <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:home-md-twotone">
+                <i data-lucide="building-2" class="icon-sm"></i>
+              </span>
+              <span class="ug-combobox-value is-placeholder" data-placeholder="Select your course or program">
+                Select your course or program
+              </span>
+              <span class="ug-combobox-badge hidden"></span>
+              <span class="ug-combobox-chevron" aria-hidden="true">
+                <i data-lucide="chevron-down" class="icon-sm"></i>
+              </span>
+            </button>
+            <div class="ug-combobox-popover hidden" role="dialog" aria-label="Course or program options">
+              <div class="ug-combobox-search-wrap">
+                <i data-lucide="search" class="icon-xs ug-combobox-search-icon"></i>
+                <input
+                  type="text"
+                  class="ug-combobox-search-input"
+                  placeholder="Search course, acronym, or college..."
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </div>
+              <div class="ug-combobox-list" role="listbox"></div>
+            </div>
+          </div>
+          <div class="form-error"></div>
+        </div>
+
+        <div class="form-row-2" id="reg-student-extra-row">
+          <div class="form-group" id="reg-year-group">
+            <span class="form-label" id="reg-year-label">Year Level</span>
+            <div class="ug-combobox" id="reg-year-combo" data-searchable="false">
+              <input type="hidden" id="reg-year" name="year_or_grade" value="" />
+              <button
+                type="button"
+                class="ug-combobox-trigger has-left-icon"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby="reg-year-label"
+              >
+                <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:calendar-twotone">
+                  <i data-lucide="calendar" class="icon-sm"></i>
+                </span>
+                <span class="ug-combobox-value is-placeholder" data-placeholder="Select year level">
+                  Select year level
+                </span>
+                <span class="ug-combobox-chevron" aria-hidden="true">
+                  <i data-lucide="chevron-down" class="icon-sm"></i>
+                </span>
+              </button>
+              <div class="ug-combobox-popover hidden" role="dialog" aria-label="Year level options">
+                <div class="ug-combobox-search-wrap hidden">
+                  <input type="text" class="ug-combobox-search-input" autocomplete="off" />
+                </div>
+                <div class="ug-combobox-list" role="listbox"></div>
+              </div>
+            </div>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-section" id="reg-section-label">Section</label>
+            <div class="input-wrapper has-left-icon">
+              <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:compass-twotone-loop">
+                <i data-lucide="users" class="icon-sm"></i>
+              </span>
+              <input
+                type="text"
+                id="reg-section"
+                name="section"
+                class="form-input"
+                placeholder="Enter section"
+                data-restrict="section"
+                maxlength="20"
+              />
+            </div>
+            <div class="form-error"></div>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="reg-password">Password</label>
+            <div class="input-wrapper has-left-icon">
+              <span class="input-icon-left auth-api-field-icon" data-api-icon="lucide:lock-keyhole">
+                <i data-lucide="lock" class="icon-sm"></i>
+              </span>
+              <input
+                type="password"
+                id="reg-password"
+                name="password"
+                class="form-input has-right-action"
+                placeholder="Enter password"
+                autocomplete="new-password"
+                maxlength="128"
+                required
+              />
+              <button
+                type="button"
+                class="input-action-right js-toggle-password"
+                aria-label="Show password"
+              >
+                <span class="auth-eye-icon" data-api-icon="line-md:watch-twotone">
+                  <i data-lucide="eye" class="icon-sm"></i>
+                </span>
+              </button>
+            </div>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-password-confirm">Confirm Password</label>
+            <div class="input-wrapper has-left-icon">
+              <span class="input-icon-left auth-api-field-icon" data-api-icon="lucide:lock-keyhole">
+                <i data-lucide="lock" class="icon-sm"></i>
+              </span>
+              <input
+                type="password"
+                id="reg-password-confirm"
+                name="password_confirmation"
+                class="form-input has-right-action"
+                placeholder="Confirm password"
+                autocomplete="new-password"
+                maxlength="128"
+                required
+              />
+              <button
+                type="button"
+                class="input-action-right js-toggle-password"
+                aria-label="Show password"
+              >
+                <span class="auth-eye-icon" data-api-icon="line-md:watch-twotone">
+                  <i data-lucide="eye" class="icon-sm"></i>
+                </span>
+              </button>
+            </div>
+            <div class="form-error"></div>
+          </div>
+        </div>
+
+        <!-- Live Visible Password Strength & Requirements Checklist -->
+        <div class="pw-validation-box" id="reg-password-rules" data-level="empty" aria-live="polite">
+          <div class="pw-strength-head">
+            <div class="pw-strength-bars" aria-hidden="true">
+              <span class="pw-bar"></span>
+              <span class="pw-bar"></span>
+              <span class="pw-bar"></span>
+              <span class="pw-bar"></span>
+            </div>
+            <span class="pw-strength-label" id="reg-pw-strength-label">Password requirements</span>
+          </div>
+          <ul class="pw-rule-grid">
+            <li class="pw-rule-item" data-pw-rule="minLen">
+              <span class="pw-rule-dot" aria-hidden="true"></span>
+              <span>8+ characters</span>
+            </li>
+            <li class="pw-rule-item" data-pw-rule="hasCases">
+              <span class="pw-rule-dot" aria-hidden="true"></span>
+              <span>Upper &amp; lowercase (A–z)</span>
+            </li>
+            <li class="pw-rule-item" data-pw-rule="hasNumber">
+              <span class="pw-rule-dot" aria-hidden="true"></span>
+              <span>At least 1 number (0–9)</span>
+            </li>
+            <li class="pw-rule-item" data-pw-rule="hasSymbol">
+              <span class="pw-rule-dot" aria-hidden="true"></span>
+              <span>Special symbol (!@#$...)</span>
+            </li>
+          </ul>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit-btn w-full" id="register-submit-btn">
+          <span>Create Account</span>
+          <span class="auth-btn-arrow" data-api-icon="line-md:arrow-right">
+            <i data-lucide="arrow-right" class="icon-sm"></i>
+          </span>
+        </button>
+
+        <p class="auth-switch-prompt">
+          Already have an account?
+          <button type="button" class="auth-switch-link js-switch-auth" data-mode="login">
+            Sign in here
+          </button>
+        </p>
+      </form>
+
+      <!-- ==================================================================
+           3. GOOGLE CAMPUS PROFILE COMPLETION STEP (MCPA-STYLE ONBOARDING)
+              Triggered automatically when signing in with Google for the
+              first time so mandatory campus info is always collected.
+           ================================================================== -->
+      <form id="google-onboarding-form" class="auth-form-panel hidden" novalidate>
+        <input type="hidden" name="onboarding_token" id="onboard-token" value="" />
+
+        <div class="google-verified-bar">
+          <div class="google-verified-info">
+            <span class="google-api-icon is-sm" data-api-icon="logos:google-icon">
+              <i data-lucide="globe" class="icon-sm"></i>
+            </span>
+            <div class="google-verified-meta">
+              <span class="google-verified-label">Verified Google Account</span>
+              <strong class="google-verified-email" id="google-verified-email"></strong>
+            </div>
+          </div>
+          <button type="button" class="google-verified-change js-cancel-google-onboarding">
+            Change
+          </button>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label">Select Your Campus Role</span>
+          <div class="role-selector">
+            <label class="role-option">
+              <input type="radio" name="role" value="student" checked />
+              <span class="role-card">
+                <span class="role-card-icon" data-api-icon="line-md:clipboard-check-twotone">
+                  <i data-lucide="book-open" class="icon-md"></i>
+                </span>
+                <span class="role-card-title">Student</span>
+              </span>
+            </label>
+            <label class="role-option">
+              <input type="radio" name="role" value="teacher" />
+              <span class="role-card">
+                <span class="role-card-icon" data-api-icon="line-md:briefcase-check-twotone">
+                  <i data-lucide="graduation-cap" class="icon-md"></i>
+                </span>
+                <span class="role-card-title">Teacher</span>
+              </span>
+            </label>
+            <label class="role-option">
+              <input type="radio" name="role" value="personnel" />
+              <span class="role-card">
+                <span class="role-card-icon" data-api-icon="line-md:account">
+                  <i data-lucide="user-check" class="icon-md"></i>
+                </span>
+                <span class="role-card-title">Personnel</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="onboard-fullname">Full Name</label>
+          <div class="input-wrapper has-left-icon">
+            <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:person-twotone">
+              <i data-lucide="user" class="icon-sm"></i>
+            </span>
+            <input
+              type="text"
+              id="onboard-fullname"
+              name="full_name"
+              class="form-input"
+              placeholder="Enter your full name"
+              autocomplete="name"
+              data-restrict="name"
+              maxlength="120"
+              required
+            />
+          </div>
+          <div class="form-error"></div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="onboard-username">Username</label>
+            <div class="input-wrapper has-left-icon">
+              <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:at">
+                <i data-lucide="at-sign" class="icon-sm"></i>
+              </span>
+              <input
+                type="text"
+                id="onboard-username"
+                name="username"
+                class="form-input"
+                placeholder="Enter your username"
+                data-restrict="username"
+                maxlength="30"
+                required
+              />
+            </div>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="onboard-school-id" id="onboard-school-id-label">
+              Student ID <span class="form-label-optional">Numbers only &middot; Optional</span>
+            </label>
+            <div class="input-wrapper has-left-icon">
+              <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:clipboard-check-twotone">
+                <i data-lucide="hash" class="icon-sm"></i>
+              </span>
+              <input
+                type="text"
+                id="onboard-school-id"
+                name="school_id_number"
+                class="form-input"
+                placeholder="Enter student ID"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                data-restrict="digits"
+                maxlength="12"
+              />
+            </div>
+            <div class="form-error"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label" id="onboard-dept-label">Course / Program</span>
+          <div class="ug-combobox" id="onboard-department-combo" data-searchable="true">
+            <input type="hidden" id="onboard-department" name="department" value="" />
+            <button
+              type="button"
+              class="ug-combobox-trigger has-left-icon"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-labelledby="onboard-dept-label"
+            >
+              <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:home-md-twotone">
+                <i data-lucide="building-2" class="icon-sm"></i>
+              </span>
+              <span class="ug-combobox-value is-placeholder" data-placeholder="Select your course or program">
+                Select your course or program
+              </span>
+              <span class="ug-combobox-badge hidden"></span>
+              <span class="ug-combobox-chevron" aria-hidden="true">
+                <i data-lucide="chevron-down" class="icon-sm"></i>
+              </span>
+            </button>
+            <div class="ug-combobox-popover hidden" role="dialog" aria-label="Course or program options">
+              <div class="ug-combobox-search-wrap">
+                <i data-lucide="search" class="icon-xs ug-combobox-search-icon"></i>
+                <input
+                  type="text"
+                  class="ug-combobox-search-input"
+                  placeholder="Search course, acronym, or college..."
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </div>
+              <div class="ug-combobox-list" role="listbox"></div>
+            </div>
+          </div>
+          <div class="form-error"></div>
+        </div>
+
+        <div class="form-row-2" id="onboard-student-extra-row">
+          <div class="form-group" id="onboard-year-group">
+            <span class="form-label" id="onboard-year-label">Year Level</span>
+            <div class="ug-combobox" id="onboard-year-combo" data-searchable="false">
+              <input type="hidden" id="onboard-year" name="year_or_grade" value="" />
+              <button
+                type="button"
+                class="ug-combobox-trigger has-left-icon"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby="onboard-year-label"
+              >
+                <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:calendar-twotone">
+                  <i data-lucide="calendar" class="icon-sm"></i>
+                </span>
+                <span class="ug-combobox-value is-placeholder" data-placeholder="Select year level">
+                  Select year level
+                </span>
+                <span class="ug-combobox-chevron" aria-hidden="true">
+                  <i data-lucide="chevron-down" class="icon-sm"></i>
+                </span>
+              </button>
+              <div class="ug-combobox-popover hidden" role="dialog" aria-label="Year level options">
+                <div class="ug-combobox-search-wrap hidden">
+                  <input type="text" class="ug-combobox-search-input" autocomplete="off" />
+                </div>
+                <div class="ug-combobox-list" role="listbox"></div>
+              </div>
+            </div>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="onboard-section" id="onboard-section-label">Section</label>
+            <div class="input-wrapper has-left-icon">
+              <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:compass-twotone-loop">
+                <i data-lucide="users" class="icon-sm"></i>
+              </span>
+              <input
+                type="text"
+                id="onboard-section"
+                name="section"
+                class="form-input"
+                placeholder="Enter section"
+                data-restrict="section"
+                maxlength="20"
+              />
+            </div>
+            <div class="form-error"></div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit-btn w-full" id="onboard-submit-btn">
+          <span>Complete &amp; Continue</span>
+          <span class="auth-btn-arrow" data-api-icon="line-md:arrow-right">
+            <i data-lucide="arrow-right" class="icon-sm"></i>
+          </span>
+        </button>
+      </form>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,14 @@
+{
+  "name": "ugnayra-social-platform",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node scripts/build-prod.js"
+  },
+  "dependencies": {
+    "@supabase/server": "^1.9.2",
+    "firebase": "^13.1.0"
+  },
+  "devDependencies": {
+    "terser": "^5.51.2"
+  }
+}

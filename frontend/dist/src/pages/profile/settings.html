@@ -1,0 +1,294 @@
+<!-- ==========================================================================
+     UGNAYRA — Account Settings & Campus Account Record View
+     (frontend/src/pages/profile/settings.html)
+     ========================================================================== -->
+<div class="feed-column-wrap" style="max-width:740px;" id="settings-view-root">
+  <header class="page-header-bar">
+    <div>
+      <h1 class="heading-xl">Account Settings</h1>
+      <p class="text-secondary">
+        Manage your campus theme, privacy, notification alerts, and view your verified university record.
+      </p>
+    </div>
+  </header>
+
+  <!-- Campus Appearance & Theme (BulSU Human-Crafted UI/UX) -->
+  <section class="panel mb-4" aria-labelledby="theme-heading">
+    <div class="panel-header">
+      <div>
+        <h2 class="heading-md" id="theme-heading">Campus Appearance &amp; Theme</h2>
+        <p class="text-xs-muted">Choose your preferred visual style for studying, browsing, and messaging.</p>
+      </div>
+      <span class="badge badge-accent" id="active-theme-pill">
+        <i data-lucide="sparkles" class="icon-xs"></i><span id="active-theme-name">BulSU Daylight</span>
+      </span>
+    </div>
+
+    <div class="panel-body">
+      <div class="theme-selection-grid" role="radiogroup" aria-label="Visual Theme Options">
+        <!-- Option 1: BulSU Daylight (Light Mode) -->
+        <button type="button" class="theme-option-card is-selected js-theme-choice" data-theme-choice="light" role="radio" aria-checked="true">
+          <div class="theme-preview-frame theme-preview-light">
+            <div class="preview-mock-header">
+              <span class="preview-mock-dot dot-navy"></span>
+              <span class="preview-mock-bar bar-navy"></span>
+            </div>
+            <div class="preview-mock-body">
+              <div class="preview-mock-sidebar"></div>
+              <div class="preview-mock-card">
+                <div class="preview-mock-line line-long"></div>
+                <div class="preview-mock-line line-short"></div>
+              </div>
+            </div>
+          </div>
+          <div class="theme-option-content">
+            <div class="theme-option-title-row">
+              <div class="theme-option-title">
+                <i data-lucide="sun" class="icon-sm text-yellow-500"></i>
+                <span>BulSU Daylight</span>
+              </div>
+              <div class="theme-check-badge"><i data-lucide="check" class="icon-xs"></i></div>
+            </div>
+            <p class="theme-option-desc">Crisp white canvas with BulSU royal navy and warm academic gold accents.</p>
+          </div>
+        </button>
+
+        <!-- Option 2: Midnight Sapphire (Dark Mode) -->
+        <button type="button" class="theme-option-card js-theme-choice" data-theme-choice="dark" role="radio" aria-checked="false">
+          <div class="theme-preview-frame theme-preview-dark">
+            <div class="preview-mock-header">
+              <span class="preview-mock-dot dot-blue"></span>
+              <span class="preview-mock-bar bar-blue"></span>
+            </div>
+            <div class="preview-mock-body">
+              <div class="preview-mock-sidebar"></div>
+              <div class="preview-mock-card">
+                <div class="preview-mock-line line-long"></div>
+                <div class="preview-mock-line line-short"></div>
+              </div>
+            </div>
+          </div>
+          <div class="theme-option-content">
+            <div class="theme-option-title-row">
+              <div class="theme-option-title">
+                <i data-lucide="moon" class="icon-sm text-blue-500"></i>
+                <span>Midnight Sapphire</span>
+              </div>
+              <div class="theme-check-badge"><i data-lucide="check" class="icon-xs"></i></div>
+            </div>
+            <p class="theme-option-desc">Deep velvet slate with luminous blue elements. Ideal for late-night classes.</p>
+          </div>
+        </button>
+
+        <!-- Option 3: System Match (Auto) -->
+        <button type="button" class="theme-option-card js-theme-choice" data-theme-choice="system" role="radio" aria-checked="false">
+          <div class="theme-preview-frame theme-preview-system">
+            <div class="theme-preview-split split-left"></div>
+            <div class="theme-preview-split split-right"></div>
+            <div class="preview-system-icon"><i data-lucide="laptop" class="icon-md"></i></div>
+          </div>
+          <div class="theme-option-content">
+            <div class="theme-option-title-row">
+              <div class="theme-option-title">
+                <i data-lucide="monitor" class="icon-sm"></i>
+                <span>System Match</span>
+              </div>
+              <div class="theme-check-badge"><i data-lucide="check" class="icon-xs"></i></div>
+            </div>
+            <p class="theme-option-desc">Automatically synchronizes with your device's light or dark mode schedule.</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Campus Privacy & Notification Preferences -->
+  <section class="panel mb-4" aria-labelledby="prefs-heading">
+    <div class="panel-header">
+      <div>
+        <h2 class="heading-md" id="prefs-heading">Campus Privacy &amp; Notification Alerts</h2>
+        <p class="text-xs-muted">Customize how you appear to classmates and instructors, and choose what updates you receive.</p>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm" id="save-json-prefs-btn">
+        <i data-lucide="check" class="icon-xs"></i><span>Save Changes</span>
+      </button>
+    </div>
+
+    <div class="panel-body" id="settings-prefs-form">
+      <div class="switch-row">
+        <div>
+          <div class="text-sm" style="font-weight:600;">Show Online Status to Classmates</div>
+          <div class="text-xs-muted">Display an active indicator in the Campus Online list and Messenger.</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" name="show_online_status" id="pref-online-status" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="switch-row">
+        <div>
+          <div class="text-sm" style="font-weight:600;">Comment Notifications</div>
+          <div class="text-xs-muted">Notify me when classmates or faculty reply to my posts.</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" name="notify_comments" id="pref-notify-comments" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="switch-row">
+        <div>
+          <div class="text-sm" style="font-weight:600;">Post Reaction Notifications</div>
+          <div class="text-xs-muted">Notify me when someone likes my academic updates.</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" name="notify_likes" id="pref-notify-likes" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="switch-row">
+        <div>
+          <div class="text-sm" style="font-weight:600;">Direct Message Alerts</div>
+          <div class="text-xs-muted">Highlight unread private messages in the navigation badge.</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" name="notify_messages" id="pref-notify-messages" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- Campus Account Record & Personal Data (Human-friendly UI Cards) -->
+  <section class="panel mb-4" aria-labelledby="record-heading">
+    <div class="panel-header">
+      <div>
+        <h2 class="heading-md" id="record-heading">Campus Account Record &amp; Personal Data</h2>
+        <p class="text-xs-muted">Review your verified BulSU enrollment details, activity status, and download a personal backup copy.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" class="btn btn-secondary btn-sm" id="copy-json-snapshot-btn">
+          <i data-lucide="copy" class="icon-xs"></i><span>Copy Summary</span>
+        </button>
+        <button type="button" class="btn btn-accent btn-sm" id="download-json-snapshot-btn">
+          <i data-lucide="download" class="icon-xs"></i><span>Download Record</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel-body">
+      <div class="filter-tabs mb-4" role="tablist">
+        <button type="button" class="filter-chip is-active js-json-scope" data-scope="full">
+          <i data-lucide="clipboard-list" class="icon-xs"></i><span>Complete Record</span>
+        </button>
+        <button type="button" class="filter-chip js-json-scope" data-scope="profile_only">
+          <i data-lucide="graduation-cap" class="icon-xs"></i><span>Academic Profile</span>
+        </button>
+        <button type="button" class="filter-chip js-json-scope" data-scope="preferences_only">
+          <i data-lucide="sliders" class="icon-xs"></i><span>Privacy &amp; Alerts</span>
+        </button>
+      </div>
+
+      <!-- Human-Centered Account Record Cards -->
+      <div id="account-record-card-view" class="account-record-grid">
+        <!-- Card 1: Official University Profile -->
+        <div class="account-record-card" id="record-card-profile">
+          <div class="record-card-header">
+            <div class="record-card-icon" style="background:transparent!important;background-color:transparent!important;box-shadow:none!important;border:none!important;padding:0!important;"><i data-lucide="graduation-cap" class="icon-sm"></i></div>
+            <div>
+              <div class="record-card-title">University Academic Details</div>
+              <div class="text-xs-muted">BulSU Verified Enrollment</div>
+            </div>
+            <span class="badge badge-success record-status-badge"><i data-lucide="shield-check" class="icon-xs"></i> Verified</span>
+          </div>
+          <div class="record-card-body">
+            <div class="record-info-row">
+              <span class="record-label">Full Name</span>
+              <span class="record-value" id="rec-full-name">—</span>
+            </div>
+            <div class="record-info-row">
+              <span class="record-label">BulSU ID Number</span>
+              <span class="record-value font-mono" id="rec-school-id">—</span>
+            </div>
+            <div class="record-info-row">
+              <span class="record-label">Campus Role</span>
+              <span class="record-value capitalize" id="rec-role">—</span>
+            </div>
+            <div class="record-info-row">
+              <span class="record-label">Program / Department</span>
+              <span class="record-value" id="rec-department">—</span>
+            </div>
+            <div class="record-info-row">
+              <span class="record-label">Year &amp; Section</span>
+              <span class="record-value" id="rec-year-section">—</span>
+            </div>
+            <div class="record-info-row">
+              <span class="record-label">Institutional Email</span>
+              <span class="record-value" id="rec-email">—</span>
+            </div>
+            <div class="record-info-row">
+              <span class="record-label">Campus Username</span>
+              <span class="record-value font-mono" id="rec-username">@—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Campus Activity & Privacy Summary -->
+        <div class="account-record-card" id="record-card-privacy">
+          <div class="record-card-header">
+            <div class="record-card-icon" style="background:transparent!important;background-color:transparent!important;box-shadow:none!important;border:none!important;padding:0!important;"><i data-lucide="shield" class="icon-sm"></i></div>
+            <div>
+              <div class="record-card-title">Privacy &amp; Account Status</div>
+              <div class="text-xs-muted">Protection &amp; campus connectivity</div>
+            </div>
+            <span class="badge badge-primary record-status-badge"><i data-lucide="lock" class="icon-xs"></i> Active</span>
+          </div>
+          <div class="record-card-body">
+            <div class="record-info-row">
+              <span class="record-label">Online Presence</span>
+              <span class="record-value text-success" id="rec-presence-status">Visible to classmates</span>
+            </div>
+            <div class="record-info-row">
+              <span class="record-label">Notification Alerts</span>
+              <span class="record-value" id="rec-notify-status">All active</span>
+            </div>
+            <div class="record-info-row">
+              <span class="record-label">Joined Communities</span>
+              <span class="record-value" id="rec-communities-count">Active</span>
+            </div>
+            <div class="record-info-row">
+              <span class="record-label">Account Security</span>
+              <span class="record-value text-success" id="rec-security-status">Encrypted &amp; Protected</span>
+            </div>
+            <div class="record-info-row">
+              <span class="record-label">Account Backup</span>
+              <span class="record-value text-success" id="rec-portability-status">Ready to Download</span>
+            </div>
+            <div class="record-info-row">
+              <span class="record-label">Record Last Synced</span>
+              <span class="record-value" id="rec-snapshot-date">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Background Data Anchor (Non-UI, preserved for client-side download) -->
+      <div id="settings-json-preview" style="display:none;" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- Session Security -->
+  <section class="panel" aria-labelledby="session-heading">
+    <div class="panel-body flex items-center justify-between gap-4 flex-wrap">
+      <div>
+        <h2 class="heading-md" id="session-heading">Session &amp; Sign Out</h2>
+        <p class="text-secondary">End your active session on this device safely.</p>
+      </div>
+      <button type="button" class="btn btn-danger-outline js-logout-btn">
+        <i data-lucide="log-out" class="icon-sm"></i><span>Sign Out</span>
+      </button>
+    </div>
+  </section>
+</div>

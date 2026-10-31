@@ -1,0 +1,70 @@
+<!-- ==========================================================================
+     UGNAYRA — Academic User Profile View
+     (frontend/src/pages/profile/profile.html)
+     ========================================================================== -->
+<div class="feed-column-wrap" style="max-width:780px;" id="profile-view-root">
+  <section class="profile-header-card">
+    <div class="profile-cover-banner" id="profile-cover-el">
+      <label
+        class="btn btn-secondary btn-sm profile-cover-edit-btn hidden"
+        id="profile-cover-edit-label"
+        for="profile-cover-input"
+        style="cursor:pointer;"
+      >
+        <i data-lucide="camera" class="icon-xs"></i><span>Edit Cover</span>
+      </label>
+      <input
+        type="file"
+        id="profile-cover-input"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        class="sr-only"
+      />
+    </div>
+
+    <div class="profile-identity-wrap">
+      <div class="profile-avatar-row">
+        <div class="profile-avatar-frame">
+          <span id="profile-avatar-slot"></span>
+          <label
+            class="profile-avatar-upload-btn hidden"
+            id="profile-avatar-edit-label"
+            for="profile-avatar-input"
+            title="Change profile photo"
+            style="cursor:pointer;"
+          >
+            <i data-lucide="camera" class="icon-xs"></i>
+          </label>
+          <input
+            type="file"
+            id="profile-avatar-input"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            class="sr-only"
+          />
+        </div>
+
+        <div class="flex items-center gap-2" id="profile-action-buttons"></div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <h1 class="heading-xl" id="profile-full-name"></h1>
+        <span id="profile-role-badge"></span>
+      </div>
+
+      <p class="text-secondary" id="profile-handle-line"></p>
+      <p class="text-body mt-3 hidden" id="profile-bio-text"></p>
+
+      <div
+        class="flex items-center gap-4 flex-wrap mt-4 text-xs-muted"
+        id="profile-academic-meta"
+        style="padding-top:12px;border-top:1px solid var(--color-border-subtle);"
+      ></div>
+    </div>
+  </section>
+
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="heading-md">Recent Activity &amp; Posts</h2>
+    <span class="text-xs-muted tabular-nums" id="profile-posts-count-label">0 total posts</span>
+  </div>
+
+  <div id="profile-posts-stream" class="post-stream"></div>
+</div>
