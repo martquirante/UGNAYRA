@@ -97,14 +97,14 @@ UGNAYRA implements a strict Role-Based Access Control (RBAC) hierarchy ensuring 
 
 | Feature &amp; Capability | Student | Faculty / Teacher | Campus Personnel |
 |:---|:---:|:---:|:---:|
-| **Access Campus Feed &amp; Engage in Discussions** | Supported | Supported | Supported |
-| **Publish Academic Timeline Posts &amp; Media** | Supported | Supported | Supported |
-| **Direct Peer &amp; Instructor Messaging** | Supported | Supported | Supported |
-| **Join Course &amp; Club Communities** | Supported | Supported | Supported |
-| **Create Subject or Interest Communities** | Supported | Supported | Supported |
-| **Publish Official Campus Bulletins** | Read Only | Supported *(Faculty Memo)* | Supported *(Official Advisory)* |
-| **Issue High-Priority Emergency Alerts** | Read Only | Read Only | Exclusive Access |
-| **Manage Departmental Rosters** | Read Only | Supported | Exclusive Access |
+| **Access Campus Feed &amp; Engage in Discussions** | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> |
+| **Publish Academic Timeline Posts &amp; Media** | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> |
+| **Direct Peer &amp; Instructor Messaging** | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> |
+| **Join Course &amp; Club Communities** | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> |
+| **Create Subject or Interest Communities** | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> |
+| **Publish Official Campus Bulletins** | <img src="https://img.shields.io/badge/Read%20Only-64748b?style=flat-square" alt="Read Only" /> | <img src="https://img.shields.io/badge/Faculty%20Memo-3b82f6?style=flat-square" alt="Faculty Memo" /> | <img src="https://img.shields.io/badge/Official%20Advisory-8b5cf6?style=flat-square" alt="Official Advisory" /> |
+| **Issue High-Priority Emergency Alerts** | <img src="https://img.shields.io/badge/Read%20Only-64748b?style=flat-square" alt="Read Only" /> | <img src="https://img.shields.io/badge/Read%20Only-64748b?style=flat-square" alt="Read Only" /> | <img src="https://img.shields.io/badge/Exclusive%20Access-ef4444?style=flat-square" alt="Exclusive Access" /> |
+| **Manage Departmental Rosters** | <img src="https://img.shields.io/badge/Read%20Only-64748b?style=flat-square" alt="Read Only" /> | <img src="https://img.shields.io/badge/Supported-22c55e?style=flat-square" alt="Supported" /> | <img src="https://img.shields.io/badge/Exclusive%20Access-ef4444?style=flat-square" alt="Exclusive Access" /> |
 
 ---
 
@@ -136,20 +136,47 @@ The UGNAYRA interface was designed from the ground up to balance modern social m
 
 UGNAYRA operates on a decoupled client-server architecture designed for reliability, fast initial loads, and independent scalability:
 
-```text
-                                 [ UGNAYRA Ecosystem ]
-                                           │
-         ┌─────────────────────────────────┼─────────────────────────────────┐
-         ▼                                 ▼                                 ▼
-┌──────────────────┐             ┌──────────────────┐             ┌──────────────────┐
-│   Static Client  │             │   Core REST API  │             │ Cloud Data Store │
-│   (Vercel SPA)   │ ◄──HTTPS──► │  (Render Docker) │ ◄──TLS/SQL► │  (Supabase PG)   │
-│                  │             │                  │             │                  │
-│  • HTML5/CSS3    │             │  • PHP 8.2+      │             │  • PostgreSQL 15 │
-│  • Vanilla ES6+  │             │  • Middleware    │             │  • Media Storage │
-│  • jQuery AJAX   │             │  • CSRF/RBAC     │             │  • Google OAuth  │
-└──────────────────┘             └──────────────────┘             └──────────────────┘
+<p align="center">
+  <img src="./ugnayra_architecture.svg" alt="UGNAYRA Decoupled Platform Architecture &amp; Ecosystem Flow" width="100%" />
+</p>
+
+<details>
+<summary><b>View Interactive Mermaid Flow Diagram</b></summary>
+<br />
+
+```mermaid
+flowchart LR
+    classDef client fill:#0c4a6e,stroke:#38bdf8,stroke-width:2px,color:#f0f9ff
+    classDef server fill:#1e3a8a,stroke:#60a5fa,stroke-width:2px,color:#eff6ff
+    classDef cloud fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#ecfdf5
+
+    subgraph Client["Static Web Client (Vercel SPA)"]
+        direction TB
+        C1["HTML5 &amp; CSS3 Tokens"]:::client
+        C2["Vanilla ES6+ Reactive Store"]:::client
+        C3["jQuery 3.7 AJAX Engine"]:::client
+    end
+
+    subgraph Server["Backend REST API (Render Docker)"]
+        direction TB
+        S1["PHP 8.2+ PSR-4 Router"]:::server
+        S2["Security Pipeline (CSRF / RBAC)"]:::server
+        S3["Domain Services (Auth, Feed, Chat)"]:::server
+        S4["PDO Parameterized Queries"]:::server
+    end
+
+    subgraph Cloud["Cloud Infrastructure (Supabase &amp; Google)"]
+        direction TB
+        D1[("Supabase PostgreSQL 15")]:::cloud
+        D2["Google Identity Services (OAuth 2.0)"]:::cloud
+        D3[("Media Storage (ugnayra-media)")]:::cloud
+    end
+
+    Client <== "HTTPS JSON (/api/v1/*)" ==> Server
+    Server <== "TLS / SQL (Pooler :5432)" ==> Cloud
 ```
+
+</details>
 
 - **Frontend Application:** Zero server-side rendering overhead. Assets are pre-minified and distributed globally via Content Delivery Networks for instantaneous edge delivery.
 - **Backend Application Programming Interface:** Modular PHP 8.2 service architecture handling request authentication, CSRF validation, rate limiting, and business logic execution.
@@ -193,13 +220,13 @@ The platform is engineered to fulfill and exceed the rigorous assessment standar
 
 | Grading Rubric Criteria | Curricular Requirement &amp; Assessment Focus | UGNAYRA Technical Implementation &amp; Evidence | Status |
 |:---|:---|:---|:---:|
-| **1. Advanced Client-Side Architecture (SPA)** | Elimination of full-page reloads, state management, asynchronous data orchestration, dynamic view rendering, and client-side routing. | Built with Vanilla ES6+ modules and jQuery 3.7 AJAX. Features a centralized reactive State Store (`store.js`), dynamic template caching (`templateLoader.js`), and clean URL routing with zero hash `#` artifacts. | Exceeded |
-| **2. Robust Server-Side REST API Engineering** | Clear separation of concerns, PSR-compliant architecture, decoupled controllers, modular services, request validation, and uniform response envelopes. | Engineered with PHP 8.2+ using custom PSR-4 routing, pipeline middleware, domain services (`AuthService`, `PostService`, `ChatService`), and standardized JSON envelopes (`success`, `data`, `message`, `errors`). | Exceeded |
-| **3. Database Normalization &amp; Relational Integrity** | Normalized relational schema (3NF), foreign-key constraints, UUID primary keys, composite indexing, and transactional data integrity. | Powered by Supabase PostgreSQL 15+. Implements RFC 4122 v4 UUIDs, strict cascade/restrict foreign keys, cursor pagination composite indexes, and parameterized queries via PDO (`pdo_pgsql`). | Exceeded |
-| **4. Enterprise Security, Auth &amp; Governance** | Multi-tier authentication, secure session handling, CSRF defense, role-based access control (RBAC), and sanitization pipelines. | Incorporates native bcrypt password hashing alongside official **Google Identity Services (OAuth 2.0)** with campus onboarding. Enforces SameSite/HttpOnly cookies, CSRF tokens, and 3-tier RBAC (`Student`, `Teacher`, `Personnel`). | Exceeded |
-| **5. Responsive Design System &amp; Ergonomics** | Mobile-first responsiveness, visual hierarchy, dark/light theme adaptability, accessibility (WCAG AA), and high-fidelity typography. | Crafted using pure CSS3 design tokens (`--color-navy`, `--color-royal`, etc.) with zero UI framework bloat. Features high-contrast dark/light theme switching, responsive bottom bar/sidebar shells, and scalable vector SVG icons. | Exceeded |
-| **6. Real-Time &amp; Asynchronous Capabilities** | Asynchronous interactivity, direct communication channels, presence signaling, and event-driven data flow. | Implements a battery-friendly delta-polling messaging engine with `document.visibilityState` throttling, real-time typing indicators, unread notification badges, and thread discussions. | Exceeded |
-| **7. Software Engineering &amp; Verification** | Clean code organization, separation of frontend/backend concerns, automated unit testing, and version control discipline. | Follows decoupled monorepo best practices. Validated by an automated 12-suite backend test runner (`php backend/tests/run.php` &mdash; 100% passing) with automated production bundling and minification. | Exceeded |
+| **1. Advanced Client-Side Architecture (SPA)** | Elimination of full-page reloads, state management, asynchronous data orchestration, dynamic view rendering, and client-side routing. | Built with Vanilla ES6+ modules and jQuery 3.7 AJAX. Features a centralized reactive State Store (`store.js`), dynamic template caching (`templateLoader.js`), and clean URL routing with zero hash `#` artifacts. | <img src="https://img.shields.io/badge/Compliant-Exceeded-22c55e?style=flat-square" alt="Exceeded" /> |
+| **2. Robust Server-Side REST API Engineering** | Clear separation of concerns, PSR-compliant architecture, decoupled controllers, modular services, request validation, and uniform response envelopes. | Engineered with PHP 8.2+ using custom PSR-4 routing, pipeline middleware, domain services (`AuthService`, `PostService`, `ChatService`), and standardized JSON envelopes (`success`, `data`, `message`, `errors`). | <img src="https://img.shields.io/badge/Compliant-Exceeded-22c55e?style=flat-square" alt="Exceeded" /> |
+| **3. Database Normalization &amp; Relational Integrity** | Normalized relational schema (3NF), foreign-key constraints, UUID primary keys, composite indexing, and transactional data integrity. | Powered by Supabase PostgreSQL 15+. Implements RFC 4122 v4 UUIDs, strict cascade/restrict foreign keys, cursor pagination composite indexes, and parameterized queries via PDO (`pdo_pgsql`). | <img src="https://img.shields.io/badge/Compliant-Exceeded-22c55e?style=flat-square" alt="Exceeded" /> |
+| **4. Enterprise Security, Auth &amp; Governance** | Multi-tier authentication, secure session handling, CSRF defense, role-based access control (RBAC), and sanitization pipelines. | Incorporates native bcrypt password hashing alongside official **Google Identity Services (OAuth 2.0)** with campus onboarding. Enforces SameSite/HttpOnly cookies, CSRF tokens, and 3-tier RBAC (`Student`, `Teacher`, `Personnel`). | <img src="https://img.shields.io/badge/Compliant-Exceeded-22c55e?style=flat-square" alt="Exceeded" /> |
+| **5. Responsive Design System &amp; Ergonomics** | Mobile-first responsiveness, visual hierarchy, dark/light theme adaptability, accessibility (WCAG AA), and high-fidelity typography. | Crafted using pure CSS3 design tokens (`--color-navy`, `--color-royal`, etc.) with zero UI framework bloat. Features high-contrast dark/light theme switching, responsive bottom bar/sidebar shells, and scalable vector SVG icons. | <img src="https://img.shields.io/badge/Compliant-Exceeded-22c55e?style=flat-square" alt="Exceeded" /> |
+| **6. Real-Time &amp; Asynchronous Capabilities** | Asynchronous interactivity, direct communication channels, presence signaling, and event-driven data flow. | Implements a battery-friendly delta-polling messaging engine with `document.visibilityState` throttling, real-time typing indicators, unread notification badges, and thread discussions. | <img src="https://img.shields.io/badge/Compliant-Exceeded-22c55e?style=flat-square" alt="Exceeded" /> |
+| **7. Software Engineering &amp; Verification** | Clean code organization, separation of frontend/backend concerns, automated unit testing, and version control discipline. | Follows decoupled monorepo best practices. Validated by an automated 12-suite backend test runner (`php backend/tests/run.php` &mdash; 100% passing) with automated production bundling and minification. | <img src="https://img.shields.io/badge/Compliant-Exceeded-22c55e?style=flat-square" alt="Exceeded" /> |
 
 ---
 
