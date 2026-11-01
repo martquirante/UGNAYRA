@@ -196,6 +196,7 @@
     var nowIso = new Date().toISOString();
 
     var docPayload = {
+      client_id: messageData.client_id || messageData.id || null,
       sender_id: messageData.sender_id,
       sender: messageData.sender || null,
       body: messageData.body || '',

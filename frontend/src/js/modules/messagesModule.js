@@ -258,28 +258,51 @@
             if (chatState.activeId !== conversationId) return;
             var currentPeer = (conv && conv.peer) || {};
             if (fbMsgs && fbMsgs.length) {
-              var existingMap = {};
-              chatState.messages.forEach(function (m, idx) {
-                existingMap[m.id] = idx;
-              });
-
               var $s = $('#thread-messages-scroll');
               var addedAny = false;
 
               fbMsgs.forEach(function (fbMsg) {
-                if (existingMap.hasOwnProperty(fbMsg.id)) {
-                  var localIdx = existingMap[fbMsg.id];
-                  var localMsg = chatState.messages[localIdx];
+                // 1. Direct ID match
+                var existingIdx = chatState.messages.findIndex(function (m) {
+                  return m.id === fbMsg.id;
+                });
+
+                if (existingIdx !== -1) {
+                  var localMsg = chatState.messages[existingIdx];
                   if (fbMsg.is_read && !localMsg.is_read) {
                     localMsg.is_read = true;
                     localMsg.status = 'seen';
                     updateMessageStatus(fbMsg.id, 'seen', currentPeer);
                   }
-                } else {
-                  chatState.messages.push(fbMsg);
-                  $s.append(renderMessageBubble(fbMsg, currentPeer));
-                  addedAny = true;
+                  return;
                 }
+
+                // 2. Reconcile with local optimistic message (by client_id or sender + body match)
+                var optIdx = chatState.messages.findIndex(function (m) {
+                  var isTemp = String(m.id).indexOf('temp_') === 0;
+                  if (!isTemp) return false;
+                  if (fbMsg.client_id && m.id === fbMsg.client_id) return true;
+                  return String(m.sender_id) === String(fbMsg.sender_id) && m.body === fbMsg.body;
+                });
+
+                if (optIdx !== -1) {
+                  var optMsg = chatState.messages[optIdx];
+                  var oldId = optMsg.id;
+                  optMsg.id = fbMsg.id;
+                  optMsg.status = fbMsg.is_read ? 'seen' : (fbMsg.status || 'sent');
+
+                  var $el = $('[data-msg-id="' + oldId + '"]');
+                  if ($el.length) {
+                    $el.attr('data-msg-id', fbMsg.id);
+                    updateMessageStatus(fbMsg.id, optMsg.status, currentPeer);
+                  }
+                  return;
+                }
+
+                // 3. Truly new message received from peer
+                chatState.messages.push(fbMsg);
+                $s.append(renderMessageBubble(fbMsg, currentPeer));
+                addedAny = true;
               });
 
               if (addedAny) {
@@ -339,7 +362,31 @@
             var $scroll = $('#thread-messages-scroll');
             var existingIds = {};
             chatState.messages.forEach(function (m) { existingIds[m.id] = true; });
-            var fresh = incoming.filter(function (m) { return !existingIds[m.id]; });
+
+            var fresh = [];
+            incoming.forEach(function (m) {
+              if (existingIds[m.id]) return;
+
+              // Match pending optimistic message
+              var optMatch = chatState.messages.find(function (opt) {
+                return String(opt.id).indexOf('temp_') === 0 &&
+                       String(opt.sender_id) === String(m.sender_id) &&
+                       opt.body === m.body;
+              });
+
+              if (optMatch) {
+                var oldId = optMatch.id;
+                optMatch.id = m.id;
+                var $row = $('[data-msg-id="' + oldId + '"]');
+                if ($row.length) {
+                  $row.attr('data-msg-id', m.id);
+                }
+                existingIds[m.id] = true;
+                delete existingIds[oldId];
+              } else {
+                fresh.push(m);
+              }
+            });
 
             if (fresh.length) {
               var conv = chatState.conversations.find(function (c) { return c.id === conversationId; });
@@ -498,12 +545,19 @@
     }
   });
 
+  var isSendingMessage = false;
+
   $(document).on('submit', '#thread-send-form', function (e) {
     e.preventDefault();
     if (!chatState.activeId) return;
+    if (isSendingMessage) return;
+
     var $input = $('#thread-message-input');
     var body = ($input.val() || '').trim();
     if (!body) return;
+
+    isSendingMessage = true;
+    setTimeout(function () { isSendingMessage = false; }, 350);
 
     var targetConvId = chatState.activeId;
     var $btn = $('#thread-send-btn');
@@ -534,18 +588,19 @@
     // 2. Send through Firebase Firestore NoSQL realtime layer
     if (window.UgnayraFirebaseChat && window.UgnayraFirebaseChat.isAvailable()) {
       window.UgnayraFirebaseChat.sendMessage(targetConvId, {
+        client_id: tempId,
         sender_id: me.id,
         sender: me,
         body: body
       }).then(function () {
         // Transition to 'sent'
         optimisticMsg.status = 'sent';
-        updateMessageStatus(tempId, 'sent', peer);
+        updateMessageStatus(optimisticMsg.id, 'sent', peer);
 
         // Shortly after confirm delivered to peer thread
         setTimeout(function () {
           optimisticMsg.status = 'delivered';
-          updateMessageStatus(tempId, 'delivered', peer);
+          updateMessageStatus(optimisticMsg.id, 'delivered', peer);
         }, 350);
       }).catch(function () {});
     }
@@ -556,12 +611,18 @@
         var realMsg = res.data && res.data.message;
         if (realMsg && chatState.activeId === targetConvId) {
           var $row = $('[data-msg-id="' + tempId + '"]');
+          if (!$row.length) {
+            $row = $('[data-msg-id="' + optimisticMsg.id + '"]');
+          }
           if ($row.length) {
-            $row.attr('data-msg-id', realMsg.id);
-            optimisticMsg.id = realMsg.id;
+            $row.attr('data-backend-id', realMsg.id);
+            if (String(optimisticMsg.id).indexOf('temp_') === 0) {
+              $row.attr('data-msg-id', realMsg.id);
+              optimisticMsg.id = realMsg.id;
+            }
           }
           optimisticMsg.status = (peer && peer.is_online) ? 'delivered' : 'sent';
-          updateMessageStatus(realMsg.id, optimisticMsg.status, peer);
+          updateMessageStatus(optimisticMsg.id, optimisticMsg.status, peer);
 
           chatState.lastMessageTimestamp = realMsg.created_at;
 
