@@ -8,20 +8,20 @@
 
   var templateCache = {};
 
-  var TEMPLATE_REV = 'v=38';
+  var TEMPLATE_REV = 'v=39';
 
   var VIEWS = Object.freeze({
-    AUTH: 'src/pages/auth/auth.html?' + TEMPLATE_REV,
-    SHELL: 'src/pages/dashboard/shell.html?' + TEMPLATE_REV,
-    EXPLORE: 'src/pages/dashboard/explore.html?' + TEMPLATE_REV,
-    ANNOUNCEMENTS: 'src/pages/dashboard/announcements.html?' + TEMPLATE_REV,
-    NOTIFICATIONS: 'src/pages/dashboard/notifications.html?' + TEMPLATE_REV,
-    FEED: 'src/pages/feed/feed.html?' + TEMPLATE_REV,
-    MESSAGES: 'src/pages/messages/messages.html?' + TEMPLATE_REV,
-    COMMUNITIES: 'src/pages/communities/communities.html?' + TEMPLATE_REV,
-    COMMUNITY_DETAIL: 'src/pages/communities/detail.html?' + TEMPLATE_REV,
-    PROFILE: 'src/pages/profile/profile.html?' + TEMPLATE_REV,
-    SETTINGS: 'src/pages/profile/settings.html?' + TEMPLATE_REV
+    AUTH: '/src/pages/auth/auth.html?' + TEMPLATE_REV,
+    SHELL: '/src/pages/dashboard/shell.html?' + TEMPLATE_REV,
+    EXPLORE: '/src/pages/dashboard/explore.html?' + TEMPLATE_REV,
+    ANNOUNCEMENTS: '/src/pages/dashboard/announcements.html?' + TEMPLATE_REV,
+    NOTIFICATIONS: '/src/pages/dashboard/notifications.html?' + TEMPLATE_REV,
+    FEED: '/src/pages/feed/feed.html?' + TEMPLATE_REV,
+    MESSAGES: '/src/pages/messages/messages.html?' + TEMPLATE_REV,
+    COMMUNITIES: '/src/pages/communities/communities.html?' + TEMPLATE_REV,
+    COMMUNITY_DETAIL: '/src/pages/communities/detail.html?' + TEMPLATE_REV,
+    PROFILE: '/src/pages/profile/profile.html?' + TEMPLATE_REV,
+    SETTINGS: '/src/pages/profile/settings.html?' + TEMPLATE_REV
   });
 
   function load(viewPath) {

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <base href="/" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="UGNAYRA — School-Based Social Networking Platform for students, teachers, and authorized school personnel." />
@@ -10,8 +11,8 @@
 
   <title>UGNAYRA — School-Based Social Networking Platform</title>
 
-  <link rel="icon" href="public/favicon.ico" sizes="any" />
-  <link rel="apple-touch-icon" href="public/assets/icons/apple-touch-icon.png" />
+  <link rel="icon" href="/public/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/public/assets/icons/apple-touch-icon.png" />
 
   <!-- Plus Jakarta Sans (Editorial Display) + Inter (UI Precision) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -38,13 +39,13 @@
   </script>
 
   <!-- UGNAYRA Design System Stylesheet -->
-  <link rel="stylesheet" href="src/css/main.css?v=38" />
+  <link rel="stylesheet" href="/src/css/main.css?v=39" />
 </head>
 <body>
   <div id="app" class="app-root">
     <!-- Initial Accessible Boot State before AJAX Session Verification -->
     <div style="min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;">
-      <img src="public/assets/logos/ugnayra-mark.png" alt="UGNAYRA" style="width:60px;height:60px;background:transparent;" />
+      <img src="/public/assets/logos/ugnayra-mark.png" alt="UGNAYRA" style="width:60px;height:60px;background:transparent;" />
       <div style="display:flex;align-items:center;gap:10px;color:var(--color-navy-900, #173B70);font-weight:600;font-size:1rem;">
         <span class="spinner" aria-hidden="true"></span>
         <span>Loading UGNAYRA...</span>
@@ -53,43 +54,43 @@
   </div>
 
   <!-- Local Bundled Dependencies (Offline-Safe) -->
-  <script src="public/assets/vendor/jquery.min.js"></script>
-  <script src="public/assets/vendor/lucide.min.js"></script>
+  <script src="/public/assets/vendor/jquery.min.js"></script>
+  <script src="/public/assets/vendor/lucide.min.js"></script>
   <!-- Google Identity Services (GSI) Client API -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <!-- Firebase NoSQL Realtime Messaging Client (Offline-Safe Vendor Bundles) -->
-  <script src="public/assets/vendor/firebase-app-compat.js"></script>
-  <script src="public/assets/vendor/firebase-firestore-compat.js"></script>
+  <script src="/public/assets/vendor/firebase-app-compat.js"></script>
+  <script src="/public/assets/vendor/firebase-firestore-compat.js"></script>
 
   <!-- Core Infrastructure & Utilities -->
-  <script src="src/js/core/config.js?v=38"></script>
-  <script src="src/js/core/theme.js?v=38"></script>
-  <script src="src/js/core/networkMonitor.js?v=38"></script>
-  <script src="src/js/utils/escape.js"></script>
-  <script src="src/js/utils/validator.js?v=38"></script>
-  <script src="src/js/core/store.js"></script>
-  <script src="src/js/core/apiClient.js?v=38"></script>
-  <script src="src/js/core/templateLoader.js?v=38"></script>
-  <script src="src/js/services/apiServices.js?v=38"></script>
-  <script src="src/js/services/firebaseChatService.js?v=38"></script>
+  <script src="/src/js/core/config.js?v=39"></script>
+  <script src="/src/js/core/theme.js?v=39"></script>
+  <script src="/src/js/core/networkMonitor.js?v=39"></script>
+  <script src="/src/js/utils/escape.js"></script>
+  <script src="/src/js/utils/validator.js?v=39"></script>
+  <script src="/src/js/core/store.js"></script>
+  <script src="/src/js/core/apiClient.js?v=39"></script>
+  <script src="/src/js/core/templateLoader.js?v=39"></script>
+  <script src="/src/js/services/apiServices.js?v=39"></script>
+  <script src="/src/js/services/firebaseChatService.js?v=39"></script>
 
   <!-- Reusable UI & Post Components -->
-  <script src="src/js/components/ui.js?v=38"></script>
-  <script src="src/js/components/postCard.js"></script>
+  <script src="/src/js/components/ui.js?v=39"></script>
+  <script src="/src/js/components/postCard.js"></script>
 
   <!-- Domain Feature Modules -->
-  <script src="src/js/modules/authModule.js?v=38"></script>
-  <script src="src/js/modules/feedModule.js?v=38"></script>
-  <script src="src/js/modules/messagesModule.js?v=38"></script>
-  <script src="src/js/modules/communitiesModule.js?v=38"></script>
-  <script src="src/js/modules/announcementsModule.js?v=38"></script>
-  <script src="src/js/modules/notificationsModule.js"></script>
-  <script src="src/js/modules/profileModule.js?v=38"></script>
-  <script src="src/js/modules/searchModule.js"></script>
-  <script src="src/js/modules/rtcModule.js?v=38"></script>
+  <script src="/src/js/modules/authModule.js?v=39"></script>
+  <script src="/src/js/modules/feedModule.js?v=39"></script>
+  <script src="/src/js/modules/messagesModule.js?v=39"></script>
+  <script src="/src/js/modules/communitiesModule.js?v=39"></script>
+  <script src="/src/js/modules/announcementsModule.js?v=39"></script>
+  <script src="/src/js/modules/notificationsModule.js"></script>
+  <script src="/src/js/modules/profileModule.js?v=39"></script>
+  <script src="/src/js/modules/searchModule.js"></script>
+  <script src="/src/js/modules/rtcModule.js?v=39"></script>
 
   <!-- Visibility-Aware Polling & SPA Bootstrapper -->
-  <script src="src/js/core/app-polling.js"></script>
-  <script src="src/js/core/app.js?v=38"></script>
+  <script src="/src/js/core/app-polling.js"></script>
+  <script src="/src/js/core/app.js?v=39"></script>
 </body>
 </html>
