@@ -17,7 +17,10 @@ class ClassroomController
     {
         $user = $request->getUser();
         $classrooms = Classroom::listForUser($user['id'], $user['role'] ?? 'student');
-        JsonResponse::success($classrooms, 'Classrooms retrieved.');
+        JsonResponse::success([
+            'classrooms' => $classrooms,
+            'items' => $classrooms,
+        ], 'Classrooms retrieved.');
     }
 
     /**
@@ -43,7 +46,10 @@ class ClassroomController
 
         $classroom = Classroom::create($data, $user['id']);
         if ($classroom) {
-            JsonResponse::success($classroom, 'Classroom created successfully!', 201);
+            JsonResponse::success([
+                'classroom' => $classroom,
+                'id' => $classroom['id'] ?? null,
+            ], 'Classroom created successfully!', 201);
             return;
         }
 
@@ -64,7 +70,7 @@ class ClassroomController
             return;
         }
 
-        JsonResponse::success($classroom, 'Classroom details retrieved.');
+        JsonResponse::success(array_merge($classroom, ['classroom' => $classroom]), 'Classroom details retrieved.');
     }
 
     /**

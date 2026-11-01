@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Helpers\JsonResponse;
 use App\Helpers\Request;
+use App\Helpers\Security;
 use App\Models\Announcement;
 use App\Validators\AnnouncementValidator;
 
@@ -44,6 +45,12 @@ class AnnouncementController
         }
 
         $body['author_id'] = $user['id'];
+        if (isset($body['title'])) {
+            $body['title'] = Security::sanitizeString((string)$body['title']);
+        }
+        if (isset($body['content'])) {
+            $body['content'] = Security::sanitizeString((string)$body['content']);
+        }
         $ann = Announcement::create($body);
 
         if ($ann === null) {

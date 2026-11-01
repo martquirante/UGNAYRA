@@ -74,11 +74,15 @@
           Store.setState({ unreadNotifications: res.data.unread_count });
         }
         if (!items.length) {
-          $box.html(UI.renderEmptyState(
-            'bell',
-            notifFilter === 'unread' ? 'You are all caught up' : 'No notifications yet',
-            'Interactions on your posts, messages, and campus announcements appear here.'
-          ));
+          $box.html(UI.renderEmptyState({
+            icon: 'notifications',
+            title: notifFilter === 'unread' ? 'You are All Caught Up!' : 'No Campus Notifications Yet',
+            description: notifFilter === 'unread'
+              ? 'There are zero unread activity alerts in your feed. New assignments, grades, and mentions will notify you here.'
+              : 'Interactions on your posts, direct messages, and campus advisories will appear in this notification center.',
+            tip: 'You can customize your notification preferences anytime in Settings.',
+            apiBadge: 'Notification Inbox Clear'
+          }));
         } else {
           $box.html('<div class="panel" style="overflow:hidden;">' + items.map(renderNotificationRow).join('') + '</div>');
         }

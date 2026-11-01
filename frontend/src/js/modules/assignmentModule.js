@@ -48,7 +48,7 @@
   function loadAssignmentOverview(id) {
     Services.Assignments.get(id)
       .then(function (res) {
-        var a = (res && res.data && res.data.assignment) || {};
+        var a = (res && res.data && (res.data.assignment || res.data)) || {};
         currentAssignmentData = a;
 
         $('#crumb-assignment-title').text(a.title || 'Assignment Details');
@@ -131,7 +131,13 @@
   function renderVersionHistory(versions) {
     var $list = $('#submission-versions-list');
     if (!versions || versions.length === 0) {
-      $list.html('<p class="text-xs text-muted">No submissions recorded yet.</p>');
+      $list.html(
+        UI.renderCompactEmptyState({
+          icon: 'assignments',
+          title: 'No Submissions Yet',
+          description: 'Attach your files and turn in your deliverable before the deadline.'
+        })
+      );
       return;
     }
 
@@ -408,7 +414,13 @@
         var $list = $('#assign-comments-list');
 
         if (comments.length === 0) {
-          $list.html('<p class="text-xs text-muted">No comments posted yet.</p>');
+          $list.html(
+            UI.renderCompactEmptyState({
+              icon: 'messages',
+              title: 'No Class Discussions Yet',
+              description: 'Ask a clarification question or share a note with your instructor.'
+            })
+          );
           return;
         }
 

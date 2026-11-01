@@ -15,6 +15,27 @@ class Conversation
     {
         $pdo = Database::getConnection();
         if ($pdo === null) {
+            $sb = new SupabaseClient();
+            if ($sb->isConfigured()) {
+                $memberships = $sb->queryTable('conversation_members', [
+                    'user_id' => 'eq.' . $userId,
+                    'limit' => $limit,
+                ]) ?: [];
+                if (empty($memberships)) {
+                    return [];
+                }
+                $convList = [];
+                foreach ($memberships as $mem) {
+                    $cid = $mem['conversation_id'] ?? null;
+                    if ($cid) {
+                        $conv = self::findById($cid, $userId);
+                        if ($conv) {
+                            $convList[] = $conv;
+                        }
+                    }
+                }
+                return $convList;
+            }
             return [];
         }
 
@@ -100,6 +121,27 @@ class Conversation
 
         $pdo = Database::getConnection();
         if ($pdo === null) {
+            $sb = new SupabaseClient();
+            if ($sb->isConfigured()) {
+                $existing = $sb->queryTable('conversations', ['direct_key' => 'eq.' . $directKey, 'limit' => 1]);
+                if (!empty($existing) && isset($existing[0]['id'])) {
+                    return self::findById($existing[0]['id'], $user1);
+                }
+                $id = Security::generateUuid();
+                $now = (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM);
+                $sb->queryTable('conversations', [], 'POST', [
+                    'id' => $id,
+                    'is_group' => false,
+                    'direct_key' => $directKey,
+                    'created_at' => $now,
+                    'last_message_at' => $now,
+                ]);
+                $sb->queryTable('conversation_members', [], 'POST', [
+                    ['conversation_id' => $id, 'user_id' => $user1],
+                    ['conversation_id' => $id, 'user_id' => $user2],
+                ]);
+                return self::findById($id, $user1);
+            }
             return null;
         }
 
@@ -139,6 +181,41 @@ class Conversation
     {
         $pdo = Database::getConnection();
         if ($pdo === null) {
+            $sb = new SupabaseClient();
+            if ($sb->isConfigured()) {
+                $convs = $sb->queryTable('conversations', ['id' => 'eq.' . $id, 'limit' => 1]);
+                if (empty($convs)) {
+                    return null;
+                }
+                $c = $convs[0];
+                $members = $sb->queryTable('conversation_members', ['conversation_id' => 'eq.' . $id]) ?: [];
+                $peerId = null;
+                $peerMem = null;
+                foreach ($members as $m) {
+                    if (($m['user_id'] ?? '') !== $currentUserId) {
+                        $peerId = $m['user_id'];
+                        $peerMem = $m;
+                        break;
+                    }
+                }
+                $peer = $peerId ? User::findById($peerId) : null;
+                $isTyping = !empty($peerMem['typing_until']) && strtotime($peerMem['typing_until']) > time();
+                return [
+                    'id' => $c['id'],
+                    'is_group' => (bool)($c['is_group'] ?? false),
+                    'peer' => $peer ? [
+                        'id' => $peer['id'],
+                        'full_name' => $peer['full_name'] ?? 'Classmate',
+                        'username' => $peer['username'] ?? 'user',
+                        'role' => $peer['role'] ?? 'student',
+                        'department' => $peer['department'] ?? null,
+                        'avatar_url' => $peer['avatar_url'] ?? null,
+                        'last_seen_at' => $peer['last_seen_at'] ?? null,
+                        'is_online' => !empty($peer['last_seen_at']) && (time() - strtotime($peer['last_seen_at']) < 180),
+                        'is_typing' => $isTyping,
+                    ] : null,
+                ];
+            }
             return null;
         }
 

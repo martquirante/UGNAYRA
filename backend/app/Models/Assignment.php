@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Config\Database;
 use App\Helpers\Security;
+use App\Services\SupabaseClient;
 use PDO;
 
 class Assignment
@@ -13,7 +14,21 @@ class Assignment
     public static function listForClassroom(string $classroomId, ?string $studentId = null): array
     {
         $pdo = Database::getConnection();
-        if ($pdo === null) return [];
+        if ($pdo === null) {
+            $sb = new SupabaseClient();
+            if ($sb->isConfigured()) {
+                $rows = $sb->queryTable('assignments', [
+                    'classroom_id' => 'eq.' . $classroomId,
+                    'is_published' => 'eq.true',
+                    'order' => 'due_at.asc.nullslast',
+                ]) ?: [];
+                return array_map(function ($r) {
+                    $r['reference_files'] = is_string($r['reference_files'] ?? null) ? json_decode($r['reference_files'], true) : ($r['reference_files'] ?? []);
+                    return $r;
+                }, $rows);
+            }
+            return [];
+        }
 
         if ($studentId !== null) {
             $stmt = $pdo->prepare(
@@ -47,7 +62,27 @@ class Assignment
     public static function findById(string $id, ?string $studentId = null): ?array
     {
         $pdo = Database::getConnection();
-        if ($pdo === null) return null;
+        if ($pdo === null) {
+            $sb = new SupabaseClient();
+            if ($sb->isConfigured()) {
+                $rows = $sb->queryTable('assignments', ['id' => 'eq.' . $id, 'limit' => 1]) ?: [];
+                if (empty($rows)) return null;
+                $assignment = $rows[0];
+                $c = Classroom::findById($assignment['classroom_id'] ?? '', $studentId ?? '');
+                $assignment['subject_code'] = $c['subject_code'] ?? 'COURSE';
+                $assignment['subject_title'] = $c['subject_title'] ?? 'Course Title';
+                $assignment['section_designation'] = $c['section_designation'] ?? '';
+                $assignment['teacher_id'] = $c['teacher_id'] ?? '';
+                $u = User::findById($assignment['author_id'] ?? '');
+                $assignment['author_name'] = $u['full_name'] ?? 'Instructor';
+                $assignment['author_avatar'] = $u['avatar_url'] ?? null;
+                $assignment['reference_files'] = is_string($assignment['reference_files'] ?? null) 
+                    ? json_decode($assignment['reference_files'], true) 
+                    : ($assignment['reference_files'] ?? []);
+                return $assignment;
+            }
+            return null;
+        }
 
         $stmt = $pdo->prepare(
             'SELECT a.*, c.subject_code, c.subject_title, c.section_designation, c.teacher_id,
@@ -87,12 +122,36 @@ class Assignment
 
     public static function create(array $data, string $authorId): ?array
     {
-        $pdo = Database::getConnection();
-        if ($pdo === null) return null;
-
         $id = Security::generateUuid();
         $dueAt = !empty($data['due_at']) ? date('Y-m-d H:i:s', strtotime($data['due_at'])) : null;
         $refFiles = isset($data['reference_files']) && is_array($data['reference_files']) ? json_encode($data['reference_files']) : '[]';
+
+        $pdo = Database::getConnection();
+        if ($pdo === null) {
+            $sb = new SupabaseClient();
+            if ($sb->isConfigured()) {
+                $now = (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM);
+                $payload = [
+                    'id' => $id,
+                    'classroom_id' => $data['classroom_id'],
+                    'author_id' => $authorId,
+                    'title' => trim($data['title']),
+                    'instructions' => trim($data['instructions'] ?? ''),
+                    'activity_type' => $data['activity_type'] ?? 'assignment',
+                    'max_score' => (float)($data['max_score'] ?? 100),
+                    'due_at' => $dueAt,
+                    'max_attachments' => (int)($data['max_attachments'] ?? 5),
+                    'max_file_size_mb' => (int)($data['max_file_size_mb'] ?? 25),
+                    'allow_resubmit' => !isset($data['allow_resubmit']) || !empty($data['allow_resubmit']),
+                    'reference_files' => json_decode($refFiles, true),
+                    'is_published' => !isset($data['is_published']) || !empty($data['is_published']),
+                    'created_at' => $now,
+                ];
+                $res = $sb->queryTable('assignments', [], 'POST', $payload);
+                return (!empty($res) && isset($res[0])) ? $res[0] : $payload;
+            }
+            return null;
+        }
 
         $stmt = $pdo->prepare(
             'INSERT INTO assignments (id, classroom_id, author_id, title, instructions, activity_type, max_score, due_at, max_attachments, max_file_size_mb, allow_resubmit, reference_files, is_published)

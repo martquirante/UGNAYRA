@@ -343,47 +343,231 @@
     if (raw.indexOf(':') !== -1) return raw;
 
     var iconMap = {
-      'alert-circle': 'lucide:circle-alert',
-      'circle-alert': 'lucide:circle-alert',
-      'newspaper': 'lucide:newspaper',
-      'sparkles': 'lucide:sparkles',
-      'users': 'lucide:users',
-      'user-x': 'lucide:user-x',
-      'message-square': 'lucide:message-square',
-      'messages-square': 'lucide:messages-square',
-      'megaphone': 'lucide:megaphone',
-      'bell': 'lucide:bell',
-      'bell-off': 'lucide:bell-off',
-      'file-text': 'lucide:file-text',
-      'search-x': 'lucide:search-x',
-      'search': 'lucide:search',
-      'inbox': 'lucide:inbox',
-      'wifi-off': 'lucide:wifi-off'
+      'classroom': 'line-md:document-list',
+      'graduation-cap': 'line-md:document-list',
+      'book-open': 'line-md:document-list',
+      'assignments': 'line-md:clipboard-list',
+      'clipboard-list': 'line-md:clipboard-list',
+      'check-circle': 'line-md:clipboard-check',
+      'check-circle-2': 'line-md:clipboard-check',
+      'calendar': 'line-md:calendar',
+      'video': 'line-md:calendar',
+      'meeting': 'line-md:calendar',
+      'announcements': 'line-md:bell',
+      'megaphone': 'line-md:bell',
+      'bell': 'line-md:bell',
+      'bell-off': 'line-md:bell',
+      'messages': 'line-md:chat',
+      'message-square': 'line-md:chat',
+      'messages-square': 'line-md:chat',
+      'users': 'line-md:account',
+      'user-x': 'line-md:account',
+      'search': 'line-md:search',
+      'search-x': 'line-md:search',
+      'alert-circle': 'line-md:alert-circle',
+      'circle-alert': 'line-md:alert-circle',
+      'newspaper': 'line-md:document-list',
+      'file-text': 'line-md:document-list',
+      'inbox': 'line-md:email',
+      'wifi-off': 'line-md:alert-circle'
     };
 
-    return iconMap[raw] || ('lucide:' + raw);
+    return iconMap[raw] || ('line-md:' + raw);
   }
 
-  function renderEmptyState(iconName, title, description, ctaHtml) {
-    var apiSpec = resolveEmptyStateApiIcon(iconName);
-    var fallbackName = (iconName || 'inbox').trim().replace(/^[a-z0-9_-]+:/i, '');
+  function getBespokeAnimatedSvg(type) {
+    var t = (type || '').toLowerCase();
+    if (t === 'classroom' || t === 'graduation-cap' || t === 'book-open' || t === 'academic') {
+      return (
+        '<svg class="empty-state-svg-art" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+          '<g class="svg-anim-float">' +
+            '<path d="M22 62C22 57.58 25.58 54 30 54H44V72H30C25.58 72 22 68.42 22 64V62Z" fill="rgba(23, 59, 112, 0.12)" stroke="var(--color-navy-900, #173B70)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+            '<path d="M66 62C66 57.58 62.42 54 58 54H44V72H58C62.42 72 66 68.42 66 64V62Z" fill="rgba(23, 59, 112, 0.08)" stroke="var(--color-navy-900, #173B70)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+            '<path d="M44 54V64L41 62L38 64V54" fill="var(--color-yellow-500, #F5C518)"/>' +
+            '<g class="svg-anim-cap">' +
+              '<path d="M44 20L72 32L44 44L16 32L44 20Z" fill="var(--color-navy-900, #173B70)" stroke="var(--color-yellow-600, #C89D0A)" stroke-width="2.2" stroke-linejoin="round"/>' +
+              '<path d="M28 38V50C28 54.42 35.16 58 44 58C52.84 58 60 54.42 60 50V38" stroke="var(--color-navy-900, #173B70)" stroke-width="2.2" fill="none" stroke-linecap="round"/>' +
+              '<circle cx="44" cy="32" r="2.5" fill="var(--color-yellow-400, #F5C518)"/>' +
+              '<path class="svg-anim-tassel" d="M44 32C52 35 58 42 60 48" stroke="var(--color-yellow-500, #E0B10F)" stroke-width="2" stroke-linecap="round" fill="none"/>' +
+              '<circle class="svg-anim-tassel-tip" cx="60" cy="48" r="2" fill="var(--color-yellow-500, #E0B10F)"/>' +
+            '</g>' +
+            '<path class="svg-anim-sparkle-1" d="M20 22L21.5 25.5L25 27L21.5 28.5L20 32L18.5 28.5L15 27L18.5 25.5L20 22Z" fill="var(--color-yellow-500, #E0B10F)"/>' +
+            '<path class="svg-anim-sparkle-2" d="M68 18L69 20.5L71.5 21.5L69 22.5L68 25L67 22.5L64.5 21.5L67 20.5L68 18Z" fill="var(--color-yellow-400, #F5C518)"/>' +
+          '</g>' +
+        '</svg>'
+      );
+    }
+
+    if (t === 'assignments' || t === 'clipboard-list' || t === 'classwork' || t === 'file-text' || t === 'document-list') {
+      return (
+        '<svg class="empty-state-svg-art" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+          '<g class="svg-anim-float">' +
+            '<rect x="22" y="18" width="44" height="56" rx="8" fill="rgba(23, 59, 112, 0.08)" stroke="var(--color-navy-900, #173B70)" stroke-width="2.2"/>' +
+            '<path d="M34 18V14C34 12.9 34.9 12 36 12H52C53.1 12 54 12.9 54 14V18" stroke="var(--color-yellow-600, #C89D0A)" stroke-width="2.2" fill="var(--color-surface, #fff)" stroke-linecap="round"/>' +
+            '<line x1="32" y1="32" x2="56" y2="32" stroke="var(--color-navy-900, #173B70)" stroke-width="2.2" stroke-linecap="round"/>' +
+            '<line x1="32" y1="42" x2="48" y2="42" stroke="var(--color-navy-900, #173B70)" stroke-width="2.2" stroke-linecap="round"/>' +
+            '<rect x="32" y="52" width="10" height="10" rx="3" stroke="var(--color-yellow-600, #C89D0A)" stroke-width="1.8" fill="rgba(200, 157, 10, 0.12)"/>' +
+            '<path class="svg-anim-check" d="M34.5 57L37.5 60L42.5 54" stroke="var(--color-green-600, #229456)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+            '<line x1="48" y1="57" x2="56" y2="57" stroke="var(--color-ink-400, #788497)" stroke-width="2" stroke-linecap="round"/>' +
+            '<circle class="svg-anim-sparkle-1" cx="64" cy="28" r="3" fill="var(--color-yellow-400, #F5C518)"/>' +
+          '</g>' +
+        '</svg>'
+      );
+    }
+
+    if (t === 'deadlines' || t === 'check-circle' || t === 'check-circle-2' || t === 'calendar' || t === 'meeting' || t === 'video') {
+      return (
+        '<svg class="empty-state-svg-art" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+          '<g class="svg-anim-float">' +
+            '<rect x="20" y="22" width="48" height="48" rx="10" fill="rgba(34, 148, 86, 0.08)" stroke="var(--color-green-700, #1B7A46)" stroke-width="2.2"/>' +
+            '<path d="M20 34H68" stroke="var(--color-green-700, #1B7A46)" stroke-width="2" stroke-linecap="round"/>' +
+            '<line x1="32" y1="16" x2="32" y2="24" stroke="var(--color-yellow-600, #C89D0A)" stroke-width="2.6" stroke-linecap="round"/>' +
+            '<line x1="56" y1="16" x2="56" y2="24" stroke="var(--color-yellow-600, #C89D0A)" stroke-width="2.6" stroke-linecap="round"/>' +
+            '<circle cx="44" cy="50" r="14" fill="rgba(34, 148, 86, 0.15)"/>' +
+            '<path class="svg-anim-check" d="M37 50L42 55L51 45" stroke="var(--color-green-600, #229456)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>' +
+            '<circle class="svg-anim-sparkle-1" cx="66" cy="38" r="2.5" fill="var(--color-yellow-400, #F5C518)"/>' +
+          '</g>' +
+        '</svg>'
+      );
+    }
+
+    if (t === 'announcements' || t === 'bell' || t === 'bell-off' || t === 'megaphone') {
+      return (
+        '<svg class="empty-state-svg-art" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+          '<g class="svg-anim-float">' +
+            '<path d="M44 20C35.16 20 28 27.16 28 36V48L22 54V56H66V54L60 48V36C60 27.16 52.84 20 44 20Z" fill="rgba(200, 157, 10, 0.1)" stroke="var(--color-navy-900, #173B70)" stroke-width="2.2" stroke-linejoin="round"/>' +
+            '<path d="M38 58C38 61.31 40.69 64 44 64C47.31 64 50 61.31 50 58" stroke="var(--color-yellow-600, #C89D0A)" stroke-width="2.4" stroke-linecap="round"/>' +
+            '<line x1="44" y1="14" x2="44" y2="20" stroke="var(--color-yellow-600, #C89D0A)" stroke-width="2.6" stroke-linecap="round"/>' +
+            '<circle class="svg-anim-sparkle-1" cx="22" cy="30" r="3" fill="var(--color-yellow-400, #F5C518)"/>' +
+            '<circle class="svg-anim-sparkle-2" cx="66" cy="32" r="2.5" fill="var(--color-blue-500, #4689D6)"/>' +
+          '</g>' +
+        '</svg>'
+      );
+    }
+
+    if (t === 'search' || t === 'search-x') {
+      return (
+        '<svg class="empty-state-svg-art" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+          '<g class="svg-anim-float">' +
+            '<circle cx="38" cy="38" r="18" fill="rgba(23, 59, 112, 0.08)" stroke="var(--color-navy-900, #173B70)" stroke-width="2.4"/>' +
+            '<line x1="51" y1="51" x2="68" y2="68" stroke="var(--color-navy-900, #173B70)" stroke-width="3" stroke-linecap="round"/>' +
+            '<path class="svg-anim-sparkle-1" d="M38 30L39.5 33.5L43 35L39.5 36.5L38 40L36.5 36.5L33 35L36.5 33.5L38 30Z" fill="var(--color-yellow-500, #E0B10F)"/>' +
+            '<circle class="svg-anim-sparkle-2" cx="58" cy="26" r="3" fill="var(--color-yellow-400, #F5C518)"/>' +
+          '</g>' +
+        '</svg>'
+      );
+    }
+
+    if (t === 'messages' || t === 'message-square' || t === 'messages-square' || t === 'chat') {
+      return (
+        '<svg class="empty-state-svg-art" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+          '<g class="svg-anim-float">' +
+            '<path d="M22 26C22 21.58 25.58 18 30 18H58C62.42 18 66 21.58 66 26V46C66 50.42 62.42 54 58 54H36L26 62V54H30C25.58 54 22 50.42 22 46V26Z" fill="rgba(23, 59, 112, 0.08)" stroke="var(--color-navy-900, #173B70)" stroke-width="2.2" stroke-linejoin="round"/>' +
+            '<circle class="svg-anim-sparkle-1" cx="36" cy="36" r="3" fill="var(--color-navy-900, #173B70)"/>' +
+            '<circle class="svg-anim-sparkle-2" cx="44" cy="36" r="3" fill="var(--color-yellow-600, #C89D0A)"/>' +
+            '<circle class="svg-anim-sparkle-1" cx="52" cy="36" r="3" fill="var(--color-blue-500, #4689D6)"/>' +
+          '</g>' +
+        '</svg>'
+      );
+    }
+
+    // Default fallback
+    return (
+      '<svg class="empty-state-svg-art" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+        '<g class="svg-anim-float">' +
+          '<rect x="22" y="24" width="44" height="42" rx="8" fill="rgba(23, 59, 112, 0.08)" stroke="var(--color-navy-900, #173B70)" stroke-width="2.2"/>' +
+          '<path d="M22 36L44 48L66 36" stroke="var(--color-yellow-600, #C89D0A)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '<circle class="svg-anim-sparkle-1" cx="64" cy="22" r="3" fill="var(--color-yellow-400, #F5C518)"/>' +
+        '</g>' +
+      '</svg>'
+    );
+  }
+
+  function renderEmptyState(optionsOrIcon, maybeTitle, maybeDesc, maybeCta, maybeOpts) {
+    var opts = {};
+    if (typeof optionsOrIcon === 'object' && optionsOrIcon !== null) {
+      opts = optionsOrIcon;
+    } else {
+      opts = maybeOpts || {};
+      opts.icon = optionsOrIcon;
+      opts.title = maybeTitle;
+      opts.description = maybeDesc;
+      opts.ctaHtml = maybeCta;
+    }
+
+    var iconKey = (opts.icon || 'inbox').trim();
+    var apiSpec = resolveEmptyStateApiIcon(iconKey);
+    var bespokeSvg = getBespokeAnimatedSvg(iconKey);
+    var isCompact = opts.variant === 'compact';
+    var title = opts.title || 'No records found';
+    var description = opts.description || '';
+    var ctaHtml = opts.ctaHtml || '';
+    var secondaryCta = opts.secondaryCtaHtml || '';
+    var tip = opts.tip || '';
+    var apiBadge = opts.apiBadge === true ? 'Live API Synced' : (opts.apiBadge || '');
+    var extraClass = opts.containerClass || '';
 
     setTimeout(function () {
       if (typeof refreshIcons === 'function') {
         refreshIcons();
       }
-    }, 15);
+    }, 20);
+
+    var statusPillHtml = '';
+    if (apiBadge) {
+      statusPillHtml =
+        '<div class="empty-state-status-pill">' +
+          '<span class="empty-pulse-dot" aria-hidden="true"></span>' +
+          '<span>' + fmt.escapeHtml(apiBadge) + '</span>' +
+        '</div>';
+    }
+
+    var tipHtml = '';
+    if (tip && !isCompact) {
+      tipHtml =
+        '<div class="empty-state-tip-card">' +
+          '<i data-lucide="info" class="icon-xs" aria-hidden="true"></i>' +
+          '<span>' + fmt.escapeHtml(tip) + '</span>' +
+        '</div>';
+    }
+
+    var actionsHtml = '';
+    if (ctaHtml || secondaryCta) {
+      actionsHtml =
+        '<div class="empty-state-actions">' +
+          (ctaHtml || '') +
+          (secondaryCta || '') +
+        '</div>';
+    }
+
+    var compactClass = isCompact ? ' empty-state--compact' : '';
 
     return (
-      '<div class="panel empty-state">' +
-        '<div class="empty-state-icon" data-api-icon="' + fmt.escapeHtml(apiSpec) + '" aria-hidden="true">' +
-          '<i data-lucide="' + fmt.escapeHtml(fallbackName) + '"></i>' +
+      '<div class="empty-state' + compactClass + (extraClass ? ' ' + extraClass : '') + '" role="region" aria-label="' + fmt.escapeHtml(title) + '">' +
+        '<div class="empty-state-stage" aria-hidden="true">' +
+          '<div class="empty-stage-ambient-glow"></div>' +
+          '<div class="empty-stage-orbital-ring"></div>' +
+          '<div class="empty-stage-orbital-ring empty-stage-orbital-ring--outer"></div>' +
+          '<span class="empty-stage-particle particle-1"></span>' +
+          '<span class="empty-stage-particle particle-2"></span>' +
+          '<span class="empty-stage-particle particle-3"></span>' +
+          '<div class="empty-stage-badge" data-api-icon="' + fmt.escapeHtml(apiSpec) + '">' +
+            bespokeSvg +
+          '</div>' +
         '</div>' +
+        statusPillHtml +
         '<h3 class="empty-state-title">' + fmt.escapeHtml(title) + '</h3>' +
-        '<p class="empty-state-desc">' + fmt.escapeHtml(description) + '</p>' +
-        (ctaHtml ? '<div class="mt-2">' + ctaHtml + '</div>' : '') +
+        (description ? '<p class="empty-state-desc">' + fmt.escapeHtml(description) + '</p>' : '') +
+        actionsHtml +
+        tipHtml +
       '</div>'
     );
+  }
+
+  function renderCompactEmptyState(options) {
+    var opts = options || {};
+    opts.variant = 'compact';
+    return renderEmptyState(opts);
   }
 
   // -------------------------------------------------------------------------
@@ -1119,6 +1303,7 @@
     confirm: confirmDialog,
     openLightbox: openLightbox,
     renderPostSkeletons: renderPostSkeletons,
-    renderEmptyState: renderEmptyState
+    renderEmptyState: renderEmptyState,
+    renderCompactEmptyState: renderCompactEmptyState
   };
 })(window, window.jQuery);

@@ -19,6 +19,97 @@ class SearchController
 
         $pdo = Database::getConnection();
         if ($pdo === null) {
+            $sb = new \App\Services\SupabaseClient();
+            if ($sb->isConfigured()) {
+                $cleanQ = str_replace(['%', '*', '(', ')'], '', $q);
+                $results = [
+                    'people' => [],
+                    'communities' => [],
+                    'announcements' => [],
+                    'posts' => [],
+                ];
+
+                if ($cleanQ !== '') {
+                    // Search People via Supabase
+                    if ($type === 'all' || $type === 'people') {
+                        $people = $sb->queryTable('profiles', [
+                            'or' => sprintf('(full_name.ilike.*%s*,username.ilike.*%s*,department.ilike.*%s*)', $cleanQ, $cleanQ, $cleanQ),
+                            'is_active' => 'eq.true',
+                            'limit' => $limit,
+                            'select' => 'id,full_name,username,role,department,avatar_url',
+                        ]) ?: [];
+                        $results['people'] = $people;
+                    }
+
+                    // Search Communities via Supabase
+                    if ($type === 'all' || $type === 'communities') {
+                        $comms = $sb->queryTable('communities', [
+                            'or' => sprintf('(name.ilike.*%s*,description.ilike.*%s*)', $cleanQ, $cleanQ),
+                            'limit' => $limit,
+                            'select' => 'id,slug,name,category,description,members_count,avatar_url',
+                        ]) ?: [];
+                        $results['communities'] = $comms;
+                    }
+
+                    // Search Announcements via Supabase
+                    if ($type === 'all' || $type === 'announcements') {
+                        $annRows = $sb->queryTable('announcements', [
+                            'or' => sprintf('(title.ilike.*%s*,body.ilike.*%s*)', $cleanQ, $cleanQ),
+                            'order' => 'published_at.desc',
+                            'limit' => $limit,
+                        ]) ?: [];
+                        $results['announcements'] = array_map(function ($r) {
+                            $u = \App\Models\User::findById($r['author_id'] ?? '');
+                            return [
+                                'id' => $r['id'],
+                                'title' => $r['title'],
+                                'body' => $r['body'],
+                                'category' => $r['category'] ?? 'general',
+                                'priority' => $r['priority'] ?? 'normal',
+                                'published_at' => $r['published_at'] ?? $r['created_at'] ?? null,
+                                'author' => [
+                                    'id' => $r['author_id'] ?? '',
+                                    'full_name' => $u['full_name'] ?? 'School Office',
+                                    'role' => $u['role'] ?? 'personnel',
+                                    'department' => $u['department'] ?? null,
+                                ],
+                            ];
+                        }, $annRows);
+                    }
+
+                    // Search Posts via Supabase
+                    if ($type === 'all' || $type === 'posts') {
+                        $postRows = $sb->queryTable('posts', [
+                            'content' => 'ilike.*' . $cleanQ . '*',
+                            'order' => 'created_at.desc',
+                            'limit' => $limit,
+                        ]) ?: [];
+                        $results['posts'] = array_map(function ($r) {
+                            $u = \App\Models\User::findById($r['author_id'] ?? '');
+                            return [
+                                'id' => $r['id'],
+                                'content' => $r['content'],
+                                'likes_count' => (int)($r['likes_count'] ?? 0),
+                                'comments_count' => (int)($r['comments_count'] ?? 0),
+                                'shares_count' => (int)($r['shares_count'] ?? 0),
+                                'created_at' => $r['created_at'],
+                                'author' => [
+                                    'id' => $r['author_id'] ?? '',
+                                    'full_name' => $u['full_name'] ?? 'Campus Member',
+                                    'username' => $u['username'] ?? 'user',
+                                    'role' => $u['role'] ?? 'student',
+                                    'avatar_url' => $u['avatar_url'] ?? null,
+                                ],
+                                'images' => [],
+                            ];
+                        }, $postRows);
+                    }
+                }
+
+                JsonResponse::success($results, 'Campus search results.');
+                return;
+            }
+
             JsonResponse::success([
                 'people' => [],
                 'communities' => [],

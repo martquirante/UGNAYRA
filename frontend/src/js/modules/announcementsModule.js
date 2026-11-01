@@ -82,13 +82,15 @@
       limit: 30
     })
       .then(function (res) {
-        var items = (res.data && res.data.items) || [];
+        var items = (res.data && (res.data.items || res.data.announcements)) || [];
         if (!items.length) {
-          $list.html(UI.renderEmptyState(
-            'megaphone',
-            'No announcements in this category',
-            'Official school bulletins published by faculty and personnel appear here.'
-          ));
+          $list.html(UI.renderEmptyState({
+            icon: 'announcements',
+            title: 'No Announcements in This Category',
+            description: 'Official school advisories, academic circulars, and departmental memos will appear on this bulletin board once published.',
+            tip: 'Urgent campus alerts will also highlight directly on your main dashboard.',
+            apiBadge: 'BulSU Official Gazette'
+          }));
         } else {
           $list.html(items.map(renderAnnouncementCard).join(''));
         }

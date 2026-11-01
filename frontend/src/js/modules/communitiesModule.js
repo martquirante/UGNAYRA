@@ -77,11 +77,14 @@
       .then(function (res) {
         var items = (res.data && res.data.items) || [];
         if (!items.length) {
-          $grid.removeClass('cards-grid-2').html(UI.renderEmptyState(
-            'users',
-            'No communities in this category yet',
-            'Create a community space for your class section, subject, or campus organization.'
-          ));
+          $grid.html(UI.renderEmptyState({
+            icon: 'users',
+            title: 'No Communities in This Category Yet',
+            description: 'Create a community space for your academic college, student council, program section, or university club.',
+            ctaHtml: '<button type="button" class="btn btn-primary" id="empty-create-community-btn"><i data-lucide="plus"></i><span>Create Community</span></button>',
+            tip: 'Academic communities let you collaborate with classmates and share study resources.',
+            apiBadge: 'BulSU Student Hub'
+          }));
         } else {
           $grid.addClass('cards-grid-2').html(items.map(renderCommunityCard).join(''));
         }
@@ -315,7 +318,7 @@
     });
   }
 
-  $(document).on('click', '#open-create-community-btn', openCreateCommunityModal);
+  $(document).on('click', '#open-create-community-btn, #empty-create-community-btn', openCreateCommunityModal);
 
   $(document).on('click', '.js-comm-filter', function () {
     $('.js-comm-filter').removeClass('is-active');

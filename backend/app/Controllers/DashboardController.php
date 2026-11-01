@@ -19,18 +19,27 @@ class DashboardController
     {
         $user = $request->getUser();
         $pdo = Database::getConnection();
+        $role = $user['role'] ?? 'student';
 
         if ($pdo === null) {
+            $classes = \App\Models\Classroom::listForUser($user['id'], $role);
             JsonResponse::success([
-                'role' => $user['role'] ?? 'student',
-                'classes' => [],
+                'role' => $role,
+                'classes' => $classes,
+                'classrooms' => $classes,
+                'classes_count' => count($classes),
+                'enrolled_classes' => $classes,
+                'pending_grading' => [],
+                'pending_assignments' => [],
+                'upcoming_deadlines' => [],
+                'pending_tasks_count' => 0,
+                'completed_tasks_count' => 0,
                 'upcoming_sessions' => [],
-                'pending_items' => [],
+                'today_sessions' => [],
+                'live_sessions_today' => 0,
             ], 'Overview data retrieved.');
             return;
         }
-
-        $role = $user['role'] ?? 'student';
 
         if ($role === 'teacher' || $role === 'personnel') {
             // Teacher Cockpit
@@ -79,8 +88,14 @@ class DashboardController
             JsonResponse::success([
                 'role' => 'teacher',
                 'classes' => $classes,
+                'classrooms' => $classes,
+                'classes_count' => count($classes),
                 'pending_grading' => $pendingToGrade,
+                'pending_tasks_count' => count($pendingToGrade),
+                'completed_tasks_count' => 0,
                 'upcoming_sessions' => $sessions,
+                'today_sessions' => $sessions,
+                'live_sessions_today' => count($sessions),
             ], 'Teacher cockpit retrieved.');
             return;
         }
@@ -135,8 +150,16 @@ class DashboardController
         JsonResponse::success([
             'role' => 'student',
             'enrolled_classes' => $enrolledClasses,
+            'classes' => $enrolledClasses,
+            'classrooms' => $enrolledClasses,
+            'classes_count' => count($enrolledClasses),
             'pending_assignments' => $pendingAssignments,
+            'upcoming_deadlines' => $pendingAssignments,
+            'pending_tasks_count' => count($pendingAssignments),
+            'completed_tasks_count' => 0,
             'upcoming_sessions' => $upcomingSessions,
+            'today_sessions' => $upcomingSessions,
+            'live_sessions_today' => count($upcomingSessions),
         ], 'Student cockpit retrieved.');
     }
 }

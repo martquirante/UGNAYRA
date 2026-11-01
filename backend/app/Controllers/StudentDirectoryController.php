@@ -24,6 +24,23 @@ class StudentDirectoryController
 
         $pdo = Database::getConnection();
         if ($pdo === null) {
+            $sb = new \App\Services\SupabaseClient();
+            if ($sb->isConfigured()) {
+                $params = [
+                    'role' => 'eq.student',
+                    'is_active' => 'eq.true',
+                    'order' => 'full_name.asc',
+                    'limit' => 100,
+                    'select' => 'id,full_name,username,school_id_number,avatar_url,department,year_or_grade,section,program_code,year_level_code,section_letter,academic_status',
+                ];
+                if (!empty($search)) {
+                    $cleanSearch = str_replace(['%', '*', '(', ')'], '', $search);
+                    $params['or'] = sprintf('(full_name.ilike.*%s*,username.ilike.*%s*,school_id_number.ilike.*%s*)', $cleanSearch, $cleanSearch, $cleanSearch);
+                }
+                $students = $sb->queryTable('profiles', $params) ?: [];
+                JsonResponse::success($students, 'Directory query executed.');
+                return;
+            }
             JsonResponse::success([], 'Directory query executed.');
             return;
         }

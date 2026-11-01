@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Helpers\JsonResponse;
 use App\Helpers\Request;
+use App\Helpers\Security;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Services\NotificationService;
@@ -83,6 +84,9 @@ class PostController
 
         $body['author_id'] = $user['id'];
         $body['images'] = $uploadedImages;
+        if (isset($body['content'])) {
+            $body['content'] = Security::sanitizeString((string)$body['content']);
+        }
 
         // Content or images must be present
         if (empty(trim((string)($body['content'] ?? ''))) && empty($uploadedImages) && empty($body['shared_post_id'])) {

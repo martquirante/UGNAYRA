@@ -167,7 +167,7 @@ class StorageService
 
         // Try Supabase Storage if configured
         $driver = Config::storage()['driver'];
-        if ($driver === 'supabase' && $this->supabase->isConfigured()) {
+        if (($driver === 'supabase' || $this->supabase->isConfigured())) {
             $remoteUrl = $this->supabase->uploadStorageObject($relativePath, $realMime, $content);
             if ($remoteUrl !== null) {
                 return $remoteUrl;

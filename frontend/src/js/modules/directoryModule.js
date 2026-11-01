@@ -62,10 +62,13 @@
     var $grid = $('#dir-students-grid');
     if (!students || students.length === 0) {
       $grid.html(
-        '<div class="card p-4 text-center text-muted col-span-2">' +
-          '<i data-lucide="users" class="icon-lg mb-2 text-secondary" style="margin: 0 auto;"></i>' +
-          '<p class="text-sm">No students found matching your criteria.</p>' +
-        '</div>'
+        UI.renderEmptyState({
+          icon: 'users',
+          title: 'No Students Match Current Filters',
+          description: 'Try adjusting your search query, selecting another year level or section, or searching by name or student ID number.',
+          ctaHtml: '<button type="button" class="btn btn-secondary js-reset-directory-filters"><i data-lucide="refresh-cw"></i><span>Reset Filters</span></button>',
+          apiBadge: 'BulSU Student Roster'
+        })
       );
       UI.refreshIcons($grid[0]);
       return;
@@ -126,7 +129,7 @@
     });
 
     // Reset Filters
-    $(document).off('click', '#btn-reset-dir-filters').on('click', '#btn-reset-dir-filters', function () {
+    $(document).off('click', '#btn-reset-dir-filters, .js-reset-directory-filters').on('click', '#btn-reset-dir-filters, .js-reset-directory-filters', function () {
       $('#dir-search-input').val('');
       $('#dir-college-select').val('');
       $('#dir-program-select').val('');

@@ -120,7 +120,16 @@ class Request
 
     public function ip(): string
     {
-        return (string)($_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1');
+        $forwarded = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null;
+        if (!empty($forwarded)) {
+            $parts = explode(',', (string)$forwarded);
+            $clientIp = trim($parts[0]);
+            if (filter_var($clientIp, FILTER_VALIDATE_IP)) {
+                return $clientIp;
+            }
+        }
+        $remote = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+        return filter_var($remote, FILTER_VALIDATE_IP) ? (string)$remote : '127.0.0.1';
     }
 
     public function userAgent(): string

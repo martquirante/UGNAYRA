@@ -310,7 +310,11 @@ function generateProductionVercelConfig() {
         "destination": "https://ugnayra-api.onrender.com/api/v1/:path*"
       },
       {
-        "source": "/((?!api/|public/|src/|dist/|assets/|vendor/|css/|js/|pages/|favicon.ico).*)",
+        "source": "/uploads/:path*",
+        "destination": "https://ugnayra-api.onrender.com/uploads/:path*"
+      },
+      {
+        "source": "/((?!api/|public/|src/|dist/|assets/|vendor/|css/|js/|pages/|uploads/|favicon.ico).*)",
         "destination": "/index.html"
       }
     ]

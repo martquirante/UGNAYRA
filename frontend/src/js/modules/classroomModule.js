@@ -16,6 +16,8 @@
   var currentClassroomData = null;
   var activeTab = 'stream';
   var schedulePollingTimer = null;
+  var cachedClassrooms = [];
+  var currentFilter = 'all';
 
   function isTeacherOrFaculty() {
     var user = Store.getState().user || {};
@@ -38,59 +40,114 @@
     });
   }
 
+  function filterAndRenderClassrooms() {
+    var query = ($('#classroom-search-input').val() || '').trim().toLowerCase();
+    var filtered = cachedClassrooms.slice();
+
+    if (currentFilter === 'teaching') {
+      var currUserId = (Store.getState().user || {}).id;
+      filtered = filtered.filter(function (c) { return c.created_by === currUserId || c.teacher_id === currUserId; });
+    } else if (currentFilter === 'archived') {
+      filtered = filtered.filter(function (c) { return c.is_archived === true; });
+    } else if (currentFilter === 'enrolled') {
+      filtered = filtered.filter(function (c) { return !c.is_archived; });
+    }
+
+    if (query) {
+      filtered = filtered.filter(function (c) {
+        var code = (c.subject_code || '').toLowerCase();
+        var name = (c.name || c.subject_title || '').toLowerCase();
+        var teacher = ((c.teacher && c.teacher.full_name) || c.instructor_name || '').toLowerCase();
+        var sec = (c.section || c.section_designation || '').toLowerCase();
+        return code.indexOf(query) !== -1 || name.indexOf(query) !== -1 || teacher.indexOf(query) !== -1 || sec.indexOf(query) !== -1;
+      });
+    }
+
+    renderClassroomCards(filtered, query);
+  }
+
   function loadClassroomsList(filter) {
+    if (filter !== undefined) {
+      currentFilter = filter;
+    }
     var $grid = $('#classroom-cards-grid');
     $grid.html('<div class="card-skeleton" style="height: 180px;"></div><div class="card-skeleton" style="height: 180px;"></div>');
 
     Services.Classrooms.list()
       .then(function (res) {
-        var classrooms = (res && res.data && res.data.classrooms) || [];
-        var filtered = classrooms;
-
-        if (filter === 'teaching') {
-          var currUserId = (Store.getState().user || {}).id;
-          filtered = classrooms.filter(function (c) { return c.created_by === currUserId; });
-        } else if (filter === 'archived') {
-          filtered = classrooms.filter(function (c) { return c.is_archived === true; });
-        } else if (filter === 'enrolled') {
-          filtered = classrooms.filter(function (c) { return !c.is_archived; });
-        }
-
-        renderClassroomCards(filtered);
+        cachedClassrooms = (res && res.data && (res.data.classrooms || res.data.items || (Array.isArray(res.data) ? res.data : []))) || [];
+        filterAndRenderClassrooms();
       })
       .catch(function (err) {
         $grid.html(
-          '<div class="card p-4 text-center text-muted w-full col-span-2">' +
-            '<i data-lucide="alert-circle" class="icon-md mb-2 text-danger"></i>' +
-            '<p>' + escapeHtml(err.message || 'Unable to load classrooms.') + '</p>' +
-            '<button type="button" class="btn btn-secondary btn-sm mt-3 js-retry-classrooms">Try Again</button>' +
-          '</div>'
+          UI.renderEmptyState({
+            icon: 'alert-circle',
+            title: 'Unable to Sync Classrooms',
+            description: escapeHtml(err.message || 'There was an issue contacting the BulSU classroom servers. Please check your network connection and retry.'),
+            ctaHtml: '<button type="button" class="btn btn-secondary js-retry-classrooms"><i data-lucide="refresh-cw"></i><span>Try Again</span></button>',
+            apiBadge: 'Connection Offline'
+          })
         );
         UI.refreshIcons($grid[0]);
       });
   }
 
-  function renderClassroomCards(list) {
+  function renderClassroomCards(list, searchQuery) {
     var $grid = $('#classroom-cards-grid');
     if (!list || list.length === 0) {
-      $grid.html(
-        '<div class="card p-5 text-center text-muted w-full col-span-2">' +
-          '<i data-lucide="graduation-cap" class="icon-xl mb-3 text-secondary" style="margin: 0 auto;"></i>' +
-          '<h3 class="heading-md mb-1">No Classrooms Found</h3>' +
-          '<p class="text-secondary text-sm mb-4">You have not joined or created any course classrooms yet.</p>' +
-          '<button type="button" class="btn btn-primary" id="card-empty-join-btn">' +
-            '<i data-lucide="key-round" class="icon-sm"></i><span>Join Class with Code</span>' +
-          '</button>' +
-        '</div>'
-      );
+      var isTeacher = isTeacherOrFaculty();
+
+      if (searchQuery) {
+        $grid.html(
+          UI.renderEmptyState({
+            icon: 'search',
+            title: 'No Classrooms Found',
+            description: 'We couldn\'t find any courses matching "' + escapeHtml(searchQuery) + '". Try searching by subject code (e.g. IT 305W), course title, or instructor name.',
+            ctaHtml: '<button type="button" class="btn btn-secondary js-clear-classroom-search"><i data-lucide="x"></i><span>Clear Search</span></button>',
+            apiBadge: 'Search Query: ' + searchQuery
+          })
+        );
+      } else if (currentFilter === 'archived') {
+        $grid.html(
+          UI.renderEmptyState({
+            icon: 'classroom',
+            title: 'No Archived Classrooms',
+            description: 'You do not have any archived course spaces from previous academic semesters on file.',
+            ctaHtml: '<button type="button" class="btn btn-secondary js-view-all-classes"><i data-lucide="arrow-left"></i><span>View Active Classes</span></button>',
+            apiBadge: 'BulSU Academic Cloud'
+          })
+        );
+      } else if (currentFilter === 'teaching') {
+        $grid.html(
+          UI.renderEmptyState({
+            icon: 'classroom',
+            title: 'No Teaching Classrooms Yet',
+            description: 'You have not created any course spaces yet. Create a course room to generate a 7-character invite code and manage syllabus streams and assignments.',
+            ctaHtml: '<button type="button" class="btn btn-primary js-trigger-create-class"><i data-lucide="plus"></i><span>Create Classroom</span></button>',
+            apiBadge: 'Faculty Academic Portal'
+          })
+        );
+      } else {
+        $grid.html(
+          UI.renderEmptyState({
+            icon: 'classroom',
+            title: 'Your Academic Course Hub is Ready',
+            description: 'You have not joined or created any course classrooms yet for this semester. Enter your instructor\'s 7-character course code to access syllabus streams, classwork submissions, and live video sessions.',
+            ctaHtml: '<button type="button" class="btn btn-primary" id="card-empty-join-btn"><i data-lucide="key-round"></i><span>Join Class with Code</span></button>',
+            secondaryCtaHtml: isTeacher ? '<button type="button" class="btn btn-secondary js-trigger-create-class"><i data-lucide="plus"></i><span>Create Class</span></button>' : '',
+            tip: 'Ask your professor or subject instructor for the 7-character join code (e.g. UG-7X9B2).',
+            apiBadge: 'BulSU API \u2022 0 Enrolled Courses'
+          })
+        );
+      }
       UI.refreshIcons($grid[0]);
       return;
     }
 
     var html = list.map(function (c) {
       var subjectCode = escapeHtml(c.subject_code || 'COURSE');
-      var name = escapeHtml(c.name || 'Untitled Subject');
-      var section = escapeHtml(c.section || 'All Sections');
+      var name = escapeHtml(c.name || c.subject_title || 'Untitled Subject');
+      var section = escapeHtml(c.section || c.section_designation || 'All Sections');
       var teacherName = escapeHtml((c.teacher && c.teacher.full_name) || c.instructor_name || 'Faculty Instructor');
       var initial = teacherName.charAt(0).toUpperCase();
       var id = escapeHtml(c.id);
@@ -130,6 +187,30 @@
       $(this).addClass('is-active');
       var filter = $(this).attr('data-filter') || 'all';
       loadClassroomsList(filter);
+    });
+
+    $(document).off('input', '#classroom-search-input').on('input', '#classroom-search-input', function () {
+      filterAndRenderClassrooms();
+    });
+
+    $(document).off('click', '.js-clear-classroom-search').on('click', '.js-clear-classroom-search', function () {
+      $('#classroom-search-input').val('');
+      filterAndRenderClassrooms();
+    });
+
+    $(document).off('click', '.js-view-all-classes').on('click', '.js-view-all-classes', function () {
+      $('.js-classroom-filter').removeClass('is-active');
+      $('.js-classroom-filter[data-filter="all"]').addClass('is-active');
+      loadClassroomsList('all');
+    });
+
+    $(document).off('click', '.js-retry-classrooms').on('click', '.js-retry-classrooms', function () {
+      loadClassroomsList(currentFilter);
+    });
+
+    $(document).off('click', '#open-create-class-modal-btn, .js-trigger-create-class').on('click', '#open-create-class-modal-btn, .js-trigger-create-class', function () {
+      $('#create-classroom-modal').removeClass('hidden');
+      $('#new-class-name').val('').focus();
     });
 
     $(document).off('click', '#open-join-class-modal-btn, #card-empty-join-btn').on('click', '#open-join-class-modal-btn, #card-empty-join-btn', function () {
@@ -196,8 +277,10 @@
 
       Services.Classrooms.create({
         name: name,
+        subject_title: name,
         subject_code: code,
         section: section,
+        section_designation: section,
         room: room,
         default_lab_batches: batches,
         description: desc
@@ -205,7 +288,7 @@
         .then(function (res) {
           UI.toast('Classroom created successfully!', 'success');
           $('#create-classroom-modal').addClass('hidden');
-          var classId = res.data && res.data.classroom && res.data.classroom.id;
+          var classId = res.data && ((res.data.classroom && res.data.classroom.id) || res.data.id);
           if (classId && window.UgnayraApp) {
             window.UgnayraApp.navigate('/classroom/' + classId);
           } else {
@@ -252,7 +335,7 @@
   function loadClassroomData(id) {
     Services.Classrooms.get(id)
       .then(function (res) {
-        var c = (res && res.data && res.data.classroom) || {};
+        var c = (res && res.data && (res.data.classroom || res.data)) || {};
         currentClassroomData = c;
 
         $('#crumb-subject-code').text(c.subject_code || c.name || 'Classroom');
@@ -374,7 +457,7 @@
   function loadUpcomingWork(id) {
     Services.Assignments.list(id)
       .then(function (res) {
-        var list = (res && res.data && res.data.assignments) || [];
+        var list = (res && res.data && (res.data.assignments || res.data.items || (Array.isArray(res.data) ? res.data : []))) || [];
         var pending = list.filter(function (a) { return !a.submitted; }).slice(0, 3);
         var $target = $('#stream-upcoming-work-list');
 
@@ -406,14 +489,18 @@
 
     Services.Assignments.list(id)
       .then(function (res) {
-        var assignments = (res && res.data && res.data.assignments) || [];
+        var assignments = (res && res.data && (res.data.assignments || res.data.items || (Array.isArray(res.data) ? res.data : []))) || [];
         if (assignments.length === 0) {
+          var isTeacher = isTeacherOrFaculty();
           $list.html(
-            '<div class="card p-5 text-center text-muted">' +
-              '<i data-lucide="clipboard-list" class="icon-xl mb-3 text-secondary" style="margin: 0 auto;"></i>' +
-              '<h3 class="heading-md mb-1">No Assignments Yet</h3>' +
-              '<p class="text-secondary text-sm">Course assignments and laboratory tasks will appear here.</p>' +
-            '</div>'
+            UI.renderEmptyState({
+              icon: 'assignments',
+              title: 'No Coursework Assigned Yet',
+              description: 'Course assignments, laboratory tasks, and syllabus deliverables will appear here once published by the faculty instructor.',
+              ctaHtml: isTeacher ? '<button type="button" class="btn btn-primary" id="open-create-assignment-btn"><i data-lucide="plus"></i><span>Create Assignment</span></button>' : '',
+              tip: 'Upcoming deadlines will alert you directly on your student Cockpit dashboard.',
+              apiBadge: 'Classroom Syllabus Stream'
+            })
           );
           UI.refreshIcons($list[0]);
           return;
@@ -490,7 +577,11 @@
             '</div>'
           );
         }).join('');
-        $teachers.html(tHtml || '<p class="text-xs text-muted">No instructors assigned.</p>');
+        $teachers.html(tHtml || UI.renderCompactEmptyState({
+          icon: 'users',
+          title: 'No Instructors Listed',
+          description: 'Faculty assignments for this section will be updated by the academic department.'
+        }));
 
         // Render Students
         var sHtml = students.map(function (s) {
@@ -518,7 +609,11 @@
             '</div>'
           );
         }).join('');
-        $students.html(sHtml || '<p class="text-xs text-muted">No students enrolled yet.</p>');
+        $students.html(sHtml || UI.renderCompactEmptyState({
+          icon: 'users',
+          title: 'No Students Enrolled Yet',
+          description: 'Enrolled students who join with the classroom code will appear here in the class roster.'
+        }));
         UI.refreshIcons($('#tab-pane-people')[0]);
       })
       .catch(function () {});

@@ -21,10 +21,11 @@
         if (typeof d.unread_notifications_count === 'number') {
           patch.unreadNotifications = d.unread_notifications_count;
         }
-        if (Array.isArray(d.online_contacts)) {
-          patch.onlineContacts = d.online_contacts;
+        var contacts = d.online_contacts || d.online_users;
+        if (Array.isArray(contacts)) {
+          patch.onlineContacts = contacts;
           if (window.UgnayraFeedModule) {
-            window.UgnayraFeedModule.renderRightRailOnlineContacts(d.online_contacts);
+            window.UgnayraFeedModule.renderRightRailOnlineContacts(contacts);
           }
         }
         window.UgnayraStore.setState(patch);

@@ -44,6 +44,7 @@ class PresenceController
             'unread_notifications_count' => $unreadNotifs,
             'unread_messages_count' => 0,
             'online_users' => $online,
+            'online_contacts' => $online,
         ], 'Presence synchronized.');
     }
 }

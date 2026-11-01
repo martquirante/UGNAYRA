@@ -19,6 +19,34 @@ class Message
     ): array {
         $pdo = Database::getConnection();
         if ($pdo === null) {
+            $sb = new SupabaseClient();
+            if ($sb->isConfigured()) {
+                $params = [
+                    'conversation_id' => 'eq.' . $conversationId,
+                    'order' => 'created_at.asc',
+                    'limit' => $limit,
+                ];
+                if ($afterTimestamp !== null && $afterTimestamp !== '') {
+                    $params['created_at'] = 'gt.' . $afterTimestamp;
+                }
+                $rows = $sb->queryTable('messages', $params) ?: [];
+                return array_map(function ($r) {
+                    $u = User::findById($r['sender_id'] ?? '');
+                    return [
+                        'id' => $r['id'],
+                        'conversation_id' => $r['conversation_id'],
+                        'sender_id' => $r['sender_id'],
+                        'body' => $r['body'],
+                        'attachment_url' => $r['attachment_url'],
+                        'created_at' => $r['created_at'],
+                        'sender' => [
+                            'id' => $r['sender_id'],
+                            'full_name' => $u['full_name'] ?? 'Classmate',
+                            'avatar_url' => $u['avatar_url'] ?? null,
+                        ],
+                    ];
+                }, $rows);
+            }
             return [];
         }
 
@@ -125,6 +153,36 @@ class Message
             }
         }
 
+        $sb = new SupabaseClient();
+        if ($sb->isConfigured()) {
+            $now = (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM);
+            $sb->queryTable('messages', [], 'POST', [
+                'id' => $id,
+                'conversation_id' => $conversationId,
+                'sender_id' => $senderId,
+                'body' => $body,
+                'attachment_url' => $attachmentUrl,
+                'created_at' => $now,
+            ]);
+            $sb->queryTable('conversations', ['id' => 'eq.' . $conversationId], 'PATCH', [
+                'last_message_at' => $now,
+            ]);
+            $u = User::findById($senderId);
+            return [
+                'id' => $id,
+                'conversation_id' => $conversationId,
+                'sender_id' => $senderId,
+                'body' => $body,
+                'attachment_url' => $attachmentUrl,
+                'created_at' => $now,
+                'sender' => [
+                    'id' => $senderId,
+                    'full_name' => $u['full_name'] ?? 'Classmate',
+                    'avatar_url' => $u['avatar_url'] ?? null,
+                ],
+            ];
+        }
+
         return null;
     }
 
@@ -141,6 +199,19 @@ class Message
             $stmt = $pdo->prepare($sql);
             return $stmt->execute(['cid' => $conversationId, 'uid' => $userId]);
         }
+
+        $sb = new SupabaseClient();
+        if ($sb->isConfigured()) {
+            $now = (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM);
+            $sb->queryTable('conversation_members', [
+                'conversation_id' => 'eq.' . $conversationId,
+                'user_id' => 'eq.' . $userId,
+            ], 'PATCH', [
+                'last_read_at' => $now,
+            ]);
+            return true;
+        }
+
         return false;
     }
 
@@ -154,6 +225,19 @@ class Message
             $stmt = $pdo->prepare($sql);
             return $stmt->execute(['sec' => (string)$seconds, 'cid' => $conversationId, 'uid' => $userId]);
         }
+
+        $sb = new SupabaseClient();
+        if ($sb->isConfigured()) {
+            $typingUntil = (new \DateTimeImmutable("+{$seconds} seconds"))->format(\DateTimeInterface::ATOM);
+            $sb->queryTable('conversation_members', [
+                'conversation_id' => 'eq.' . $conversationId,
+                'user_id' => 'eq.' . $userId,
+            ], 'PATCH', [
+                'typing_until' => $typingUntil,
+            ]);
+            return true;
+        }
+
         return false;
     }
 }

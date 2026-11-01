@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Config\Database;
 use App\Helpers\Security;
+use App\Services\SupabaseClient;
 use PDO;
 
 class Classroom
@@ -18,7 +19,38 @@ class Classroom
     public static function listForUser(string $userId, string $role = 'student'): array
     {
         $pdo = Database::getConnection();
-        if ($pdo === null) return [];
+        if ($pdo === null) {
+            $sb = new SupabaseClient();
+            if ($sb->isConfigured()) {
+                if ($role === 'teacher' || $role === 'personnel') {
+                    $classes = $sb->queryTable('classrooms', [
+                        'teacher_id' => 'eq.' . $userId,
+                        'is_archived' => 'eq.false',
+                        'order' => 'created_at.desc',
+                    ]) ?: [];
+                } else {
+                    $memberships = $sb->queryTable('classroom_members', ['user_id' => 'eq.' . $userId]) ?: [];
+                    $cids = array_column($memberships, 'classroom_id');
+                    $classes = [];
+                    if (!empty($cids)) {
+                        $classes = $sb->queryTable('classrooms', [
+                            'id' => 'in.(' . implode(',', $cids) . ')',
+                            'is_archived' => 'eq.false',
+                            'order' => 'created_at.desc',
+                        ]) ?: [];
+                    }
+                }
+                return array_map(function ($c) {
+                    $t = User::findById($c['teacher_id'] ?? '');
+                    $c['teacher_name'] = $t['full_name'] ?? 'Instructor';
+                    $c['teacher_avatar'] = $t['avatar_url'] ?? null;
+                    $c['student_count'] = (int)($c['student_count'] ?? 0);
+                    $c['assignment_count'] = (int)($c['assignment_count'] ?? 0);
+                    return $c;
+                }, $classes);
+            }
+            return [];
+        }
 
         if ($role === 'teacher' || $role === 'personnel') {
             $stmt = $pdo->prepare(
@@ -56,7 +88,23 @@ class Classroom
     public static function findById(string $id, string $userId): ?array
     {
         $pdo = Database::getConnection();
-        if ($pdo === null) return null;
+        if ($pdo === null) {
+            $sb = new SupabaseClient();
+            if ($sb->isConfigured()) {
+                $res = $sb->queryTable('classrooms', ['id' => 'eq.' . $id, 'limit' => 1]) ?: [];
+                if (empty($res)) return null;
+                $c = $res[0];
+                $t = User::findById($c['teacher_id'] ?? '');
+                $c['teacher_name'] = $t['full_name'] ?? 'Instructor';
+                $c['teacher_avatar'] = $t['avatar_url'] ?? null;
+                $c['teacher_email'] = $t['email'] ?? null;
+                $cm = $sb->queryTable('classroom_members', ['classroom_id' => 'eq.' . $id, 'user_id' => 'eq.' . $userId, 'limit' => 1]) ?: [];
+                $c['my_role'] = $cm[0]['role'] ?? null;
+                $c['assigned_lab_batch'] = $cm[0]['assigned_lab_batch'] ?? null;
+                return $c;
+            }
+            return null;
+        }
 
         $stmt = $pdo->prepare(
             'SELECT c.*, t.school_year, t.semester,
@@ -77,9 +125,21 @@ class Classroom
     public static function findByJoinCode(string $code): ?array
     {
         $pdo = Database::getConnection();
-        if ($pdo === null) return null;
-
         $clean = strtoupper(trim($code));
+
+        if ($pdo === null) {
+            $sb = new SupabaseClient();
+            if ($sb->isConfigured()) {
+                $res = $sb->queryTable('classrooms', ['join_code' => 'ilike.' . $clean, 'is_archived' => 'eq.false', 'limit' => 1]) ?: [];
+                if (empty($res)) return null;
+                $c = $res[0];
+                $t = User::findById($c['teacher_id'] ?? '');
+                $c['teacher_name'] = $t['full_name'] ?? 'Instructor';
+                return $c;
+            }
+            return null;
+        }
+
         $stmt = $pdo->prepare(
             'SELECT c.*, p.full_name AS teacher_name
              FROM classrooms c
@@ -94,13 +154,60 @@ class Classroom
     public static function create(array $data, string $teacherId): ?array
     {
         $pdo = Database::getConnection();
-        if ($pdo === null) return null;
-
         $id = Security::generateUuid();
         $joinCode = self::generateJoinCode();
+        $termId = $data['term_id'] ?? null;
+
+        if ($pdo === null) {
+            $sb = new SupabaseClient();
+            if ($sb->isConfigured()) {
+                if (empty($termId)) {
+                    $terms = $sb->queryTable('academic_terms', ['is_current' => 'eq.true', 'limit' => 1]) ?: [];
+                    if (!empty($terms) && isset($terms[0]['id'])) {
+                        $termId = $terms[0]['id'];
+                    } else {
+                        $termId = Security::generateUuid();
+                        $sb->queryTable('academic_terms', [], 'POST', [
+                            'id' => $termId,
+                            'school_year' => '2026-2027',
+                            'semester' => '1st Semester',
+                            'is_current' => true,
+                            'starts_at' => '2026-08-15',
+                            'ends_at' => '2026-12-20',
+                        ]);
+                    }
+                }
+
+                $now = (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM);
+                $payload = [
+                    'id' => $id,
+                    'teacher_id' => $teacherId,
+                    'term_id' => $termId,
+                    'subject_code' => strtoupper(trim($data['subject_code'])),
+                    'subject_title' => trim($data['subject_title']),
+                    'section_designation' => strtoupper(trim($data['section_designation'])),
+                    'has_laboratory' => !empty($data['has_laboratory']),
+                    'join_code' => $joinCode,
+                    'theme_color' => $data['theme_color'] ?? '#173B70',
+                    'description' => trim($data['description'] ?? ''),
+                    'created_at' => $now,
+                ];
+
+                $res = $sb->queryTable('classrooms', [], 'POST', $payload);
+                $created = (!empty($res) && isset($res[0])) ? $res[0] : $payload;
+
+                $sb->queryTable('classroom_members', [], 'POST', [
+                    'classroom_id' => $id,
+                    'user_id' => $teacherId,
+                    'role' => 'teacher',
+                ]);
+
+                return $created;
+            }
+            return null;
+        }
 
         // Get or default term_id
-        $termId = $data['term_id'] ?? null;
         if (empty($termId)) {
             $tStmt = $pdo->query('SELECT id FROM academic_terms WHERE is_current = true LIMIT 1');
             $termId = $tStmt ? $tStmt->fetchColumn() : null;
@@ -142,7 +249,19 @@ class Classroom
     public static function enrollStudent(string $classroomId, string $userId, ?int $batch = null, string $role = 'student'): bool
     {
         $pdo = Database::getConnection();
-        if ($pdo === null) return false;
+        if ($pdo === null) {
+            $sb = new SupabaseClient();
+            if ($sb->isConfigured()) {
+                $sb->queryTable('classroom_members', [], 'POST', [
+                    'classroom_id' => $classroomId,
+                    'user_id' => $userId,
+                    'role' => $role,
+                    'assigned_lab_batch' => ($batch !== null && $batch > 0) ? $batch : null,
+                ]);
+                return true;
+            }
+            return false;
+        }
 
         $stmt = $pdo->prepare(
             'INSERT INTO classroom_members (classroom_id, user_id, role, assigned_lab_batch)

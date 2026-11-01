@@ -20,7 +20,10 @@ class AssignmentController
 
         $studentId = ($user['role'] ?? '') === 'student' ? $user['id'] : null;
         $assignments = Assignment::listForClassroom($classroomId, $studentId);
-        JsonResponse::success($assignments, 'Classwork activities retrieved.');
+        JsonResponse::success([
+            'assignments' => $assignments,
+            'items' => $assignments,
+        ], 'Classwork activities retrieved.');
     }
 
     /**
@@ -46,7 +49,10 @@ class AssignmentController
 
         $assignment = Assignment::create($data, $user['id']);
         if ($assignment) {
-            JsonResponse::success($assignment, 'Assignment published successfully!', 201);
+            JsonResponse::success([
+                'assignment' => $assignment,
+                'id' => $assignment['id'] ?? null,
+            ], 'Assignment published successfully!', 201);
             return;
         }
 
@@ -68,6 +74,6 @@ class AssignmentController
             return;
         }
 
-        JsonResponse::success($assignment, 'Assignment details retrieved.');
+        JsonResponse::success(array_merge($assignment, ['assignment' => $assignment]), 'Assignment details retrieved.');
     }
 }

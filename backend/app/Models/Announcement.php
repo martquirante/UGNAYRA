@@ -119,6 +119,31 @@ class Announcement
             ];
         }
 
+        $sb = new SupabaseClient();
+        if ($sb->isConfigured()) {
+            $now = (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM);
+            $insertData = array_merge($params, ['published_at' => $now]);
+            $res = $sb->queryTable('announcements', [], 'POST', $insertData);
+            $a = (!empty($res) && isset($res[0])) ? $res[0] : $insertData;
+            $u = User::findById($data['author_id']);
+            return [
+                'id' => $id,
+                'title' => $params['title'],
+                'body' => $params['body'],
+                'category' => $params['category'],
+                'priority' => $params['priority'],
+                'target_department' => $params['target_department'],
+                'is_pinned' => $params['is_pinned'],
+                'published_at' => $a['published_at'] ?? $now,
+                'author' => [
+                    'id' => $data['author_id'],
+                    'full_name' => $u['full_name'] ?? 'School Faculty',
+                    'role' => $u['role'] ?? 'teacher',
+                    'department' => $u['department'] ?? null,
+                ],
+            ];
+        }
+
         return null;
     }
 
@@ -129,6 +154,13 @@ class Announcement
             $stmt = $pdo->prepare('DELETE FROM announcements WHERE id = :id');
             return $stmt->execute(['id' => $id]);
         }
+
+        $sb = new SupabaseClient();
+        if ($sb->isConfigured()) {
+            $sb->queryTable('announcements', ['id' => 'eq.' . $id], 'DELETE');
+            return true;
+        }
+
         return false;
     }
 
@@ -140,6 +172,13 @@ class Announcement
             $stmt->execute(['id' => $id]);
             return $stmt->fetch() ?: null;
         }
+
+        $sb = new SupabaseClient();
+        if ($sb->isConfigured()) {
+            $res = $sb->queryTable('announcements', ['id' => 'eq.' . $id, 'limit' => 1]);
+            return (!empty($res) && isset($res[0])) ? $res[0] : null;
+        }
+
         return null;
     }
 }

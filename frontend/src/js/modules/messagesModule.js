@@ -44,13 +44,13 @@
 
     if (!filtered.length) {
       $box.html(
-        '<div style="padding:28px 16px;text-align:center;">' +
-          '<div class="empty-state-icon mb-2" style="margin:0 auto 10px;width:52px;height:52px;font-size:52px;" data-api-icon="lucide:message-square" aria-hidden="true">' +
-            '<i data-lucide="message-square"></i>' +
-          '</div>' +
-          '<p class="text-secondary" style="font-size:var(--text-sm);font-weight:600;color:var(--color-ink-900);">No conversations found</p>' +
-          '<p class="text-secondary mt-1" style="font-size:var(--text-xs);">Start a chat with a classmate or instructor.</p>' +
-        '</div>'
+        UI.renderCompactEmptyState({
+          icon: 'messages',
+          title: 'No Conversations Found',
+          description: 'Start a direct chat with a classmate, professor, or group project partner.',
+          ctaHtml: '<button type="button" class="btn btn-primary btn-sm" id="empty-new-chat-btn"><i data-lucide="plus"></i><span>New Message</span></button>',
+          apiBadge: 'Direct Messenger'
+        })
       );
       UI.refreshIcons($box[0]);
       return;
