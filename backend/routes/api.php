@@ -14,6 +14,7 @@ use App\Controllers\CommunityController;
 use App\Controllers\DashboardController;
 use App\Controllers\HealthController;
 use App\Controllers\MessageController;
+use App\Controllers\MetaController;
 use App\Controllers\NotificationController;
 use App\Controllers\PostController;
 use App\Controllers\PresenceController;
@@ -90,6 +91,7 @@ $router->post('/api/v1/conversations/{id}/messages', [MessageController::class, 
 $router->post('/api/v1/conversations/{id}/read', [MessageController::class, 'markRead'], [$cors, $auth, $csrf]);
 $router->post('/api/v1/conversations/{id}/typing', [MessageController::class, 'setTyping'], [$cors, $auth, $csrf]);
 $router->post('/api/v1/presence/heartbeat', [PresenceController::class, 'heartbeat'], [$cors, $optionalAuth]);
+$router->get('/api/v1/meta/link-preview', [MetaController::class, 'linkPreview'], [$cors, $optionalAuth]);
 
 // School Groups & Channels (Personal & Academic)
 $router->get('/api/v1/groups', [AcademicGroupController::class, 'index'], [$cors, $auth]);

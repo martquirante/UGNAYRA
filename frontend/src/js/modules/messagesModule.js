@@ -141,12 +141,273 @@
     return '';
   }
 
+  var linkPreviewCache = {};
+  var activePreviewRequests = {};
+
+  function extractFirstUrl(text) {
+    if (!text) return null;
+    var urlMatch = text.match(/(https?:\/\/[^\s<]+|www\.[a-zA-Z0-9][-a-zA-Z0-9]*(?:\.[a-zA-Z0-9][-a-zA-Z0-9]*)+(?:\/[^\s<]*)?)/i);
+    if (!urlMatch) return null;
+    var url = urlMatch[1].replace(/[.,;:!?')\]]+$/, '');
+    if (/^www\./i.test(url)) url = 'https://' + url;
+    return url;
+  }
+
+  function getDomainFromUrl(url) {
+    try {
+      var a = document.createElement('a');
+      a.href = url;
+      return a.hostname.replace(/^www\./i, '');
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function getYouTubeVideoId(url) {
+    if (!url) return null;
+    var m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([a-zA-Z0-9_-]{11})/i);
+    return m ? m[1] : null;
+  }
+
+  function guessDefaultSiteTitle(domain) {
+    var domainMap = {
+      'youtube.com': 'YouTube',
+      'youtu.be': 'YouTube',
+      'chatgpt.com': 'ChatGPT: Get instant answers & ideas',
+      'openai.com': 'OpenAI',
+      'github.com': 'GitHub: Where the world builds software',
+      'google.com': 'Google Search',
+      'wikipedia.org': 'Wikipedia, the free encyclopedia',
+      'facebook.com': 'Facebook',
+      'twitter.com': 'X (formerly Twitter)',
+      'x.com': 'X',
+      'instagram.com': 'Instagram',
+      'linkedin.com': 'LinkedIn',
+      'bulsu.edu.ph': 'Bulacan State University'
+    };
+    if (domainMap[domain]) return domainMap[domain];
+    return domain.charAt(0).toUpperCase() + domain.slice(1);
+  }
+
+  function renderLinkPreviewHtml(url) {
+    var domain = getDomainFromUrl(url);
+    if (!domain) return '';
+    var ytId = getYouTubeVideoId(url);
+    var cached = linkPreviewCache[url];
+
+    var title = (cached && cached.title) ? cached.title : (ytId ? 'YouTube Video' : guessDefaultSiteTitle(domain));
+    var desc = (cached && cached.description) ? cached.description : ('Click to open ' + domain);
+    var img = (cached && cached.image) ? cached.image : (ytId ? ('https://img.youtube.com/vi/' + ytId + '/hqdefault.jpg') : null);
+    var favicon = (cached && cached.favicon) || ('https://www.google.com/s2/favicons?domain=' + encodeURIComponent(domain) + '&sz=64');
+
+    var mediaHtml = '';
+    if (img) {
+      mediaHtml =
+        '<div class="msg-link-preview-media">' +
+          '<img src="' + fmt.escapeHtml(img) + '" alt="' + fmt.escapeHtml(title) + '" class="msg-link-preview-img" loading="lazy" onerror="this.parentElement.style.display=\'none\';" />' +
+        '</div>';
+    } else {
+      mediaHtml = '<div class="msg-link-preview-media" style="display:none;"><img src="" alt="" class="msg-link-preview-img" loading="lazy" onerror="this.parentElement.style.display=\'none\';" /></div>';
+    }
+
+    return (
+      '<a href="' + fmt.escapeHtml(url) + '" target="_blank" rel="noopener noreferrer" class="msg-link-preview-card" data-preview-url="' + fmt.escapeHtml(url) + '">' +
+        mediaHtml +
+        '<div class="msg-link-preview-body">' +
+          '<div class="msg-link-preview-site">' +
+            '<img src="' + fmt.escapeHtml(favicon) + '" alt="" class="msg-link-preview-favicon" onerror="this.style.display=\'none\';" />' +
+            '<span class="msg-link-preview-domain">' + fmt.escapeHtml(domain) + '</span>' +
+          '</div>' +
+          '<div class="msg-link-preview-title">' + fmt.escapeHtml(title) + '</div>' +
+          '<div class="msg-link-preview-desc">' + fmt.escapeHtml(desc) + '</div>' +
+        '</div>' +
+      '</a>'
+    );
+  }
+
+  function applyPreviewData($card, data) {
+    if (!data) return;
+    if (data.title) {
+      $card.find('.msg-link-preview-title').text(data.title);
+    }
+    if (data.description) {
+      $card.find('.msg-link-preview-desc').text(data.description);
+    }
+    if (data.favicon) {
+      $card.find('.msg-link-preview-favicon').attr('src', data.favicon);
+    }
+    if (data.image) {
+      var $media = $card.find('.msg-link-preview-media');
+      var $img = $media.find('.msg-link-preview-img');
+      $img.attr('src', data.image);
+      $media.show();
+    }
+  }
+
+  function enrichLinkPreviews($container) {
+    var $cards = ($container || $('#thread-messages-scroll')).find('.msg-link-preview-card[data-preview-url]');
+    $cards.each(function () {
+      var $card = $(this);
+      var url = $card.attr('data-preview-url');
+      if (!url) return;
+
+      if (linkPreviewCache[url]) {
+        applyPreviewData($card, linkPreviewCache[url]);
+        return;
+      }
+
+      if (activePreviewRequests[url]) {
+        activePreviewRequests[url].then(function (data) {
+          if (data) applyPreviewData($card, data);
+        });
+        return;
+      }
+
+      if (Services.Meta && typeof Services.Meta.linkPreview === 'function') {
+        activePreviewRequests[url] = Services.Meta.linkPreview(url)
+          .then(function (res) {
+            var p = res.data && res.data.preview;
+            if (p) {
+              linkPreviewCache[url] = p;
+              applyPreviewData($card, p);
+              return p;
+            }
+            return null;
+          })
+          .catch(function () {
+            return null;
+          });
+      }
+    });
+  }
+
   function updateMessageStatus(msgId, newStatus, peer) {
     if (!msgId) return;
-    var $row = $('[data-msg-id="' + msgId + '"]');
+    var $row = $('[data-msg-id="' + msgId + '"], [data-client-id="' + msgId + '"], [data-backend-id="' + msgId + '"], [data-firestore-id="' + msgId + '"]');
     if ($row.length) {
       $row.find('.receipt-slot').html(renderDeliveryReceipt(newStatus, peer));
     }
+  }
+
+  function findMessageMatch(msg) {
+    if (!msg) return null;
+    var msgId = String(msg.id || '');
+    var clientId = String(msg.client_id || '');
+    var msgSenderId = String(msg.sender_id || (msg.sender && msg.sender.id) || '');
+    var msgBody = String(msg.body || '').trim();
+    var msgTime = msg.created_at ? new Date(msg.created_at).getTime() : Date.now();
+
+    for (var i = 0; i < chatState.messages.length; i++) {
+      var m = chatState.messages[i];
+      var mId = String(m.id || '');
+      var mClientId = String(m.client_id || m.temp_id || '');
+      var mBackendId = String(m.backend_id || '');
+      var mFirestoreId = String(m.firestore_id || '');
+      var mSenderId = String(m.sender_id || (m.sender && m.sender.id) || '');
+      var mBody = String(m.body || '').trim();
+      var mTime = m.created_at ? new Date(m.created_at).getTime() : Date.now();
+
+      // 1. Direct ID match
+      if (msgId && (mId === msgId || mBackendId === msgId || mFirestoreId === msgId || mClientId === msgId)) {
+        return m;
+      }
+      // 2. Client ID match
+      if (clientId && (mClientId === clientId || mId === clientId)) {
+        return m;
+      }
+      // 3. Sender + Body match within 60 seconds
+      if (msgSenderId && mSenderId === msgSenderId && mBody && mBody === msgBody) {
+        if (Math.abs(mTime - msgTime) <= 60000) {
+          return m;
+        }
+      }
+    }
+    return null;
+  }
+
+  function appendOrUpdateBubble($container, msg, peer) {
+    if (!msg) return false;
+    var existing = findMessageMatch(msg);
+    var msgId = String(msg.id || '');
+    var clientId = String(msg.client_id || '');
+
+    // Check if DOM already has an element for this message
+    var $existingEl = $();
+    if (msgId) {
+      $existingEl = $container.find('[data-msg-id="' + msgId + '"], [data-backend-id="' + msgId + '"], [data-firestore-id="' + msgId + '"]');
+    }
+    if (!$existingEl.length && clientId) {
+      $existingEl = $container.find('[data-client-id="' + clientId + '"], [data-msg-id="' + clientId + '"]');
+    }
+    if (!$existingEl.length && existing) {
+      var checkId = existing.id || existing.backend_id || existing.client_id;
+      if (checkId) {
+        $existingEl = $container.find('[data-msg-id="' + checkId + '"], [data-client-id="' + checkId + '"], [data-backend-id="' + checkId + '"]');
+      }
+    }
+
+    if ($existingEl.length) {
+      // Message already exists in DOM! Just reconcile IDs and update delivery receipt
+      if (msgId && !$existingEl.attr('data-firestore-id')) {
+        $existingEl.attr('data-firestore-id', msgId);
+      }
+      if (msg.backend_id) {
+        $existingEl.attr('data-backend-id', msg.backend_id);
+      }
+      if (existing) {
+        if (msgId && existing.id !== msgId && !existing.firestore_id) {
+          existing.firestore_id = msgId;
+        }
+        if (msg.backend_id) {
+          existing.backend_id = msg.backend_id;
+        }
+        if (msg.is_read || msg.status === 'seen') {
+          existing.is_read = true;
+          existing.status = 'seen';
+          updateMessageStatus(existing.id, 'seen', peer);
+        } else if (msg.status && existing.status !== 'seen') {
+          existing.status = msg.status;
+          updateMessageStatus(existing.id, msg.status, peer);
+        }
+      }
+      return false; // Did not add a new bubble
+    }
+
+    // Extra safety guard: check the very last message in the container
+    var $lastRow = $container.children('.msg-row').last();
+    if ($lastRow.length) {
+      var lastText = $lastRow.find('.msg-bubble .msg-text').text().trim() || $lastRow.find('.msg-bubble').text().trim();
+      var thisText = String(msg.body || '').trim();
+      var me = Store.getState().user || {};
+      var isMine = msg.sender_id === me.id || (msg.sender && msg.sender.id === me.id);
+      var lastIsMine = $lastRow.hasClass('is-mine');
+
+      if (isMine === lastIsMine && thisText && lastText === thisText) {
+        var lastMsgObj = chatState.messages[chatState.messages.length - 1];
+        var msgTime = msg.created_at ? new Date(msg.created_at).getTime() : Date.now();
+        var lastTime = (lastMsgObj && lastMsgObj.created_at) ? new Date(lastMsgObj.created_at).getTime() : Date.now();
+        if (Math.abs(msgTime - lastTime) <= 60000) {
+          if (msgId) $lastRow.attr('data-firestore-id', msgId);
+          if (msg.backend_id) $lastRow.attr('data-backend-id', msg.backend_id);
+          if (lastMsgObj) {
+            lastMsgObj.firestore_id = msgId;
+            if (msg.is_read) {
+              lastMsgObj.is_read = true;
+              lastMsgObj.status = 'seen';
+              updateMessageStatus(lastMsgObj.id, 'seen', peer);
+            }
+          }
+          return false;
+        }
+      }
+    }
+
+    // Truly new message! Push to state, render bubble, enrich links
+    chatState.messages.push(msg);
+    var $bubble = $(renderMessageBubble(msg, peer));
+    $container.append($bubble);
+    enrichLinkPreviews($bubble);
+    return true;
   }
 
   function renderMessageBubble(msg, peer) {
@@ -173,13 +434,25 @@
       receiptHtml = renderDeliveryReceipt(status, peer);
     }
 
+    var previewHtml = '';
+    var url = extractFirstUrl(msg.body);
+    if (url) {
+      previewHtml = renderLinkPreviewHtml(url);
+    }
+
+    var dataAttrs = 'data-msg-id="' + fmt.escapeHtml(msg.id || '') + '"';
+    if (msg.client_id) dataAttrs += ' data-client-id="' + fmt.escapeHtml(msg.client_id) + '"';
+    if (msg.backend_id) dataAttrs += ' data-backend-id="' + fmt.escapeHtml(msg.backend_id) + '"';
+    if (msg.firestore_id) dataAttrs += ' data-firestore-id="' + fmt.escapeHtml(msg.firestore_id) + '"';
+
     return (
-      '<div class="msg-row ' + (isMine ? 'is-mine' : '') + '" data-msg-id="' + fmt.escapeHtml(msg.id || '') + '">' +
+      '<div class="msg-row ' + (isMine ? 'is-mine' : '') + '" ' + dataAttrs + '>' +
         (!isMine ? fmt.renderAvatar(msg.sender || {}, 'avatar-xs', false) : '') +
         '<div class="msg-bubble-wrap">' +
           '<div class="msg-bubble">' +
             attachmentHtml +
-            (msg.body ? fmt.formatPostContent(msg.body) : '') +
+            (msg.body ? ('<div class="msg-text">' + fmt.formatPostContent(msg.body) + '</div>') : '') +
+            previewHtml +
           '</div>' +
           '<div class="msg-meta-row">' +
             '<span class="msg-timestamp">' + fmt.escapeHtml(fmt.timeAgo(msg.created_at)) + '</span>' +
@@ -240,7 +513,29 @@
     Services.Messages.listMessages(conversationId, { limit: 60 })
       .then(function (res) {
         if (chatState.activeId !== conversationId) return;
-        var items = (res.data && (res.data.messages || res.data.items)) || [];
+        var rawItems = (res.data && (res.data.messages || res.data.items)) || [];
+
+        // Deduplicate incoming raw items from backend
+        var seenIds = {};
+        var items = [];
+        rawItems.forEach(function (m) {
+          if (m.id && seenIds[m.id]) return;
+          if (m.id) seenIds[m.id] = true;
+
+          if (items.length > 0) {
+            var prev = items[items.length - 1];
+            if (String(prev.sender_id) === String(m.sender_id) &&
+                String(prev.body || '').trim() === String(m.body || '').trim()) {
+              var tPrev = prev.created_at ? new Date(prev.created_at).getTime() : 0;
+              var tCurr = m.created_at ? new Date(m.created_at).getTime() : 0;
+              if (Math.abs(tCurr - tPrev) < 5000) {
+                return;
+              }
+            }
+          }
+          items.push(m);
+        });
+
         chatState.messages = items;
         var $scroll = $('#thread-messages-scroll');
         if (!items.length) {
@@ -249,6 +544,7 @@
           $scroll.html(items.map(function (m) { return renderMessageBubble(m, peer); }).join(''));
           chatState.lastMessageTimestamp = items[items.length - 1].created_at;
           scrollThreadToBottom();
+          enrichLinkPreviews($scroll);
         }
         markConversationAsRead(conversationId);
         startActiveThreadPolling(conversationId);
@@ -264,47 +560,8 @@
               var addedAny = false;
 
               fbMsgs.forEach(function (fbMsg) {
-                // 1. Direct ID match
-                var existingIdx = chatState.messages.findIndex(function (m) {
-                  return m.id === fbMsg.id;
-                });
-
-                if (existingIdx !== -1) {
-                  var localMsg = chatState.messages[existingIdx];
-                  if (fbMsg.is_read && !localMsg.is_read) {
-                    localMsg.is_read = true;
-                    localMsg.status = 'seen';
-                    updateMessageStatus(fbMsg.id, 'seen', currentPeer);
-                  }
-                  return;
-                }
-
-                // 2. Reconcile with local optimistic message (by client_id or sender + body match)
-                var optIdx = chatState.messages.findIndex(function (m) {
-                  var isTemp = String(m.id).indexOf('temp_') === 0;
-                  if (!isTemp) return false;
-                  if (fbMsg.client_id && m.id === fbMsg.client_id) return true;
-                  return String(m.sender_id) === String(fbMsg.sender_id) && m.body === fbMsg.body;
-                });
-
-                if (optIdx !== -1) {
-                  var optMsg = chatState.messages[optIdx];
-                  var oldId = optMsg.id;
-                  optMsg.id = fbMsg.id;
-                  optMsg.status = fbMsg.is_read ? 'seen' : (fbMsg.status || 'sent');
-
-                  var $el = $('[data-msg-id="' + oldId + '"]');
-                  if ($el.length) {
-                    $el.attr('data-msg-id', fbMsg.id);
-                    updateMessageStatus(fbMsg.id, optMsg.status, currentPeer);
-                  }
-                  return;
-                }
-
-                // 3. Truly new message received from peer
-                chatState.messages.push(fbMsg);
-                $s.append(renderMessageBubble(fbMsg, currentPeer));
-                addedAny = true;
+                var added = appendOrUpdateBubble($s, fbMsg, currentPeer);
+                if (added) addedAny = true;
               });
 
               if (addedAny) {
@@ -362,43 +619,18 @@
 
           if (incoming.length) {
             var $scroll = $('#thread-messages-scroll');
-            var existingIds = {};
-            chatState.messages.forEach(function (m) { existingIds[m.id] = true; });
+            var conv = chatState.conversations.find(function (c) { return c.id === conversationId; });
+            var peer = (conv && conv.peer) || {};
+            var addedAny = false;
 
-            var fresh = [];
+            if (!chatState.messages.length) $scroll.empty();
             incoming.forEach(function (m) {
-              if (existingIds[m.id]) return;
-
-              // Match pending optimistic message
-              var optMatch = chatState.messages.find(function (opt) {
-                return String(opt.id).indexOf('temp_') === 0 &&
-                       String(opt.sender_id) === String(m.sender_id) &&
-                       opt.body === m.body;
-              });
-
-              if (optMatch) {
-                var oldId = optMatch.id;
-                optMatch.id = m.id;
-                var $row = $('[data-msg-id="' + oldId + '"]');
-                if ($row.length) {
-                  $row.attr('data-msg-id', m.id);
-                }
-                existingIds[m.id] = true;
-                delete existingIds[oldId];
-              } else {
-                fresh.push(m);
-              }
+              var added = appendOrUpdateBubble($scroll, m, peer);
+              if (added) addedAny = true;
             });
 
-            if (fresh.length) {
-              var conv = chatState.conversations.find(function (c) { return c.id === conversationId; });
-              var peer = (conv && conv.peer) || {};
-              if (!chatState.messages.length) $scroll.empty();
-              fresh.forEach(function (m) {
-                chatState.messages.push(m);
-                $scroll.append(renderMessageBubble(m, peer));
-              });
-              chatState.lastMessageTimestamp = fresh[fresh.length - 1].created_at;
+            if (addedAny) {
+              chatState.lastMessageTimestamp = incoming[incoming.length - 1].created_at;
               scrollThreadToBottom();
               markConversationAsRead(conversationId);
             }
@@ -573,6 +805,8 @@
     var tempId = 'temp_' + Date.now();
     var optimisticMsg = {
       id: tempId,
+      client_id: tempId,
+      temp_id: tempId,
       conversation_id: targetConvId,
       sender_id: me.id,
       sender: me,
@@ -584,7 +818,9 @@
 
     if (!chatState.messages.length) $('#thread-messages-scroll').empty();
     chatState.messages.push(optimisticMsg);
-    $('#thread-messages-scroll').append(renderMessageBubble(optimisticMsg, peer));
+    var $bubble = $(renderMessageBubble(optimisticMsg, peer));
+    $('#thread-messages-scroll').append($bubble);
+    enrichLinkPreviews($bubble);
     scrollThreadToBottom();
 
     // 2. Send through Firebase Firestore NoSQL realtime layer
@@ -594,12 +830,11 @@
         sender_id: me.id,
         sender: me,
         body: body
-      }).then(function () {
-        // Transition to 'sent'
+      }).then(function (docPayload) {
+        optimisticMsg.firestore_id = docPayload ? docPayload.id : null;
         optimisticMsg.status = 'sent';
         updateMessageStatus(optimisticMsg.id, 'sent', peer);
 
-        // Shortly after confirm delivered to peer thread
         setTimeout(function () {
           optimisticMsg.status = 'delivered';
           updateMessageStatus(optimisticMsg.id, 'delivered', peer);
@@ -612,17 +847,13 @@
       .then(function (res) {
         var realMsg = res.data && res.data.message;
         if (realMsg && chatState.activeId === targetConvId) {
-          var $row = $('[data-msg-id="' + tempId + '"]');
-          if (!$row.length) {
-            $row = $('[data-msg-id="' + optimisticMsg.id + '"]');
-          }
+          optimisticMsg.backend_id = realMsg.id;
+          var $row = $('[data-client-id="' + tempId + '"], [data-msg-id="' + tempId + '"]');
           if ($row.length) {
             $row.attr('data-backend-id', realMsg.id);
-            if (String(optimisticMsg.id).indexOf('temp_') === 0) {
-              $row.attr('data-msg-id', realMsg.id);
-              optimisticMsg.id = realMsg.id;
-            }
+            $row.attr('data-msg-id', realMsg.id);
           }
+          optimisticMsg.id = realMsg.id;
           optimisticMsg.status = (peer && peer.is_online) ? 'delivered' : 'sent';
           updateMessageStatus(optimisticMsg.id, optimisticMsg.status, peer);
 
@@ -667,9 +898,8 @@
         var msg = res.data && res.data.message;
         if (msg && chatState.activeId === targetConvId) {
           if (!chatState.messages.length) $('#thread-messages-scroll').empty();
-          chatState.messages.push(msg);
+          appendOrUpdateBubble($('#thread-messages-scroll'), msg, peer);
           chatState.lastMessageTimestamp = msg.created_at;
-          $('#thread-messages-scroll').append(renderMessageBubble(msg, peer));
           scrollThreadToBottom();
         }
       })

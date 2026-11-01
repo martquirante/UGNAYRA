@@ -346,6 +346,12 @@
       pollSignals: function (sessionId, afterIso) {
         return api.get('/rtc/sessions/' + encodeURIComponent(sessionId) + '/signal', { after: afterIso || '' });
       }
+    },
+
+    Meta: {
+      linkPreview: function (url) {
+        return api.get('/meta/link-preview', { url: url });
+      }
     }
   };
 })(window);

@@ -2034,6 +2034,184 @@ html[data-theme="dark"] .chat-message-bubble:not(.is-me) .chat-link:hover {
   text-decoration-color: #bfdbfe !important;
 }
 
+/* ==========================================================================
+   Rich Website Link Previews in Chat Bubbles
+   ========================================================================== */
+.msg-link-preview-card,
+.msg-bubble a.msg-link-preview-card,
+.msg-bubble a.msg-link-preview-card * {
+  text-decoration: none !important;
+}
+
+.msg-link-preview-card {
+  display: flex !important;
+  flex-direction: column !important;
+  margin-top: 8px !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  max-width: 320px !important;
+  width: 100% !important;
+  transition: transform var(--duration-fast, 150ms) ease, box-shadow var(--duration-fast, 150ms) ease, background-color var(--duration-fast, 150ms) ease !important;
+  cursor: pointer !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  line-height: normal !important;
+  text-align: left !important;
+}
+
+.msg-link-preview-card:hover {
+  text-decoration: none !important;
+  transform: translateY(-1px);
+}
+
+/* Outgoing messages (Navy Blue surface) */
+.msg-row.is-mine .msg-link-preview-card {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.msg-row.is-mine .msg-link-preview-card:hover {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.msg-row.is-mine .msg-link-preview-site {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.msg-row.is-mine .msg-link-preview-title {
+  color: #ffffff !important;
+}
+
+.msg-row.is-mine .msg-link-preview-desc {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Incoming messages (Light Daylight surface) */
+.msg-row:not(.is-mine) .msg-link-preview-card {
+  background-color: var(--color-surface-raised, #ffffff) !important;
+  border-color: var(--color-border-subtle, #e2e8f0) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.msg-row:not(.is-mine) .msg-link-preview-card:hover {
+  background-color: var(--color-surface-hover, #f8fafc) !important;
+  border-color: var(--color-border-strong, #cbd5e1) !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.msg-row:not(.is-mine) .msg-link-preview-site {
+  color: var(--color-ink-500, #64748b) !important;
+}
+
+.msg-row:not(.is-mine) .msg-link-preview-title {
+  color: var(--color-ink-900, #0f172a) !important;
+}
+
+.msg-row:not(.is-mine) .msg-link-preview-desc {
+  color: var(--color-ink-600, #475569) !important;
+}
+
+/* Dark Mode Incoming messages */
+html[data-theme="dark"] .msg-row:not(.is-mine) .msg-link-preview-card {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme="dark"] .msg-row:not(.is-mine) .msg-link-preview-card:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+html[data-theme="dark"] .msg-row:not(.is-mine) .msg-link-preview-site {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .msg-row:not(.is-mine) .msg-link-preview-title {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .msg-row:not(.is-mine) .msg-link-preview-desc {
+  color: #cbd5e1 !important;
+}
+
+/* Media Banner Thumbnail */
+.msg-link-preview-media {
+  width: 100%;
+  max-height: 150px;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.msg-link-preview-img {
+  width: 100%;
+  height: 100%;
+  max-height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card Body Content */
+.msg-link-preview-body {
+  padding: 8px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+}
+
+.msg-link-preview-site {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.msg-link-preview-favicon {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.msg-link-preview-domain {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.msg-link-preview-title {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.msg-link-preview-desc {
+  font-size: 11.5px !important;
+  line-height: 1.35 !important;
+  opacity: 0.9;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
 .msg-timestamp {
   font-size: 11px;
   color: var(--color-ink-400);
