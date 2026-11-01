@@ -119,7 +119,21 @@
       .catch(function () {});
   }
 
-  function loadPosts(reset) {
+  function highlightPostCard(postId) {
+    if (!postId) return;
+    setTimeout(function () {
+      var $el = $('[data-post-id="' + postId + '"]');
+      if ($el.length) {
+        $el[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        $el.addClass('is-highlighted-post');
+        setTimeout(function () {
+          $el.removeClass('is-highlighted-post');
+        }, 4000);
+      }
+    }, 280);
+  }
+
+  function loadPosts(reset, targetPostId) {
     if (feedState.loading) return;
     feedState.loading = true;
 
@@ -144,7 +158,7 @@
 
         if (reset) {
           Store.setState({ feedCache: items });
-          if (!items.length) {
+          if (!items.length && !targetPostId) {
             $list.html(UI.renderEmptyState(
               'newspaper',
               'No posts match this view yet',
@@ -156,6 +170,25 @@
         } else {
           Store.setState({ feedCache: Store.getState().feedCache.concat(items) });
           $list.append(items.map(PostCard.render).join(''));
+        }
+
+        if (targetPostId) {
+          var found = items.some(function (p) { return String(p.id) === String(targetPostId); });
+          if (!found) {
+            Services.Posts.get(targetPostId)
+              .then(function (resPost) {
+                var single = resPost.data && resPost.data.post;
+                if (single) {
+                  prependPostIfVisible(single);
+                }
+                highlightPostCard(targetPostId);
+              })
+              .catch(function () {
+                highlightPostCard(targetPostId);
+              });
+          } else {
+            highlightPostCard(targetPostId);
+          }
         }
 
         if (feedState.hasMore) {
@@ -171,13 +204,36 @@
       })
       .catch(function (err) {
         if (reset) {
-          $list.html(UI.renderEmptyState(
-            'wifi-off',
-            'Unable to load the campus feed',
-            err.message || 'Check your connection and try refreshing.',
-            '<button type="button" class="btn btn-primary btn-sm" id="retry-feed-btn">Retry</button>'
-          ));
-          UI.refreshIcons($list[0]);
+          if (targetPostId) {
+            Services.Posts.get(targetPostId)
+              .then(function (resPost) {
+                var single = resPost.data && resPost.data.post;
+                if (single) {
+                  $list.html(PostCard.render(single));
+                  highlightPostCard(targetPostId);
+                  UI.refreshIcons($('#feed-view-root')[0]);
+                } else {
+                  throw err;
+                }
+              })
+              .catch(function () {
+                $list.html(UI.renderEmptyState(
+                  'wifi-off',
+                  'Unable to load the campus post',
+                  err.message || 'Check your connection and try refreshing.',
+                  '<button type="button" class="btn btn-primary btn-sm" id="retry-feed-btn">Retry</button>'
+                ));
+                UI.refreshIcons($list[0]);
+              });
+          } else {
+            $list.html(UI.renderEmptyState(
+              'wifi-off',
+              'Unable to load the campus feed',
+              err.message || 'Check your connection and try refreshing.',
+              '<button type="button" class="btn btn-primary btn-sm" id="retry-feed-btn">Retry</button>'
+            ));
+            UI.refreshIcons($list[0]);
+          }
         } else {
           UI.toast(err.message || 'Failed to load more posts.', 'error');
         }
@@ -265,18 +321,23 @@
       .catch(function () {});
   }
 
-  function mount(mode) {
+  function mount(mode, targetPostId) {
     feedState.filter = 'all';
     clearComposerFiles();
 
     return Templates.renderInto('#main-stage', Templates.VIEWS.FEED).then(function () {
       var me = Store.getState().user || {};
       var isHome = mode === 'home';
-      $('#feed-page-heading').text(isHome ? 'Campus Home' : 'News Feed');
+      var isSinglePost = mode === 'post' && Boolean(targetPostId);
+      $('#feed-page-heading').text(
+        isSinglePost ? 'Campus Discussion' : (isHome ? 'Campus Home' : 'News Feed')
+      );
       $('#feed-page-subheading').text(
-        isHome
-          ? 'Important school advisories, classmate updates, and active discussions.'
-          : 'Chronological updates across departments, faculty, and student communities.'
+        isSinglePost
+          ? 'Viewing shared campus post and associated discussion.'
+          : (isHome
+            ? 'Important school advisories, classmate updates, and active discussions.'
+            : 'Chronological updates across departments, faculty, and student communities.')
       );
       $('#composer-author-avatar').html(fmt.renderAvatar(me, 'avatar-md', false));
       var firstName = (me.full_name || 'classmate').split(' ')[0];
@@ -284,7 +345,7 @@
 
       loadPinnedBulletin();
       loadComposerCommunities();
-      loadPosts(true);
+      loadPosts(true, targetPostId);
       hydrateRightRailSuggestions();
       renderRightRailOnlineContacts(Store.getState().onlineContacts);
     });

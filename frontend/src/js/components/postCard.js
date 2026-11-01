@@ -433,38 +433,223 @@
     });
   });
 
-  // 9. Share Post Modal via AJAX
+  // 9. Multi-Channel Share & Repost Modal via AJAX
+  function copyTextToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      try {
+        var textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.top = '-9999px';
+        textArea.style.left = '-9999px';
+        textArea.setAttribute('readonly', '');
+        document.body.appendChild(textArea);
+        textArea.select();
+        var successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (successful) resolve();
+        else reject(new Error('Copy command failed'));
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  $(document).on('click', '.js-copy-post-link', function () {
+    var $btn = $(this);
+    var url = $btn.attr('data-url');
+    if (!url) return;
+
+    copyTextToClipboard(url)
+      .then(function () {
+        $btn.addClass('is-copied').html('<i data-lucide="check" class="icon-sm"></i><span>Copied!</span>');
+        UI.refreshIcons($btn[0]);
+        UI.toast('Post link copied to clipboard!', 'success');
+        clearTimeout($btn.data('copyTimer'));
+        var t = setTimeout(function () {
+          $btn.removeClass('is-copied').html('<i data-lucide="copy" class="icon-sm"></i><span>Copy</span>');
+          UI.refreshIcons($btn[0]);
+        }, 2200);
+        $btn.data('copyTimer', t);
+      })
+      .catch(function () {
+        UI.toast('Please copy the link directly from the text field.', 'warning');
+      });
+  });
+
+  $(document).on('click', '.js-share-permalink', function () {
+    this.select();
+  });
+
+  $(document).on('click', '.js-native-share-trigger', function () {
+    var url = $(this).attr('data-url');
+    var title = $(this).attr('data-title') || 'UGNAYRA Campus Post';
+    var text = $(this).attr('data-text') || '';
+
+    if (navigator.share) {
+      navigator.share({
+        title: title,
+        text: text,
+        url: url
+      }).catch(function (err) {
+        if (err && err.name !== 'AbortError') {
+          UI.toast('Native share cancelled or unsupported on this device.', 'info');
+        }
+      });
+    } else {
+      copyTextToClipboard(url).then(function () {
+        UI.toast('Direct link copied to clipboard!', 'success');
+      });
+    }
+  });
+
+  $(document).on('input keyup', '#share-post-comment', function () {
+    var len = $(this).val().length;
+    var $ctr = $('#share-comment-counter');
+    $ctr.text(len + ' / 2000');
+    if (len >= 2000) {
+      $ctr.css('color', 'var(--color-red-600)');
+    } else if (len >= 1800) {
+      $ctr.css('color', 'var(--color-amber-600)');
+    } else {
+      $ctr.css('color', 'var(--color-ink-500)');
+    }
+  });
+
   $(document).on('click', '.js-share-post', function () {
     var postId = $(this).attr('data-post-id');
     var $card = $(this).closest('.post-card');
 
+    var authorName = $card.find('.post-author-name').first().text().trim() || 'Campus Member';
+    var authorProfileHref = $card.find('.post-author-name').first().attr('href') || '';
+    var authorHandle = authorProfileHref.replace(/^\/profile\/?/, '@');
+    if (authorHandle === '@' || !authorHandle) authorHandle = '';
+
+    var authorRoleBadge = $card.find('.post-header .badge').first().prop('outerHTML') || '';
+    var $rawAvatar = $card.find('.post-author-row .avatar').first().clone();
+    $rawAvatar.removeClass('avatar-md avatar-lg').addClass('avatar-sm');
+    var authorAvatarHtml = $rawAvatar[0] ? $rawAvatar[0].outerHTML : '';
+
+    var rawContent = ($card.attr('data-raw-content') || '').trim();
+    var postTime = $card.find('time').first().text().trim() || 'recent';
+    var permalink = window.location.origin + '/post/' + encodeURIComponent(postId);
+
+    var shareSnippet = rawContent
+      ? (rawContent.length > 140 ? rawContent.substring(0, 140) + '...' : rawContent)
+      : 'Check out this campus post on UGNAYRA';
+    var shareTitle = 'Post by ' + authorName + ' · UGNAYRA';
+    var shareXText = (rawContent ? (rawContent.length > 90 ? rawContent.substring(0, 90) + '... ' : rawContent + ' ') : '') + '— ' + authorName + ' on UGNAYRA';
+
     var $modal = UI.openModal({
-      title: 'Share Post to Campus Feed',
+      title: 'Share Post',
       bodyHtml:
-        '<form id="share-post-form" novalidate>' +
-          '<div class="form-group" style="margin-bottom:0;">' +
-            '<label class="form-label" for="share-post-comment">Add thoughts <span class="form-label-optional">Optional</span></label>' +
-            '<textarea id="share-post-comment" name="content" class="form-textarea" rows="3" maxlength="2000" ' +
-              'placeholder="Why is this relevant to your classmates or department?"></textarea>' +
+        '<div class="share-modal-container">' +
+          '<!-- Direct Link Section -->' +
+          '<div class="share-section">' +
+            '<div class="share-section-header">' +
+              '<div class="share-section-title">' +
+                '<i data-lucide="link" class="icon-xs"></i>' +
+                '<span>Direct Post Link</span>' +
+              '</div>' +
+              '<span class="share-section-hint">Anyone with this link can view this post</span>' +
+            '</div>' +
+            '<div class="share-link-bar">' +
+              '<div class="share-link-input-wrap">' +
+                '<i data-lucide="link-2" class="share-link-icon"></i>' +
+                '<input type="text" class="share-link-input js-share-permalink" readonly value="' + fmt.escapeHtml(permalink) + '" spellcheck="false" aria-label="Direct post link" />' +
+              '</div>' +
+              '<button type="button" class="btn btn-primary share-copy-btn js-copy-post-link" data-url="' + fmt.escapeHtml(permalink) + '" title="Copy link to clipboard">' +
+                '<i data-lucide="copy" class="icon-sm"></i><span>Copy</span>' +
+              '</button>' +
+            '</div>' +
           '</div>' +
-        '</form>',
+
+          '<!-- Social Share Channels -->' +
+          '<div class="share-section">' +
+            '<div class="share-section-header">' +
+              '<div class="share-section-title">' +
+                '<i data-lucide="share-2" class="icon-xs"></i>' +
+                '<span>Share to Social Apps</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="social-share-chips">' +
+              (navigator.share
+                ? '<button type="button" class="social-chip is-native js-native-share-trigger" data-url="' + fmt.escapeHtml(permalink) + '" data-title="' + fmt.escapeHtml(shareTitle) + '" data-text="' + fmt.escapeHtml(shareSnippet) + '" title="Share via native device menu">' +
+                    '<i data-lucide="share" class="icon-xs"></i><span>Share via...</span>' +
+                  '</button>'
+                : '') +
+              '<a href="https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(permalink) + '" target="_blank" rel="noopener noreferrer" class="social-chip is-facebook" title="Share to Facebook">' +
+                '<svg class="social-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>' +
+                '<span>Facebook</span>' +
+              '</a>' +
+              '<a href="https://twitter.com/intent/tweet?url=' + encodeURIComponent(permalink) + '&text=' + encodeURIComponent(shareXText) + '" target="_blank" rel="noopener noreferrer" class="social-chip is-x" title="Post on X (Twitter)">' +
+                '<svg class="social-icon" viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>' +
+                '<span>X (Twitter)</span>' +
+              '</a>' +
+              '<a href="https://t.me/share/url?url=' + encodeURIComponent(permalink) + '&text=' + encodeURIComponent(shareTitle) + '" target="_blank" rel="noopener noreferrer" class="social-chip is-telegram" title="Send via Telegram">' +
+                '<svg class="social-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.56 8.16l-1.97 9.28c-.15.66-.54.82-1.09.51l-3.03-2.24-1.46 1.41c-.16.16-.3.3-.61.3l.22-3.1 5.64-5.1c.25-.22-.05-.34-.38-.12L8.9 13.37l-3-.94c-.66-.21-.67-.66.14-.98l11.7-4.51c.54-.2 1.01.12.82.22z"/></svg>' +
+                '<span>Telegram</span>' +
+              '</a>' +
+              '<a href="mailto:?subject=' + encodeURIComponent('Campus Discussion: ' + authorName + ' on UGNAYRA') + '&body=' + encodeURIComponent('Check out this campus update on UGNAYRA:\n\n' + permalink) + '" class="social-chip is-email" title="Share via Email">' +
+                '<i data-lucide="mail" class="icon-xs"></i><span>Email</span>' +
+              '</a>' +
+            '</div>' +
+          '</div>' +
+
+          '<!-- Repost Divider -->' +
+          '<div class="share-divider">' +
+            '<span>OR REPOST TO CAMPUS FEED</span>' +
+          '</div>' +
+
+          '<!-- Campus Repost Section -->' +
+          '<div class="share-repost-section">' +
+            '<div class="share-quoted-preview">' +
+              '<div class="share-quoted-header">' +
+                authorAvatarHtml +
+                '<div class="share-quoted-meta">' +
+                  '<div class="flex items-center gap-1 flex-wrap">' +
+                    '<span class="share-quoted-name">' + fmt.escapeHtml(authorName) + '</span>' +
+                    authorRoleBadge +
+                    (authorHandle ? '<span class="text-xs-muted">' + fmt.escapeHtml(authorHandle) + '</span>' : '') +
+                  '</div>' +
+                  '<span class="text-xs-muted">' + fmt.escapeHtml(postTime) + '</span>' +
+                '</div>' +
+              '</div>' +
+              (rawContent ? '<p class="share-quoted-text">' + fmt.escapeHtml(rawContent.length > 200 ? rawContent.substring(0, 200) + '...' : rawContent) + '</p>' : '') +
+            '</div>' +
+
+            '<form id="share-post-form" novalidate class="mt-3">' +
+              '<div class="form-group mb-0">' +
+                '<div class="flex items-center justify-between mb-1">' +
+                  '<label class="form-label mb-0" for="share-post-comment">Add your thoughts <span class="form-label-optional">Optional</span></label>' +
+                  '<span class="text-xs-muted tabular-nums" id="share-comment-counter">0 / 2000</span>' +
+                '</div>' +
+                '<textarea id="share-post-comment" name="content" class="form-textarea" rows="2" maxlength="2000" ' +
+                  'placeholder="Why is this relevant to your classmates or department?"></textarea>' +
+              '</div>' +
+            '</form>' +
+          '</div>' +
+        '</div>',
       footerHtml:
         '<button type="button" class="btn btn-secondary js-close-modal">Cancel</button>' +
         '<button type="button" class="btn btn-primary" id="confirm-share-post-btn">' +
-          '<i data-lucide="repeat-2" class="icon-sm"></i><span>Share Now</span>' +
+          '<i data-lucide="repeat-2" class="icon-sm"></i><span>Repost to Feed</span>' +
         '</button>'
     });
 
     $modal.on('click', '#confirm-share-post-btn', function () {
       var $btn = $(this);
       var note = ($modal.find('#share-post-comment').val() || '').trim();
-      UI.setButtonLoading($btn, true, 'Sharing...');
+      UI.setButtonLoading($btn, true, 'Reposting...');
       Services.Posts.share(postId, { content: note })
         .then(function (res) {
           var $sCount = $card.find('.js-shares-count');
           $sCount.text((parseInt($sCount.text(), 10) || 0) + 1);
           UI.closeModal();
-          UI.toast('Shared to the campus feed.', 'success');
+          UI.toast('Reposted to the campus feed.', 'success');
           if (res.data && res.data.post && window.UgnayraFeedModule) {
             window.UgnayraFeedModule.prependPostIfVisible(res.data.post);
           }

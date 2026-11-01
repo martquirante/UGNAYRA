@@ -733,6 +733,66 @@ html[data-theme="dark"] .modal-footer {
   border-top-color: #1e2b44;
 }
 
+/* Share Modal Dark Theme Overrides */
+html[data-theme="dark"] .share-link-input-wrap {
+  background-color: #0b1120;
+  border-color: #1e2b44;
+}
+
+html[data-theme="dark"] .share-link-input-wrap:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+html[data-theme="dark"] .share-link-input {
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .social-chip {
+  background-color: #131d2e;
+  border-color: #243452;
+  color: #cbd5e1;
+}
+
+html[data-theme="dark"] .social-chip:hover {
+  background-color: #1a273e;
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .social-chip.is-native {
+  color: #93c5fd;
+  background-color: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+html[data-theme="dark"] .social-chip.is-x {
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .social-chip.is-x:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+html[data-theme="dark"] .share-divider span {
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] .share-divider::before,
+html[data-theme="dark"] .share-divider::after {
+  background-color: #1e2b44;
+}
+
+html[data-theme="dark"] .share-quoted-preview {
+  background-color: #0b1120;
+  border-color: #1e2b44;
+  border-left-color: #3b82f6;
+}
+
+html[data-theme="dark"] .share-quoted-text {
+  color: #cbd5e1;
+}
+
 /* Chat & Messaging in Dark Mode */
 html[data-theme="dark"] .msg-row.is-mine .msg-bubble {
   background-color: #2563eb;

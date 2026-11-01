@@ -24,7 +24,14 @@
       }
     }
 
-    // 2. Read clean pathname
+    // 2. Read query parameter for ?post=ID
+    var searchParams = new URLSearchParams(window.location.search || '');
+    var queryPostId = searchParams.get('post');
+    if (queryPostId) {
+      return { page: 'post', param: queryPostId };
+    }
+
+    // 3. Read clean pathname
     var rawPath = window.location.pathname || '/';
     var trimmed = rawPath.replace(/^\/+|\/+$/g, '');
     if (!trimmed || trimmed === 'index.html') {
@@ -111,16 +118,16 @@
     }
 
     // Highlight active nav links
-    var activeNavKey = nextRoute.page;
+    var activeNavKey = nextRoute.page === 'post' ? 'feed' : nextRoute.page;
     $('.nav-item, .mobile-tab').removeClass('is-active');
     $('[data-nav="' + activeNavKey + '"]').addClass('is-active');
-    if (activeNavKey === 'home') {
+    if (activeNavKey === 'home' || activeNavKey === 'feed') {
       $('.mobile-tab[data-nav="feed"]').addClass('is-active');
     }
 
-    // Layout mode: 3-column on Home & News Feed; 2-column wide stage on dedicated views
+    // Layout mode: 3-column on Home & News Feed & Post View; 2-column wide stage on dedicated views
     var $grid = $('#shell-grid');
-    if (nextRoute.page === 'feed' || nextRoute.page === 'home') {
+    if (nextRoute.page === 'feed' || nextRoute.page === 'home' || nextRoute.page === 'post') {
       $grid.removeClass('layout-wide');
     } else {
       $grid.addClass('layout-wide');
@@ -134,6 +141,9 @@
         break;
       case 'feed':
         window.UgnayraFeedModule.mount('feed');
+        break;
+      case 'post':
+        window.UgnayraFeedModule.mount('post', nextRoute.param);
         break;
       case 'explore':
         window.UgnayraSearchModule.mount(nextRoute.param);
