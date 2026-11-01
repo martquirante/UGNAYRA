@@ -1,356 +1,181 @@
 <div align="center">
 
-  <img src="frontend/public/logos/ugnayra-logo-full.png" alt="UGNAYRA Logo" width="340" />
+  <img src="./ugnayra_logo.png" alt="UGNAYRA" width="280" />
 
-  <br />
+  <h2>School-Based Social Networking Platform</h2>
 
-  <p align="center">
-    <strong>A modern, verified campus social networking platform built for students, faculty, and academic personnel.</strong>
+  <p>
+    A dedicated, verified campus social network engineered for students, educators, and school administrators.
   </p>
 
-  <p align="center">
-    <a href="#-key-features">Features</a> •
-    <a href="#-system-architecture">Architecture</a> •
-    <a href="#-role-based-access-control-rbac">Campus Roles</a> •
-    <a href="#-tech-stack">Tech Stack</a> •
-    <a href="#-quick-start--local-development">Quick Start</a> •
-    <a href="#-rest-api-overview">API Reference</a> •
-    <a href="#-contributing--license">License</a>
+  <p>
+    <a href="#platform-overview">Platform Overview</a> &bull;
+    <a href="#core-capabilities">Core Capabilities</a> &bull;
+    <a href="#campus-roles-and-permissions">Campus Roles</a> &bull;
+    <a href="#design-system--user-experience">UI/UX Design</a> &bull;
+    <a href="#platform-architecture">Architecture</a> &bull;
+    <a href="#privacy--security-governance">Security &amp; Privacy</a>
   </p>
 
-  <!-- Badges Grid -->
-  <p align="center">
-    <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP 8.2+" />
-    <img src="https://img.shields.io/badge/PostgreSQL-Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase PostgreSQL" />
-    <img src="https://img.shields.io/badge/Google-OAuth%202.0-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Google OAuth 2.0" />
-    <img src="https://img.shields.io/badge/Frontend-Vanilla%20%2B%20jQuery%203.7-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
-    <img src="https://img.shields.io/badge/Hosting-Vercel%20%26%20Render-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel & Render" />
-    <img src="https://img.shields.io/badge/Security-CSRF%20%7C%20RBAC%20%7C%20Rate%20Limit-E53E3E?style=for-the-badge&logo=auth0&logoColor=white" alt="Security" />
-    <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License: MIT" />
+  <p>
+    <img src="https://img.shields.io/badge/Status-Production%20Ready-success?style=flat-square" alt="Status" />
+    <img src="https://img.shields.io/badge/Architecture-Decoupled%20Monorepo-blue?style=flat-square" alt="Architecture" />
+    <img src="https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP 8.2+" />
+    <img src="https://img.shields.io/badge/PostgreSQL-Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white" alt="PostgreSQL" />
+    <img src="https://img.shields.io/badge/Google-Identity%20OAuth%202.0-4285F4?style=flat-square&logo=google&logoColor=white" alt="Google Identity" />
+    <img src="https://img.shields.io/badge/Interface-HTML5%20%7C%20CSS3%20Tokens-E34F26?style=flat-square&logo=html5&logoColor=white" alt="Frontend" />
+    <img src="https://img.shields.io/badge/Security-RBAC%20%7C%20CSRF%20Hardened-E53E3E?style=flat-square&logo=auth0&logoColor=white" alt="Security" />
   </p>
 
 </div>
 
 ---
 
-## 💡 Overview
+## Platform Overview
 
-**UGNAYRA** (from the Filipino word *“Ugnayan”* meaning *connection* or *interaction*) is an academic-first social networking ecosystem. Built specifically for universities and colleges, UGNAYRA replaces fragmented communication channels (Facebook groups, messy chat apps, and scattered noticeboards) with a **unified, verified, and secure campus workspace**.
+**UGNAYRA** (derived from the Filipino word *“Ugnayan”*, signifying *connection*, *interactivity*, and *collaboration*) is an academic-first social networking platform. Modern higher education and secondary institutions frequently face severe communication fragmentation—academic discussions are scattered across commercial instant messengers, unmonitored group chats, and crowded public social media feeds.
 
-Designed with clean typography, accessibility, high-contrast dark/light theme support, and lightweight client performance, UGNAYRA guarantees fast page loads even on constrained campus Wi-Fi networks.
+UGNAYRA solves this challenge by delivering a **centralized, verified, and distraction-free digital campus hub**. Within UGNAYRA, every user profile is tied to a verified academic role, enabling students to collaborate on coursework, faculty members to disseminate learning materials, and campus leadership to broadcast priority advisories with immediate reach.
 
 ---
 
-## 🌟 Key Features
+## Core Capabilities
 
 <details open>
-<summary><b>🔐 1. Institutional Authentication & Google OAuth 2.0</b></summary>
+<summary><b>Institutional Authentication &amp; Verified Access</b></summary>
 <br>
 
-- **Dual-Authentication Pipeline:** Standard institutional ID/Email + password with bcrypt hashing (cost 12), alongside official **Google Identity Services (GSI) OAuth 2.0**.
-- **Interactive Google Campus Onboarding:** New Google users are automatically prompted with a streamlined modal to complete their academic metadata (Role, Department, Student/Employee ID, Year, & Section).
-- **Hardened Sessions:** HttpOnly, SameSite cookies with strict CSRF protection on all mutating state endpoints.
+- **Dual-Mode Sign-In:** Complete integration with official **Google Identity Services (OAuth 2.0)** and institutional credentials, providing passwordless single-click entry.
+- **Academic Profile Onboarding:** First-time Google accounts complete an automated academic onboarding flow to declare their role, college department, student or employee ID number, year level, and section.
+- **Session Hardening:** Multi-layered credential management with server-side validation and encrypted cookies.
 </details>
 
 <details open>
-<summary><b>📰 2. Dynamic Academic News Feed</b></summary>
+<summary><b>Academic Feed &amp; Scholarly Sharing</b></summary>
 <br>
 
-- **Rich Feed System:** Create posts with text formatting, responsive multi-image media carousels, and hashtag exploration.
-- **Engage & Discuss:** Instant likes, nested thread discussions, and cursor-paginated infinite feeds without jarring page reloads.
-- **Audience Scope Selector:** Switch between *Campus-Wide Public*, *Department-Only*, or *Private Community* feeds with one click.
+- **Context-Aware Campus Feed:** Real-time post publication supporting multi-image carousels, academic references, and project milestone showcases.
+- **Threaded Discussions:** Nested commentary and interaction trees allowing focused peer reviews, questions, and instructor feedback.
+- **Audience Scope Controls:** Seamlessly toggle feed visibility between campus-wide public streams, department-exclusive broadcasts, and private community groups.
 </details>
 
-<details>
-<summary><b>💬 3. Real-Time Campus Direct Chat</b></summary>
+<details open>
+<summary><b>Direct Peer &amp; Faculty Messaging</b></summary>
 <br>
 
-- **1-on-1 Academic Conversations:** Private messaging between classmates, student orgs, and faculty.
-- **Presence & State:** Real-time online indicators, live typing feedback, and auto-synced unread message badges.
-- **Battery & Bandwidth Friendly:** Delta-polling engine powered by `document.visibilityState` to eliminate background CPU/battery drain.
+- **Private Scholarly Conversations:** One-on-one communication channel between classmates, project teammates, and instructors.
+- **Presence &amp; Typing Indicators:** Low-latency online indicators and live typing signals designed to facilitate rapid academic consultations.
+- **Adaptive Network Engine:** Efficient delta-synchronization engine that conserves device battery and bandwidth on congested campus Wi-Fi networks.
 </details>
 
-<details>
-<summary><b>🏛️ 4. Course, Department & Club Communities</b></summary>
+<details open>
+<summary><b>Academic Communities &amp; Subject Groups</b></summary>
 <br>
 
-- **Scoped Academic Spaces:** Create and join communities for subjects, departments, student councils, and student interest clubs.
-- **Role-Based Membership:** Public and private group access controls with member directories and community-exclusive post feeds.
+- **Collaborative Workspaces:** Scoped spaces for college departments, specific subject codes, student organizations, and study groups.
+- **Role-Governed Membership:** Community administrators manage member rosters, oversee subject discussions, and distribute group-specific announcements.
+- **Resource Depository:** Centralized timeline for study guides, lecture summaries, and collaborative project links.
 </details>
 
-<details>
-<summary><b>📢 5. Verified Official Campus Bulletins</b></summary>
+<details open>
+<summary><b>Verified Campus Advisories &amp; Priority Bulletins</b></summary>
 <br>
 
-- **Priority Advisories:** Role-gated announcements published exclusively by certified Teachers and School Personnel.
-- **Visual Urgency Badges:** Tagged with high-visibility indicators (*Urgent Advisory*, *Academic Deadline*, *Campus Event*, *General Memo*).
-</details>
-
-<details>
-<summary><b>🎨 6. Human-Centered UI/UX & Adaptive Themes</b></summary>
-<br>
-
-- **Adaptive Dark / Light Themes:** Hand-tuned color tokens engineered for reduced eye strain during late-night study sessions.
-- **Mobile-First App Shell:** Fluid bottom-navigation bar on mobile viewports and spacious sidebar layout on desktop monitors.
-- **Lucide Icons & Micro-Interactions:** Smooth transitions, accessible focus states, and zero layout shifting (CLS).
+- **Role-Gated Publication:** Only verified faculty members and authorized campus personnel are permitted to issue institutional announcements.
+- **Visual Urgency Indicators:** Visual classification across multiple priority tiers—*Urgent Advisory*, *Academic Deadline*, *Campus Event*, and *General Bulletin*.
+- **Direct Activity Center:** High-visibility notification hub alerting students immediately when urgent bulletins or academic advisories are published.
 </details>
 
 ---
 
-## 👥 Role-Based Access Control (RBAC)
+## Campus Roles and Permissions
 
-| Platform Feature / Permission | 🎓 Student | 👨‍🏫 Faculty / Teacher | 🏛️ Campus Personnel |
+UGNAYRA implements a strict Role-Based Access Control (RBAC) hierarchy ensuring structured boundaries between student life and institutional administration:
+
+| Feature &amp; Capability | Student | Faculty / Teacher | Campus Personnel |
 |:---|:---:|:---:|:---:|
-| **Browse Campus News Feed & Like/Comment** | ✅ | ✅ | ✅ |
-| **Publish Personal & Academic Feed Posts** | ✅ | ✅ | ✅ |
-| **Send 1-on-1 Messages & Chat** | ✅ | ✅ | ✅ |
-| **Join & Participate in Subject Communities** | ✅ | ✅ | ✅ |
-| **Create New Communities / Study Groups** | ✅ | ✅ | ✅ |
-| **Publish Verified Campus Announcements** | ❌ *(Read Only)* | ✅ *(Teacher Bulletin)* | ✅ *(Official Memo)* |
-| **Pin High-Priority Campus Advisories** | ❌ | ❌ | ✅ |
-| **Manage Departmental Members** | ❌ | ✅ | ✅ |
+| **Access Campus Feed &amp; Engage in Discussions** | Supported | Supported | Supported |
+| **Publish Academic Timeline Posts &amp; Media** | Supported | Supported | Supported |
+| **Direct Peer &amp; Instructor Messaging** | Supported | Supported | Supported |
+| **Join Course &amp; Club Communities** | Supported | Supported | Supported |
+| **Create Subject or Interest Communities** | Supported | Supported | Supported |
+| **Publish Official Campus Bulletins** | Read Only | Supported *(Faculty Memo)* | Supported *(Official Advisory)* |
+| **Issue High-Priority Emergency Alerts** | Read Only | Read Only | Exclusive Access |
+| **Manage Departmental Rosters** | Read Only | Supported | Exclusive Access |
 
 ---
 
-## 🏗️ System Architecture
+## Design System &amp; User Experience
 
-UGNAYRA is architected as a **strictly decoupled monorepo**, ensuring clean boundaries between the presentation client, API business logic, and cloud storage:
-
-```
-UGNAYRA/
-├── 🌐 frontend/              # Static Single Page Application (SPA)
-│   ├── src/                  # Unbundled source (HTML5, CSS3, ES6 JS, jQuery)
-│   │   ├── css/              # Modular tokens, components, views, dark/light themes
-│   │   ├── js/               # Core routing, API client, Store, UI components, modules
-│   │   └── pages/            # View templates (Feed, Auth, Chat, Communities, etc.)
-│   ├── dist/                 # Minified & mangled production bundle (Ready for Vercel)
-│   └── public/               # Static assets, SVG icons, brand logos, school photography
-│
-├── ⚙️ backend/               # PHP 8.2+ REST API Service (Ready for Render)
-│   ├── app/
-│   │   ├── Config/           # Environment loader & database configuration
-│   │   ├── Controllers/      # REST API resource controllers (JSON endpoints)
-│   │   ├── Middleware/       # Pipeline: CORS, RateLimit, Auth, CSRF, RoleGuard
-│   │   ├── Models/           # Parameterized PDO SQL repositories
-│   │   ├── Services/         # Business services (Auth, Posts, Chat, Storage, etc.)
-│   │   └── Support/          # Validation, Crypto UUIDs, HTTP response envelope
-│   ├── database/             # PostgreSQL schema DDL, sequential migrations & seeders
-│   ├── public/index.php      # Front controller & PSR-4 bootstrap
-│   └── tests/                # Automated backend test suite
-│
-├── 📄 docs/                  # Architectural specs, API documentation & ER diagrams
-└── 🚀 render.yaml            # Render Blueprint Infrastructure-as-Code
-```
-
-### 🔄 Data & Request Flow
-```mermaid
-flowchart LR
-    subgraph Client["🖥️ Frontend Client (Vercel)"]
-        UI["SPA Interface\n(HTML5 + Custom CSS Tokens)"]
-        JS["State Store & jQuery\n(apiClient.js)"]
-        UI <--> JS
-    end
-
-    subgraph API["⚡ Backend REST API (Render Docker)"]
-        FC["public/index.php\n(PSR-4 Router)"]
-        MW["Security Middleware\n(CORS • Rate Limit • Session/CSRF • RBAC)"]
-        SVC["Controllers & Domain Services\n(AuthService, PostService, etc.)"]
-        FC --> MW --> SVC
-    end
-
-    subgraph Data["☁️ Cloud Infrastructure (Supabase & Google)"]
-        DB[("Supabase PostgreSQL\n(UUID Keys, FKs & Indexes)")]
-        GAPI["Google OAuth 2.0\n(User Identity API)"]
-        BUCKET[("Supabase Media Storage\n(Encrypted Buckets)")]
-    end
-
-    JS <-->|"HTTPS JSON /api/v1/*"| FC
-    SVC <-->|"PDO Prepared SQL (TLS)"| DB
-    SVC <-->|"OAuth Token Verification"| GAPI
-    SVC <-->|"Secure cURL Uploads"| BUCKET
-```
-
----
-
-## 💻 Tech Stack
+The UGNAYRA interface was designed from the ground up to balance modern social media ergonomics with academic focus and accessibility:
 
 <div align="center">
 
-| Layer | Technologies & Tools |
-|:---|:---|
-| **Frontend Client** | HTML5, CSS3 Variables (Design Tokens), Vanilla ES6+, jQuery 3.7, AJAX, Lucide Icons |
-| **Backend API** | PHP 8.2+, Custom PSR-4 REST Router, Middleware Pipeline, PDO (`pdo_pgsql`) |
-| **Database** | Supabase Managed PostgreSQL 15+ (Normalized Relational Schema, Composite Indexes) |
-| **Authentication** | Dual-Auth: Google Identity Services (GSI OAuth 2.0) + Native Session/Bcrypt |
-| **Realtime Chat** | Visibility-aware asynchronous delta polling + Firebase Realtime Bridge |
-| **Cloud Storage** | Supabase Storage Bucket (`ugnayra-media`) for verified avatars and post media |
-| **Production DevOps** | **Vercel** (Static Client Hosting), **Render** (Docker PHP 8.2+ Web Service) |
+| Design Token | Color Swatch | Hex Code | Purpose &amp; Usage |
+|:---|:---:|:---:|:---|
+| **Deep Navy** | ![#173B70](https://img.shields.io/badge/-%23173B70-173B70?style=flat-square) | `#173B70` | Primary brand anchor, header hierarchy, and dark mode base |
+| **Royal Blue** | ![#2864A8](https://img.shields.io/badge/-%232864A8-2864A8?style=flat-square) | `#2864A8` | Interactive buttons, active navigation states, link highlights |
+| **Warm Gold** | ![#F5C518](https://img.shields.io/badge/-%23F5C518-F5C518?style=flat-square) | `#F5C518` | Visual accents, verification markers, and active tabs |
+| **Advisory Red** | ![#D94B45](https://img.shields.io/badge/-%23D94B45-D94B45?style=flat-square) | `#D94B45` | Priority advisories, urgent notifications, critical actions |
+| **Clean Surface** | ![#F7F8FA](https://img.shields.io/badge/-%23F7F8FA-F7F8FA?style=flat-square) | `#F7F8FA` | Low-strain background canvas in light mode |
 
 </div>
 
----
-
-## 🚀 Quick Start & Local Development
-
-Follow these steps to run the complete UGNAYRA environment locally on your machine.
-
-### 📋 Prerequisites
-- **PHP 8.2 or higher** with `pdo_pgsql`, `mbstring`, `curl`, `openssl`, and `fileinfo` extensions enabled.
-- **Node.js 18+ & npm** (for bundling and asset pipeline).
-- **PostgreSQL / Supabase Account** (for hosted database & media storage).
+### Key UX Highlights
+- **Adaptive Dark / Light Themes:** Hand-calibrated contrast ratios complying with WCAG 2.1 AA standards, minimizing eye fatigue during late-night study sessions.
+- **Mobile-First Responsive Shell:** Adaptive layout offering a floating bottom bar on mobile screens and an expansive productivity sidebar on desktop viewports.
+- **Vector Iconography:** Powered by crisp, modern SVG icons that scale without pixelation across high-density displays.
+- **Zero Content Layout Shift (CLS):** Pre-allocated image frames and skeleton loading states ensure stable rendering during asynchronous data retrieval.
 
 ---
 
-### 1️⃣ Clone the Repository
-```bash
-git clone https://github.com/martquirante/UGNAYRA.git
-cd UGNAYRA
+## Platform Architecture
+
+UGNAYRA operates on a decoupled client-server architecture designed for reliability, fast initial loads, and independent scalability:
+
+```text
+                                 [ UGNAYRA Ecosystem ]
+                                           │
+         ┌─────────────────────────────────┼─────────────────────────────────┐
+         ▼                                 ▼                                 ▼
+┌──────────────────┐             ┌──────────────────┐             ┌──────────────────┐
+│   Static Client  │             │   Core REST API  │             │ Cloud Data Store │
+│   (Vercel SPA)   │ ◄──HTTPS──► │  (Render Docker) │ ◄──TLS/SQL► │  (Supabase PG)   │
+│                  │             │                  │             │                  │
+│  • HTML5/CSS3    │             │  • PHP 8.2+      │             │  • PostgreSQL 15 │
+│  • Vanilla ES6+  │             │  • Middleware    │             │  • Media Storage │
+│  • jQuery AJAX   │             │  • CSRF/RBAC     │             │  • Google OAuth  │
+└──────────────────┘             └──────────────────┘             └──────────────────┘
 ```
 
-### 2️⃣ Configure Backend Environment
-Create your local environment file inside the `backend/` directory:
-```bash
-cp backend/.env.example backend/.env
-```
-Fill in your database and authentication credentials:
-```env
-APP_NAME=UGNAYRA
-APP_ENV=development
-APP_DEBUG=true
-APP_URL=http://localhost:8080
-FRONTEND_ORIGIN=http://localhost:3000,http://127.0.0.1:3000
-
-# Supabase PostgreSQL Pooler Connection
-DB_CONNECTION=pgsql
-DB_HOST=aws-0-ap-southeast-1.pooler.supabase.com
-DB_PORT=5432
-DB_DATABASE=postgres
-DB_USERNAME=postgres.your_project_id
-DB_PASSWORD=your_secure_password
-DB_SSLMODE=require
-
-# Google OAuth 2.0 API
-GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-```
-
-### 3️⃣ Initialize the Database Schema
-In your Supabase SQL Editor (or local PostgreSQL client), execute the schema:
-```bash
-# Apply initial tables, triggers, and constraints
-database/schema.sql
-```
-
-### 4️⃣ Start Local Development Servers
-
-In terminal **1** (Start the PHP REST API on port `8080`):
-```bash
-php -S 127.0.0.1:8080 -t backend/public
-```
-
-In terminal **2** (Start the Frontend static client on port `3000`):
-```bash
-# Using Python
-python scripts/spa-server.py 3000 frontend
-
-# Or using npx serve
-npx serve frontend -l 3000
-```
-
-Open your browser and navigate to: **`http://localhost:3000`** 🎉
+- **Frontend Application:** Zero server-side rendering overhead. Assets are pre-minified and distributed globally via Content Delivery Networks for instantaneous edge delivery.
+- **Backend Application Programming Interface:** Modular PHP 8.2 service architecture handling request authentication, CSRF validation, rate limiting, and business logic execution.
+- **Database &amp; Object Storage:** PostgreSQL relational database with foreign-key referential integrity, indexed query paths, and dedicated object storage for verified media files.
 
 ---
 
-## 🧪 Testing Suite
+## Privacy &amp; Security Governance
 
-UGNAYRA includes an automated PHP backend test suite with zero third-party testing bloat:
+UGNAYRA is engineered with security and privacy by design:
 
-```bash
-php backend/tests/run.php
-```
-
-```
-=================================================
-  UGNAYRA — Backend Test Suite (PHP 8.2+)
-=================================================
-[PASS] Loads environment configuration without dependencies
-[PASS] Generates RFC 4122 compliant v4 UUIDs
-[PASS] Hashes and verifies passwords using bcrypt (cost 12)
-[PASS] Generates cryptographic tokens and SHA-256 hashes
-[PASS] Sanitizes user input strings and strips dangerous tags
-[PASS] Validates required, email, username, and length rules
-[PASS] Validates registration fields and password confirmation
-[PASS] Validates post creation and content length bounds
-[PASS] Validates community categories and name constraints
-[PASS] Validates official announcement priorities and categories
-[PASS] Compiles REST route parameters and matches URL paths
-[PASS] Inspects Supabase Client configuration state safely
-=================================================
-  Results: 12 Passed, 0 Failed
-=================================================
-```
-
----
-
-## 📡 REST API Overview
-
-All API endpoints return a standardized, predictable JSON envelope:
-
-```json
-{
-  "success": true,
-  "message": "Operation completed successfully.",
-  "data": { ... },
-  "errors": []
-}
-```
-
-<details>
-<summary><b>View Major REST API Endpoints</b></summary>
-<br>
-
-| Method | Endpoint | Description | Auth Required |
-|:---:|:---|:---|:---:|
-| `POST` | `/api/v1/auth/login` | Authenticate user & start session | ❌ No |
-| `POST` | `/api/v1/auth/register` | Register new campus account | ❌ No |
-| `POST` | `/api/v1/auth/google` | Verify Google OAuth identity & login | ❌ No |
-| `POST` | `/api/v1/auth/google-onboard` | Complete academic profile for Google signups | ❌ No |
-| `GET` | `/api/v1/auth/me` | Retrieve authenticated user profile | ✅ Yes |
-| `POST` | `/api/v1/auth/logout` | Terminate session & clear cookies | ✅ Yes |
-| `GET` | `/api/v1/feed` | Cursor-paginated news feed posts | ✅ Yes |
-| `POST` | `/api/v1/posts` | Create new post with media | ✅ Yes |
-| `POST` | `/api/v1/posts/{id}/react` | Like / react to a post | ✅ Yes |
-| `GET` | `/api/v1/messages/conversations` | List user active chat threads | ✅ Yes |
-| `POST` | `/api/v1/messages` | Send direct message | ✅ Yes |
-| `GET` | `/api/v1/communities` | Browse campus communities | ✅ Yes |
-| `GET` | `/api/v1/announcements` | Fetch verified campus advisories | ✅ Yes |
-| `POST` | `/api/v1/announcements` | Publish campus advisory *(Faculty/Personnel only)* | ✅ Yes (Role-Gated) |
-
-</details>
-
----
-
-## 🛡️ Security & Privacy Architecture
-
-- **Defense-in-Depth:** Zero trust in client-side validations; all payloads pass through server-side regex and sanitized type checks.
-- **SQL Injection Immunization:** 100% of queries use strictly bound PDO prepared statements.
-- **XSS Mitigation:** HTML entity escaping on output interpolation with strict Content-Security-Policy headers.
-- **Rate-Limiting Protection:** Token-bucket rate limiting applied to authentication endpoints (10 attempts / min) and API requests (120 requests / min).
-
----
-
-## 📄 Contributing & License
-
-Contributions, bug reports, and suggestions are welcome! Feel free to open an [Issue](https://github.com/martquirante/UGNAYRA/issues) or submit a [Pull Request](https://github.com/martquirante/UGNAYRA/pulls).
-
-Distributed under the **MIT License**. See `LICENSE` for more information.
+- **Strict Identity Verification:** Academic accounts are protected by multi-tier authentication, preventing impersonation and unverified access.
+- **Encrypted Communication:** All data in transit is enforced via TLS/HTTPS, and all database operations utilize parameterized queries to eliminate SQL injection vectors.
+- **Cross-Site Request Forgery (CSRF) Prevention:** Mutating state operations require validated CSRF tokens alongside SameSite cookie protections.
+- **Input Sanitization &amp; Output Encoding:** Multi-layer sanitization pipelines guard against Cross-Site Scripting (XSS) across all rich-text and comment inputs.
+- **Rate-Limiting Protection:** Token-bucket rate limiting safeguards login endpoints and API resources against abusive brute-force attempts.
 
 ---
 
 <div align="center">
 
-  Crafted with care by [**Raymart Quirante**](https://github.com/martquirante) & the UGNAYRA Team.
-
-  <sub>Built for students. Built for faculty. Built for connection.</sub>
+  <p>
+    <strong>UGNAYRA</strong> &bull; School-Based Social Networking Platform
+  </p>
+  <p>
+    Conceived and engineered by <strong>Raymart Quirante</strong>
+  </p>
+  <p>
+    <sub>Dedicated to modernizing campus communication, collaboration, and student engagement.</sub>
+  </p>
 
 </div>
