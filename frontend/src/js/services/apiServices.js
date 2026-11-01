@@ -19,6 +19,204 @@
             });
         }
         return catalogPromiseCache;
+      },
+      yearLevels: function (program) {
+        return api.get('/academics/year-levels', { program: program || '' }, { ignoreAuthRedirect: true });
+      },
+      sections: function (program, yearLevel, termId) {
+        return api.get('/academics/sections', {
+          program: program,
+          year_level: yearLevel,
+          term_id: termId || ''
+        }, { ignoreAuthRedirect: true });
+      },
+      resolveDesignation: function (program, yearLevel, section, batch) {
+        return api.post('/academics/designation/resolve', {
+          program: program,
+          year_level: yearLevel,
+          section: section,
+          batch: batch || null
+        }, { ignoreAuthRedirect: true });
+      }
+    },
+
+    Classrooms: {
+      list: function () {
+        return api.get('/classrooms');
+      },
+      create: function (data) {
+        return api.post('/classrooms', data);
+      },
+      get: function (id) {
+        return api.get('/classrooms/' + encodeURIComponent(id));
+      },
+      join: function (joinCode, batch) {
+        return api.post('/classrooms/join', {
+          join_code: joinCode,
+          batch: batch || null
+        });
+      },
+      people: function (id) {
+        return api.get('/classrooms/' + encodeURIComponent(id) + '/people');
+      },
+      members: function (id) {
+        return api.get('/classrooms/' + encodeURIComponent(id) + '/people');
+      },
+      stream: function (id) {
+        return api.get('/classrooms/' + encodeURIComponent(id) + '/stream');
+      },
+      postAnnouncement: function (id, contentOrFormData, attachments) {
+        if (contentOrFormData instanceof FormData) {
+          return api.upload('/classrooms/' + encodeURIComponent(id) + '/stream', contentOrFormData);
+        }
+        return api.post('/classrooms/' + encodeURIComponent(id) + '/stream', {
+          content: contentOrFormData,
+          attachments: attachments || []
+        });
+      },
+      studentGrades: function (id) {
+        return api.get('/classrooms/' + encodeURIComponent(id) + '/assignments');
+      },
+      gradeMatrix: function (id) {
+        return api.get('/classrooms/' + encodeURIComponent(id) + '/people');
+      }
+    },
+
+    Assignments: {
+      list: function (classroomId) {
+        return api.get('/classrooms/' + encodeURIComponent(classroomId) + '/assignments');
+      },
+      create: function (classroomId, data) {
+        if (data instanceof FormData) {
+          return api.upload('/classrooms/' + encodeURIComponent(classroomId) + '/assignments', data);
+        }
+        return api.post('/classrooms/' + encodeURIComponent(classroomId) + '/assignments', data);
+      },
+      get: function (id) {
+        return api.get('/assignments/' + encodeURIComponent(id));
+      },
+      getComments: function () {
+        return Promise.resolve({ data: { comments: [] } });
+      },
+      postComment: function () {
+        return Promise.resolve({ data: {} });
+      }
+    },
+
+    Submissions: {
+      submit: function (assignmentId, formData) {
+        return api.upload('/assignments/' + encodeURIComponent(assignmentId) + '/submit', formData);
+      },
+      getMy: function (assignmentId) {
+        return api.get('/assignments/' + encodeURIComponent(assignmentId)).then(function (res) {
+          var a = (res && res.data && res.data.assignment) || res.data || {};
+          return {
+            data: {
+              submission: a.my_submission || null,
+              versions: (a.my_submission && a.my_submission.versions) || []
+            }
+          };
+        });
+      },
+      unsubmit: function () {
+        return Promise.resolve({ data: {} });
+      },
+      list: function (assignmentId) {
+        return api.get('/assignments/' + encodeURIComponent(assignmentId) + '/submissions');
+      },
+      grade: function (submissionId, scoreOrData, feedback) {
+        var body = typeof scoreOrData === 'object'
+          ? scoreOrData
+          : { score: scoreOrData, feedback: feedback || '' };
+        return api.post('/submissions/' + encodeURIComponent(submissionId) + '/grade', body);
+      }
+    },
+
+    Schedules: {
+      list: function (classroomId) {
+        return api.get('/classrooms/' + encodeURIComponent(classroomId) + '/schedules');
+      },
+      save: function (classroomId, data) {
+        return api.post('/classrooms/' + encodeURIComponent(classroomId) + '/schedules', data);
+      },
+      create: function (data) {
+        var cid = data.classroom_id;
+        return api.post('/classrooms/' + encodeURIComponent(cid) + '/schedules', data);
+      },
+      activeSession: function (classroomId) {
+        return api.get('/classrooms/' + encodeURIComponent(classroomId) + '/sessions/active');
+      },
+      active: function (classroomId) {
+        return api.get('/classrooms/' + encodeURIComponent(classroomId) + '/sessions/active');
+      },
+      startInstantMeeting: function (classroomId, title) {
+        return api.post('/classrooms/' + encodeURIComponent(classroomId) + '/meetings/instant', {
+          title: title || 'Live Class Session'
+        });
+      },
+      startInstant: function (classroomId, title) {
+        return api.post('/classrooms/' + encodeURIComponent(classroomId) + '/meetings/instant', {
+          title: title || 'Live Class Session'
+        });
+      },
+      endMeeting: function (sessionId) {
+        return api.post('/class-sessions/' + encodeURIComponent(sessionId) + '/end', {});
+      },
+      cancelSession: function (sessionId, reason) {
+        return api.post('/class-sessions/' + encodeURIComponent(sessionId) + '/cancel', {
+          reason: reason || 'Instructor unavailable'
+        });
+      },
+      reschedule: function (data) {
+        return api.post('/class-sessions/reschedule', data);
+      },
+      validateMeeting: function (meetingCode) {
+        return api.get('/meetings/' + encodeURIComponent(meetingCode) + '/validate');
+      }
+    },
+
+    Groups: {
+      list: function (type) {
+        return api.get('/groups', { type: type || '' });
+      },
+      create: function (data) {
+        return api.post('/groups', data);
+      },
+      get: function (id) {
+        return api.get('/groups/' + encodeURIComponent(id));
+      },
+      joinPreview: function (token) {
+        return api.get('/groups/join-preview', { token: token });
+      },
+      join: function (token, note) {
+        return api.post('/groups/join', { token: token, note: note || '' });
+      },
+      addMembers: function (id, data) {
+        return api.post('/groups/' + encodeURIComponent(id) + '/members', data);
+      },
+      getInviteLink: function (id) {
+        return api.get('/groups/' + encodeURIComponent(id));
+      },
+      updateAccess: function (id, data) {
+        return api.post('/groups/' + encodeURIComponent(id) + '/access', data);
+      }
+    },
+
+    Directory: {
+      list: function (params) {
+        return api.get('/directory/students', params || {});
+      },
+      students: function (params) {
+        return api.get('/directory/students', params || {});
+      }
+    },
+
+    Dashboard: {
+      overview: function () {
+        return api.get('/dashboard/overview');
+      },
+      getSummary: function () {
+        return api.get('/dashboard/overview');
       }
     },
 
@@ -131,7 +329,6 @@
       heartbeat: function () { return api.post('/presence/heartbeat', {}, { ignoreAuthRedirect: true }); }
     },
 
-    // Future-Ready WebRTC Signaling Seam (Isolated per Section 6.I)
     Rtc: {
       createSession: function (conversationId) { return api.post('/rtc/sessions', { conversation_id: conversationId }); },
       sendSignal: function (sessionId, type, payload) {

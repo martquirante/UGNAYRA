@@ -116,6 +116,9 @@
     if (prevRoute.page === 'messages' && nextRoute.page !== 'messages') {
       window.UgnayraMessagesModule.unmount();
     }
+    if (prevRoute.page === 'meeting' && nextRoute.page !== 'meeting' && window.UgnayraMeeting) {
+      window.UgnayraMeeting.teardown();
+    }
 
     // Highlight active nav links
     var activeNavKey = nextRoute.page === 'post' ? 'feed' : nextRoute.page;
@@ -127,7 +130,7 @@
 
     // Layout mode: 3-column on Home & News Feed & Post View; 2-column wide stage on dedicated views
     var $grid = $('#shell-grid');
-    if (nextRoute.page === 'feed' || nextRoute.page === 'home' || nextRoute.page === 'post') {
+    if (nextRoute.page === 'feed' || nextRoute.page === 'post') {
       $grid.removeClass('layout-wide');
     } else {
       $grid.addClass('layout-wide');
@@ -137,7 +140,27 @@
 
     switch (nextRoute.page) {
       case 'home':
-        window.UgnayraFeedModule.mount('home');
+        if (window.UgnayraCockpit) {
+          window.UgnayraCockpit.mount();
+        } else {
+          window.UgnayraFeedModule.mount('home');
+        }
+        break;
+      case 'classroom':
+        if (nextRoute.param) {
+          window.UgnayraClassroom.mountDetail(nextRoute.param);
+        } else {
+          window.UgnayraClassroom.mountList();
+        }
+        break;
+      case 'assignment':
+        window.UgnayraAssignment.mountDetail(nextRoute.param);
+        break;
+      case 'meeting':
+        window.UgnayraMeeting.mountStage(nextRoute.param);
+        break;
+      case 'directory':
+        window.UgnayraDirectory.mount();
         break;
       case 'feed':
         window.UgnayraFeedModule.mount('feed');

@@ -1,0 +1,187 @@
+<!-- ==========================================================================
+     UGNAYRA — Academic Student Directory & Cohort Filter
+     (frontend/src/pages/directory/student-directory.html)
+     ========================================================================== -->
+<div id="student-directory-root" class="student-directory-container">
+  <header class="page-header-bar">
+    <div>
+      <div class="header-tag-pill mb-1">
+        <i data-lucide="users-round" class="icon-xs"></i>
+        <span>Campus Academic Roster</span>
+      </div>
+      <h1 class="heading-xl">Student &amp; Cohort Directory</h1>
+      <p class="text-secondary">
+        Filter students by college, program, year level, and official academic sections for collaboration and group management.
+      </p>
+    </div>
+    <div class="header-action-group">
+      <button type="button" class="btn btn-secondary" id="btn-create-section-gc">
+        <i data-lucide="message-square-plus" class="icon-sm"></i>
+        <span>Create Section GC</span>
+      </button>
+      <button type="button" class="btn btn-primary" id="btn-bulk-add-gc" disabled>
+        <i data-lucide="user-plus" class="icon-sm"></i>
+        <span>Add Selected (<span id="selected-students-count">0</span>)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Cascading Filter Controls Card -->
+  <div class="card p-4 mb-4 directory-filters-card">
+    <div class="form-row-4 mb-3">
+      <!-- Search Input -->
+      <div class="form-group">
+        <label class="form-label text-xs" for="dir-search-input">Search Student</label>
+        <div class="input-wrapper has-left-icon">
+          <span class="input-icon-left">
+            <i data-lucide="search" class="icon-xs"></i>
+          </span>
+          <input
+            type="search"
+            id="dir-search-input"
+            class="form-input form-input-sm"
+            placeholder="Name, ID number, or username..."
+            autocomplete="off"
+          />
+        </div>
+      </div>
+
+      <!-- College Filter -->
+      <div class="form-group">
+        <label class="form-label text-xs" for="dir-college-select">College / Unit</label>
+        <select id="dir-college-select" class="form-input form-input-sm">
+          <option value="">All Colleges &amp; Campuses</option>
+          <option value="CICT" selected>College of Information and Communications Technology</option>
+          <option value="COE">College of Engineering</option>
+          <option value="CS">College of Science</option>
+          <option value="CBA">College of Business Administration</option>
+        </select>
+      </div>
+
+      <!-- Program / Course Filter -->
+      <div class="form-group">
+        <label class="form-label text-xs" for="dir-program-select">Program / Course</label>
+        <select id="dir-program-select" class="form-input form-input-sm">
+          <option value="">All Programs</option>
+          <option value="BSIT" selected>BS Information Technology (BSIT)</option>
+          <option value="BSIS">BS Information Systems (BSIS)</option>
+          <option value="BLIS">Bachelor of Library &amp; Information Science (BLIS)</option>
+        </select>
+      </div>
+
+      <!-- Year Level Filter -->
+      <div class="form-group">
+        <label class="form-label text-xs" for="dir-year-select">Year Level</label>
+        <select id="dir-year-select" class="form-input form-input-sm">
+          <option value="">All Year Levels</option>
+          <option value="1st_year">1st Year</option>
+          <option value="2nd_year" selected>2nd Year</option>
+          <option value="3rd_year">3rd Year</option>
+          <option value="4th_year">4th Year</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row-3">
+      <!-- Section Filter -->
+      <div class="form-group">
+        <label class="form-label text-xs" for="dir-section-select">Official Section</label>
+        <select id="dir-section-select" class="form-input form-input-sm">
+          <option value="">All Sections</option>
+          <option value="A">Section A</option>
+          <option value="B">Section B</option>
+          <option value="C">Section C</option>
+          <option value="D" selected>Section D</option>
+          <option value="E">Section E</option>
+        </select>
+      </div>
+
+      <!-- Lab Batch Filter -->
+      <div class="form-group">
+        <label class="form-label text-xs" for="dir-batch-select">Laboratory Batch</label>
+        <select id="dir-batch-select" class="form-input form-input-sm">
+          <option value="">All Batches (1 &amp; 2)</option>
+          <option value="1">Batch 1</option>
+          <option value="2">Batch 2</option>
+        </select>
+      </div>
+
+      <div class="form-group form-group-align-bottom">
+        <button type="button" class="btn btn-secondary btn-sm w-full" id="btn-reset-dir-filters">
+          <i data-lucide="rotate-ccw" class="icon-xs"></i>
+          <span>Reset Filters</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Roster Results Header & Select All Toolbar -->
+  <div class="roster-toolbar mb-3">
+    <div class="roster-meta-left">
+      <label class="select-all-label">
+        <input type="checkbox" id="dir-select-all-checkbox" />
+        <span class="font-semibold text-sm">Select All</span>
+      </label>
+      <span class="roster-count-text text-secondary text-sm">
+        Showing <strong id="dir-results-count">0</strong> students
+      </span>
+    </div>
+
+    <div class="roster-cohort-badge" id="dir-active-cohort-badge">
+      <i data-lucide="graduation-cap" class="icon-xs"></i>
+      <span id="dir-cohort-text">Filtered by: BSIT 2D</span>
+    </div>
+  </div>
+
+  <!-- Students Cards Grid -->
+  <div id="dir-students-grid" class="cards-grid-2">
+    <div class="card-skeleton" style="height: 120px;"></div>
+    <div class="card-skeleton" style="height: 120px;"></div>
+  </div>
+
+  <!-- Add to Group Chat Modal -->
+  <div class="ug-modal hidden" id="dir-add-to-gc-modal" role="dialog" aria-labelledby="modal-add-gc-title">
+    <div class="ug-modal-backdrop js-close-gc-modal"></div>
+    <div class="ug-modal-dialog">
+      <div class="ug-modal-header">
+        <div class="modal-title-wrap">
+          <i data-lucide="messages-square" class="icon-md text-primary"></i>
+          <h2 class="heading-md" id="modal-add-gc-title">Add to Group Chat</h2>
+        </div>
+        <button type="button" class="btn-icon-subtle js-close-gc-modal" aria-label="Close dialog">
+          <i data-lucide="x" class="icon-sm"></i>
+        </button>
+      </div>
+      <form id="dir-add-to-gc-form">
+        <div class="ug-modal-body">
+          <p class="text-sm text-secondary mb-3">
+            Select a target group chat or create a new section channel for the <strong id="modal-gc-selected-count">0</strong> selected students.
+          </p>
+          <div class="form-group mb-3">
+            <label class="form-label" for="dir-target-gc-select">Select Group Chat</label>
+            <select id="dir-target-gc-select" class="form-input">
+              <option value="">-- Choose existing group --</option>
+            </select>
+          </div>
+          <div class="divider-text mb-3"><span>OR CREATE NEW</span></div>
+          <div class="form-group">
+            <label class="form-label" for="dir-new-gc-name">New Group Chat Name</label>
+            <input
+              type="text"
+              id="dir-new-gc-name"
+              class="form-input"
+              placeholder="e.g. BSIT 2D — Class Official GC"
+            />
+          </div>
+        </div>
+        <div class="ug-modal-footer">
+          <button type="button" class="btn btn-secondary js-close-gc-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-confirm-add-to-gc">
+            <span>Confirm &amp; Add</span>
+            <i data-lucide="check" class="icon-xs"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

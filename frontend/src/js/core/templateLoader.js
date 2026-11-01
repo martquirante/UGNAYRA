@@ -21,7 +21,13 @@
     COMMUNITIES: '/src/pages/communities/communities.html?' + TEMPLATE_REV,
     COMMUNITY_DETAIL: '/src/pages/communities/detail.html?' + TEMPLATE_REV,
     PROFILE: '/src/pages/profile/profile.html?' + TEMPLATE_REV,
-    SETTINGS: '/src/pages/profile/settings.html?' + TEMPLATE_REV
+    SETTINGS: '/src/pages/profile/settings.html?' + TEMPLATE_REV,
+    CLASSROOM_LIST: '/src/pages/classroom/classroom-list.html?' + TEMPLATE_REV,
+    CLASSROOM_DETAIL: '/src/pages/classroom/classroom-detail.html?' + TEMPLATE_REV,
+    ASSIGNMENT_DETAIL: '/src/pages/classroom/assignment-detail.html?' + TEMPLATE_REV,
+    MEETING_STAGE: '/src/pages/meeting/meeting-stage.html?' + TEMPLATE_REV,
+    STUDENT_DIRECTORY: '/src/pages/directory/student-directory.html?' + TEMPLATE_REV,
+    COCKPIT: '/src/pages/dashboard/cockpit.html?' + TEMPLATE_REV
   });
 
   function load(viewPath) {

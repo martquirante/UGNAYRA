@@ -1,0 +1,194 @@
+<!-- ==========================================================================
+     UGNAYRA — Academic Assignment Detail & Submission View
+     (frontend/src/pages/classroom/assignment-detail.html)
+     ========================================================================== -->
+<div id="assignment-detail-root" class="assignment-detail-container">
+  <!-- Breadcrumb Navigation -->
+  <nav class="classroom-breadcrumbs mb-3" aria-label="Breadcrumb navigation">
+    <a href="/classroom" class="breadcrumb-back-link">
+      <i data-lucide="chevron-left" class="icon-sm"></i>
+      <span>Classrooms</span>
+    </a>
+    <span class="breadcrumb-separator">/</span>
+    <a href="#" class="breadcrumb-back-link" id="crumb-classroom-link">Subject</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current" id="crumb-assignment-title">Assignment</span>
+  </nav>
+
+  <div class="assignment-layout-grid">
+    <!-- Main Left Column: Assignment Details & Instructions -->
+    <main class="assignment-main-content">
+      <div class="card p-4 mb-4 assignment-overview-card">
+        <div class="assignment-meta-bar mb-2">
+          <div class="assignment-author-info">
+            <div class="avatar-sm" id="assign-author-avatar">T</div>
+            <div>
+              <div class="font-semibold text-sm" id="assign-author-name">Instructor</div>
+              <div class="text-xs text-muted" id="assign-created-date">Posted Date</div>
+            </div>
+          </div>
+          <div class="assignment-due-points">
+            <span class="points-badge" id="assign-points-badge">100 Points</span>
+            <span class="due-badge" id="assign-due-badge">Due Oct 31, 11:59 PM</span>
+          </div>
+        </div>
+
+        <h1 class="heading-xl mb-3" id="assign-display-title">Assignment Title</h1>
+
+        <div class="assignment-instructions-body mb-4" id="assign-instructions-text">
+          <p class="text-secondary">Loading instructions...</p>
+        </div>
+
+        <!-- Instructor Reference Attachment (if present) -->
+        <div class="assignment-attachments-wrap hidden" id="assign-attachments-section">
+          <h4 class="heading-xs text-muted text-uppercase mb-2">Reference Materials</h4>
+          <div id="assign-attachment-item" class="attachment-file-card"></div>
+        </div>
+      </div>
+
+      <!-- Class Discussion / Comments Card -->
+      <div class="card p-4 assignment-comments-card">
+        <h3 class="heading-sm mb-3">
+          <i data-lucide="message-square" class="icon-xs text-secondary"></i>
+          <span>Class Comments</span>
+        </h3>
+        <div id="assign-comments-list" class="comments-list mb-3">
+          <p class="text-xs text-muted">No comments posted yet.</p>
+        </div>
+        <form id="assign-comment-form" class="comment-composer-form">
+          <input
+            type="text"
+            id="assign-comment-input"
+            class="form-input form-input-sm"
+            placeholder="Add a class comment..."
+            required
+          />
+          <button type="submit" class="btn btn-secondary btn-sm">
+            <i data-lucide="send" class="icon-xs"></i>
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <!-- Right Side Column: Student Submission Workspace OR Teacher Grading Panel -->
+    <aside class="assignment-side-pane">
+      <!-- 1. STUDENT SUBMISSION WORKSPACE -->
+      <div class="card p-4 mb-4 submission-work-card" id="student-submission-box">
+        <div class="submission-card-header mb-3">
+          <h2 class="heading-md">Your Work</h2>
+          <span class="status-chip is-assigned" id="submission-status-chip">Assigned</span>
+        </div>
+
+        <!-- Drag & Drop Multi-file Dropzone -->
+        <div class="file-dropzone mb-3" id="submission-dropzone">
+          <input
+            type="file"
+            id="submission-file-input"
+            class="hidden"
+            multiple
+            accept=".pdf,.docx,.doc,.pptx,.ppt,.xlsx,.xls,.zip,.rar,.png,.jpg,.jpeg,.txt"
+          />
+          <div class="dropzone-content">
+            <div class="dropzone-icon">
+              <i data-lucide="upload-cloud" class="icon-lg text-primary"></i>
+            </div>
+            <p class="dropzone-title">Drag &amp; drop your deliverables</p>
+            <p class="dropzone-subtitle text-xs text-muted">PDF, Word, Excel, ZIP or images up to 25MB each</p>
+            <button type="button" class="btn btn-secondary btn-sm mt-2" id="btn-browse-submission-files">
+              <i data-lucide="folder-plus" class="icon-xs"></i>
+              <span>Browse Files</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Selected Files List -->
+        <div class="staged-files-list mb-3" id="staged-files-container"></div>
+
+        <!-- Submission Action Buttons -->
+        <div class="submission-actions-row">
+          <button type="button" class="btn btn-primary w-full" id="btn-turn-in-work">
+            <i data-lucide="check-circle-2" class="icon-sm"></i>
+            <span id="btn-turn-in-label">Turn In</span>
+          </button>
+          <button type="button" class="btn btn-secondary w-full hidden" id="btn-unsubmit-work">
+            <i data-lucide="rotate-ccw" class="icon-sm"></i>
+            <span>Unsubmit Work</span>
+          </button>
+        </div>
+
+        <!-- Grade & Feedback Display (if graded) -->
+        <div class="grade-feedback-box hidden mt-4 p-3" id="student-grade-feedback-box">
+          <div class="grade-feedback-score">
+            <span class="text-xs text-muted">Official Grade:</span>
+            <strong class="text-lg text-gold font-mono" id="student-final-score">95 / 100</strong>
+          </div>
+          <div class="grade-feedback-comment mt-2">
+            <span class="text-xs text-muted">Instructor Feedback:</span>
+            <p class="text-sm mt-1" id="student-feedback-text">Excellent job on the implementation.</p>
+          </div>
+        </div>
+
+        <!-- Submission Version History -->
+        <div class="version-history-section mt-4 pt-3 border-top" id="version-history-box">
+          <h4 class="heading-xs text-muted text-uppercase mb-2">Version History</h4>
+          <div id="submission-versions-list" class="versions-timeline">
+            <p class="text-xs text-muted">No previous submissions.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. TEACHER GRADING PANEL (Visible to Instructors) -->
+      <div class="card p-4 teacher-grading-card js-teacher-only hidden" id="teacher-grading-panel">
+        <div class="grading-panel-header mb-3">
+          <h2 class="heading-md">Instructor Grading</h2>
+          <span class="badge badge-primary">Teacher View</span>
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="form-label" for="grading-student-select">Select Student Submission</label>
+          <select id="grading-student-select" class="form-input">
+            <option value="">-- Choose student roster --</option>
+          </select>
+        </div>
+
+        <div id="selected-submission-details" class="selected-sub-preview hidden mb-3 p-3 card-subtle">
+          <div class="sub-meta mb-2">
+            <span class="font-semibold text-sm" id="grade-sub-student-name">Student Name</span>
+            <span class="status-chip is-submitted text-xs" id="grade-sub-status">Turned In</span>
+          </div>
+          <div class="sub-files mb-2" id="grade-sub-files-list"></div>
+        </div>
+
+        <form id="teacher-grade-form">
+          <div class="form-group mb-3">
+            <label class="form-label" for="teacher-score-input">Score (Max: <span id="grade-max-points">100</span>)</label>
+            <input
+              type="number"
+              id="teacher-score-input"
+              class="form-input font-mono"
+              placeholder="e.g. 95"
+              min="0"
+              max="1000"
+              required
+            />
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label" for="teacher-feedback-input">Private Feedback</label>
+            <textarea
+              id="teacher-feedback-input"
+              class="form-input"
+              rows="3"
+              placeholder="Provide constructive feedback, rubric breakdown, or commendations..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-full" id="btn-submit-grade">
+            <i data-lucide="check" class="icon-sm"></i>
+            <span>Return Grade to Student</span>
+          </button>
+        </form>
+      </div>
+    </aside>
+  </div>
+</div>

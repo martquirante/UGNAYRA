@@ -1,0 +1,161 @@
+<!-- ==========================================================================
+     UGNAYRA — Virtual Classroom Live WebRTC Stage (UGNAYRA Live)
+     (frontend/src/pages/meeting/meeting-stage.html)
+     ========================================================================== -->
+<div id="meeting-stage-root" class="meeting-stage-container">
+  <!-- Top Stage Bar -->
+  <header class="meeting-top-bar">
+    <div class="meeting-info-left">
+      <div class="meeting-brand-pill">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span class="brand-text">UGNAYRA Live</span>
+      </div>
+      <div class="meeting-title-wrap">
+        <h1 class="meeting-title" id="meeting-room-title">Interactive Virtual Classroom</h1>
+        <span class="meeting-subject-tag" id="meeting-subject-tag">IT 305W</span>
+      </div>
+    </div>
+
+    <div class="meeting-info-right">
+      <div class="meeting-timer-pill" id="meeting-timer-display" title="Meeting duration">
+        <i data-lucide="clock" class="icon-xs"></i>
+        <span id="meeting-elapsed-time">00:00</span>
+      </div>
+      <div class="meeting-participants-badge" id="meeting-count-badge" title="Active participants">
+        <i data-lucide="users" class="icon-xs"></i>
+        <span id="meeting-participant-count">1</span>
+      </div>
+      <div class="meeting-security-chip" title="WebRTC Encrypted Media Connection">
+        <i data-lucide="shield-check" class="icon-xs text-gold"></i>
+        <span>Encrypted</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Central Video Stage & Gallery Grid -->
+  <div class="meeting-viewport" id="meeting-viewport">
+    <!-- Screen Share Spotlight View (Active when presenter is sharing) -->
+    <div class="screenshare-viewport hidden" id="screenshare-spotlight">
+      <video id="screenshare-video-el" autoplay playsinline></video>
+      <div class="screenshare-presenter-badge">
+        <i data-lucide="monitor" class="icon-xs"></i>
+        <span id="screenshare-presenter-name">Instructor is presenting</span>
+      </div>
+    </div>
+
+    <!-- Responsive Participant Video Grid -->
+    <div class="video-gallery-grid grid-count-1" id="meeting-video-grid">
+      <!-- Local User Video Tile -->
+      <div class="video-tile is-local" id="local-video-tile">
+        <video id="local-video-el" autoplay playsinline muted></video>
+        <div class="tile-avatar-fallback hidden" id="local-avatar-fallback">
+          <div class="avatar-lg font-bold" id="local-avatar-initials">U</div>
+        </div>
+        <div class="tile-status-bar">
+          <span class="tile-participant-name" id="local-participant-name">You (Student)</span>
+          <div class="tile-status-icons">
+            <span class="status-icon is-muted" id="local-mic-indicator">
+              <i data-lucide="mic-off" class="icon-xs"></i>
+            </span>
+          </div>
+        </div>
+        <div class="active-speaker-ring" id="local-speaker-ring"></div>
+      </div>
+
+      <!-- Remote Participants Container (Dynamic peer tiles appended here) -->
+      <div id="remote-tiles-container" class="contents"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Glassmorphism Control Bar -->
+  <footer class="meeting-control-bar">
+    <div class="control-group-left">
+      <button type="button" class="btn-meeting-control js-toggle-mic" id="meeting-btn-mic" aria-label="Toggle Microphone" title="Toggle Microphone">
+        <i data-lucide="mic" class="icon-md"></i>
+        <span class="btn-label">Mic</span>
+      </button>
+      <button type="button" class="btn-meeting-control js-toggle-cam" id="meeting-btn-cam" aria-label="Toggle Camera" title="Toggle Camera">
+        <i data-lucide="video" class="icon-md"></i>
+        <span class="btn-label">Camera</span>
+      </button>
+      <button type="button" class="btn-meeting-control js-toggle-screen" id="meeting-btn-screen" aria-label="Share Screen" title="Share Screen">
+        <i data-lucide="monitor" class="icon-md"></i>
+        <span class="btn-label">Share</span>
+      </button>
+    </div>
+
+    <div class="control-group-center">
+      <button type="button" class="btn-meeting-control js-raise-hand" id="meeting-btn-hand" aria-label="Raise Hand" title="Raise Hand">
+        <i data-lucide="hand" class="icon-md"></i>
+        <span class="btn-label">Hand</span>
+      </button>
+      <button type="button" class="btn-meeting-control js-toggle-drawer" data-drawer-tab="chat" id="meeting-btn-chat" aria-label="In-meeting Chat" title="In-meeting Chat">
+        <i data-lucide="message-square" class="icon-md"></i>
+        <span class="btn-label">Chat</span>
+        <span class="chat-unread-badge hidden" id="meeting-chat-unread">0</span>
+      </button>
+      <button type="button" class="btn-meeting-control js-toggle-drawer" data-drawer-tab="people" id="meeting-btn-people" aria-label="Participants" title="Participants">
+        <i data-lucide="users" class="icon-md"></i>
+        <span class="btn-label">People</span>
+      </button>
+      <!-- Teacher Only: Mute All -->
+      <button type="button" class="btn-meeting-control js-teacher-only hidden" id="meeting-btn-mute-all" aria-label="Mute All Students" title="Mute All Students">
+        <i data-lucide="mic-off" class="icon-md text-gold"></i>
+        <span class="btn-label">Mute All</span>
+      </button>
+    </div>
+
+    <div class="control-group-right">
+      <button type="button" class="btn-meeting-leave" id="meeting-btn-leave" aria-label="Leave Meeting" title="Leave Meeting">
+        <i data-lucide="phone-off" class="icon-sm"></i>
+        <span>Leave</span>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Slide-out Side Drawer (Chat & Participants) -->
+  <aside class="meeting-side-drawer hidden" id="meeting-side-drawer">
+    <div class="drawer-header">
+      <div class="drawer-tabs">
+        <button type="button" class="drawer-tab is-active js-drawer-tab-btn" data-tab="chat">
+          <i data-lucide="message-square" class="icon-xs"></i>
+          <span>Meeting Chat</span>
+        </button>
+        <button type="button" class="drawer-tab js-drawer-tab-btn" data-tab="people">
+          <i data-lucide="users" class="icon-xs"></i>
+          <span>Participants (<span id="drawer-people-count">1</span>)</span>
+        </button>
+      </div>
+      <button type="button" class="btn-icon-subtle js-close-drawer" aria-label="Close drawer">
+        <i data-lucide="x" class="icon-sm"></i>
+      </button>
+    </div>
+
+    <!-- Tab 1: In-Meeting Chat -->
+    <div class="drawer-tab-pane" id="drawer-pane-chat">
+      <div class="meeting-chat-messages" id="meeting-chat-messages">
+        <div class="chat-empty-hint text-center py-4 text-xs text-muted">
+          Meeting messages are visible to everyone in this class session.
+        </div>
+      </div>
+      <form id="meeting-chat-form" class="meeting-chat-composer">
+        <input
+          type="text"
+          id="meeting-chat-input"
+          class="form-input form-input-sm"
+          placeholder="Send a message to class..."
+          autocomplete="off"
+          required
+        />
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i data-lucide="send" class="icon-xs"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- Tab 2: Participants Roster -->
+    <div class="drawer-tab-pane hidden" id="drawer-pane-people">
+      <div class="meeting-roster-list" id="meeting-roster-list"></div>
+    </div>
+  </aside>
+</div>

@@ -1,0 +1,442 @@
+<!-- ==========================================================================
+     UGNAYRA — Academic Classroom Detail View (Stream, Classwork, People, Grades)
+     (frontend/src/pages/classroom/classroom-detail.html)
+     ========================================================================== -->
+<div id="classroom-detail-root" class="classroom-detail-container">
+  <!-- Top Breadcrumb Bar -->
+  <nav class="classroom-breadcrumbs mb-3" aria-label="Breadcrumb navigation">
+    <a href="/classroom" class="breadcrumb-back-link">
+      <i data-lucide="chevron-left" class="icon-sm"></i>
+      <span>All Classrooms</span>
+    </a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current" id="crumb-subject-code">Loading...</span>
+  </nav>
+
+  <!-- Classroom Hero Banner -->
+  <header class="classroom-hero-card mb-4" id="classroom-hero">
+    <div class="classroom-hero-overlay"></div>
+    <div class="classroom-hero-content">
+      <div class="classroom-meta-top">
+        <span class="classroom-subject-chip" id="detail-subject-code">IT 305W</span>
+        <span class="classroom-section-chip" id="detail-section-code">BSIT 2D</span>
+        <div class="classroom-code-pill" id="detail-join-code-pill" title="Click to copy class code">
+          <i data-lucide="key-round" class="icon-xs"></i>
+          <span>Code: <strong id="detail-join-code">UG-XXXXX</strong></span>
+          <button type="button" class="btn-copy-code" id="btn-copy-class-code" aria-label="Copy class code">
+            <i data-lucide="copy" class="icon-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <h1 class="classroom-hero-title" id="detail-subject-name">Subject Title</h1>
+      <p class="classroom-hero-desc" id="detail-subject-desc">Course syllabus overview and classwork workspace.</p>
+
+      <div class="classroom-hero-footer">
+        <div class="classroom-teacher-pill" id="detail-teacher-pill">
+          <div class="avatar-sm" id="detail-teacher-avatar">T</div>
+          <span id="detail-teacher-name">Instructor Name</span>
+        </div>
+        <div class="classroom-room-pill" id="detail-room-pill">
+          <i data-lucide="map-pin" class="icon-xs"></i>
+          <span id="detail-room-name">Online / Room 301</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dynamic Live Online Class Banner (Prompts 15m before or during active WebRTC session) -->
+  <div class="classroom-live-banner hidden mb-4" id="classroom-live-alert">
+    <div class="live-banner-left">
+      <span class="live-pulsing-dot" aria-hidden="true"></span>
+      <div>
+        <div class="live-banner-status" id="live-banner-status-text">LIVE ONLINE CLASS IN PROGRESS</div>
+        <div class="live-banner-topic" id="live-banner-topic-text">Topic: Weekly Interactive Lecture &amp; Recitation</div>
+      </div>
+    </div>
+    <div class="live-banner-actions">
+      <button type="button" class="btn btn-gold btn-live-join" id="btn-join-live-meeting">
+        <i data-lucide="video" class="icon-sm"></i>
+        <span>Join Online Class</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Teacher Action Controls Bar -->
+  <div class="classroom-teacher-toolbar hidden mb-4" id="classroom-teacher-toolbar">
+    <div class="toolbar-label">
+      <i data-lucide="sparkles" class="icon-xs text-gold"></i>
+      <span>Instructor Management Controls</span>
+    </div>
+    <div class="toolbar-actions">
+      <button type="button" class="btn btn-secondary btn-sm" id="btn-open-schedule-modal">
+        <i data-lucide="calendar-plus" class="icon-xs"></i>
+        <span>Schedule Live Class</span>
+      </button>
+      <button type="button" class="btn btn-secondary btn-sm" id="btn-start-instant-meeting">
+        <i data-lucide="video" class="icon-xs"></i>
+        <span>Start Instant Meeting</span>
+      </button>
+      <button type="button" class="btn btn-primary btn-sm" id="btn-open-create-assignment">
+        <i data-lucide="file-plus" class="icon-xs"></i>
+        <span>New Assignment</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 4 Core Canonical LMS Navigation Tabs -->
+  <div class="classroom-nav-tabs mb-4" role="tablist" aria-label="Classroom sections">
+    <button type="button" class="classroom-tab-btn is-active js-tab-btn" data-tab="stream" role="tab" aria-selected="true">
+      <i data-lucide="message-square" class="icon-xs"></i>
+      <span>Stream</span>
+    </button>
+    <button type="button" class="classroom-tab-btn js-tab-btn" data-tab="classwork" role="tab" aria-selected="false">
+      <i data-lucide="clipboard-list" class="icon-xs"></i>
+      <span>Classwork</span>
+    </button>
+    <button type="button" class="classroom-tab-btn js-tab-btn" data-tab="people" role="tab" aria-selected="false">
+      <i data-lucide="users" class="icon-xs"></i>
+      <span>People</span>
+    </button>
+    <button type="button" class="classroom-tab-btn js-tab-btn" data-tab="grades" role="tab" aria-selected="false">
+      <i data-lucide="award" class="icon-xs"></i>
+      <span>Grades</span>
+    </button>
+  </div>
+
+  <!-- ================= TAB 1: STREAM ================= -->
+  <div class="classroom-tab-pane" id="tab-pane-stream">
+    <div class="classroom-stream-layout">
+      <!-- Left / Main Column: Stream Announcements -->
+      <div class="stream-main-col">
+        <!-- Announcement Composer Card -->
+        <div class="card p-3 mb-4 stream-composer-card" id="stream-composer-box">
+          <div class="stream-composer-header mb-2">
+            <div class="avatar-sm user-avatar-curr">U</div>
+            <span class="text-sm font-semibold text-secondary">Announce something to your class...</span>
+          </div>
+          <form id="stream-announcement-form">
+            <textarea
+              id="stream-announcement-text"
+              name="content"
+              class="form-input form-textarea mb-2"
+              rows="3"
+              placeholder="Share an advisory, learning resource link, or lecture reminder..."
+              required
+            ></textarea>
+            <div class="stream-composer-footer">
+              <div class="composer-tools">
+                <label class="btn-icon-subtle file-attach-label" title="Attach file or reference">
+                  <input type="file" id="stream-announcement-file" class="hidden" />
+                  <i data-lucide="paperclip" class="icon-sm"></i>
+                </label>
+                <span class="file-name-preview text-xs text-muted" id="stream-file-preview"></span>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm" id="btn-post-announcement">
+                <span>Post Announcement</span>
+                <i data-lucide="send" class="icon-xs"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Announcements Feed -->
+        <div id="stream-posts-list" class="stream-posts-container">
+          <div class="card-skeleton" style="height: 140px;"></div>
+          <div class="card-skeleton" style="height: 140px;"></div>
+        </div>
+      </div>
+
+      <!-- Right Column: Upcoming Work & Sched Widget -->
+      <aside class="stream-side-col">
+        <div class="card p-3 mb-3 upcoming-work-card">
+          <div class="side-card-header mb-2">
+            <i data-lucide="clock" class="icon-xs text-gold"></i>
+            <h3 class="heading-sm">Upcoming Deadlines</h3>
+          </div>
+          <div id="stream-upcoming-work-list" class="upcoming-work-list">
+            <p class="text-xs text-muted">Checking pending assignments...</p>
+          </div>
+        </div>
+
+        <div class="card p-3 class-schedule-card">
+          <div class="side-card-header mb-2">
+            <i data-lucide="calendar" class="icon-xs text-primary"></i>
+            <h3 class="heading-sm">Class Schedule</h3>
+          </div>
+          <div id="stream-schedule-list" class="stream-schedule-list">
+            <p class="text-xs text-muted">No scheduled online sessions today.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- ================= TAB 2: CLASSWORK ================= -->
+  <div class="classroom-tab-pane hidden" id="tab-pane-classwork">
+    <div class="classwork-header-bar mb-3">
+      <div>
+        <h2 class="heading-lg">Course Assignments &amp; Projects</h2>
+        <p class="text-secondary text-sm">Submit your deliverables, check rubrics, and view grades.</p>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm js-teacher-only hidden" id="btn-classwork-new-assignment">
+        <i data-lucide="plus" class="icon-xs"></i>
+        <span>Create Assignment</span>
+      </button>
+    </div>
+
+    <div id="classwork-assignments-list" class="classwork-items-list">
+      <div class="card-skeleton" style="height: 100px;"></div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 3: PEOPLE ================= -->
+  <div class="classroom-tab-pane hidden" id="tab-pane-people">
+    <div class="people-section mb-5">
+      <div class="people-section-header">
+        <h2 class="heading-md text-primary">Teachers &amp; Instructors</h2>
+        <span class="people-count-chip" id="people-teachers-count">1</span>
+      </div>
+      <div id="people-teachers-list" class="people-grid"></div>
+    </div>
+
+    <div class="people-section">
+      <div class="people-section-header">
+        <h2 class="heading-md">Classmates</h2>
+        <span class="people-count-chip" id="people-students-count">0</span>
+      </div>
+      <div id="people-students-list" class="people-grid"></div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 4: GRADES ================= -->
+  <div class="classroom-tab-pane hidden" id="tab-pane-grades">
+    <!-- Student Gradebook View -->
+    <div id="student-grades-container" class="student-grades-view">
+      <div class="card p-4 mb-4 grade-summary-hero">
+        <div class="grade-summary-left">
+          <span class="grade-summary-label">Average Performance</span>
+          <div class="grade-summary-score" id="student-grade-avg">--%</div>
+        </div>
+        <div class="grade-summary-stats">
+          <div class="stat-box">
+            <span class="stat-num" id="student-sub-done">0</span>
+            <span class="stat-lbl">Turned In</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-num" id="student-sub-pending">0</span>
+            <span class="stat-lbl">Pending</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-0 grade-table-wrapper">
+        <table class="ug-table" id="student-grades-table">
+          <thead>
+            <tr>
+              <th>Assignment</th>
+              <th>Due Date</th>
+              <th>Status</th>
+              <th>Score</th>
+              <th>Feedback</th>
+            </tr>
+          </thead>
+          <tbody id="student-grades-tbody">
+            <tr>
+              <td colspan="5" class="text-center py-4 text-muted">No graded classwork yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Teacher Grade Matrix View -->
+    <div id="teacher-grades-container" class="teacher-grades-view hidden">
+      <div class="table-actions-bar mb-3">
+        <h3 class="heading-md">Student Submissions &amp; Grade Matrix</h3>
+      </div>
+      <div class="card p-0 grade-table-wrapper overflow-x-auto">
+        <table class="ug-table" id="teacher-grades-matrix">
+          <thead id="teacher-matrix-thead">
+            <tr>
+              <th>Student Name</th>
+              <th>Student ID</th>
+              <th>Lab Batch</th>
+              <th>Submissions</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="teacher-matrix-tbody">
+            <tr>
+              <td colspan="5" class="text-center py-4 text-muted">Loading class gradebook...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Assignment Modal -->
+  <div class="ug-modal hidden" id="create-assignment-modal" role="dialog" aria-labelledby="modal-assignment-title">
+    <div class="ug-modal-backdrop js-close-assignment-modal"></div>
+    <div class="ug-modal-dialog">
+      <div class="ug-modal-header">
+        <div class="modal-title-wrap">
+          <i data-lucide="file-plus" class="icon-md text-primary"></i>
+          <h2 class="heading-md" id="modal-assignment-title">Create Classwork Assignment</h2>
+        </div>
+        <button type="button" class="btn-icon-subtle js-close-assignment-modal" aria-label="Close dialog">
+          <i data-lucide="x" class="icon-sm"></i>
+        </button>
+      </div>
+      <form id="create-assignment-form">
+        <div class="ug-modal-body">
+          <div class="form-group mb-3">
+            <label class="form-label" for="assign-title">Assignment Title</label>
+            <input
+              type="text"
+              id="assign-title"
+              name="title"
+              class="form-input"
+              placeholder="e.g. Laboratory Activity 1: REST API Integration"
+              required
+            />
+            <div class="form-error"></div>
+          </div>
+
+          <div class="form-row-2 mb-3">
+            <div class="form-group">
+              <label class="form-label" for="assign-points">Total Points</label>
+              <input
+                type="number"
+                id="assign-points"
+                name="max_score"
+                class="form-input"
+                value="100"
+                min="1"
+                max="1000"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="assign-due-date">Due Date &amp; Time</label>
+              <input
+                type="datetime-local"
+                id="assign-due-date"
+                name="due_at"
+                class="form-input"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-row-2 mb-3">
+            <div class="form-group">
+              <label class="form-label" for="assign-target-batch">Target Laboratory Batch</label>
+              <select id="assign-target-batch" name="target_lab_batch" class="form-input">
+                <option value="">All Students (Entire Class)</option>
+                <option value="1">Batch 1 Only</option>
+                <option value="2">Batch 2 Only</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="assign-file">Reference File (Optional)</label>
+              <input type="file" id="assign-file" name="attachment" class="form-input" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="assign-instructions">Instructions &amp; Requirements</label>
+            <textarea
+              id="assign-instructions"
+              name="instructions"
+              class="form-input"
+              rows="4"
+              placeholder="Describe objectives, deliverables, file formats, and submission guidelines..."
+              required
+            ></textarea>
+          </div>
+        </div>
+        <div class="ug-modal-footer">
+          <button type="button" class="btn btn-secondary js-close-assignment-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-assignment">
+            <span>Assign to Class</span>
+            <i data-lucide="check" class="icon-xs"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Schedule Live Session Modal -->
+  <div class="ug-modal hidden" id="schedule-session-modal" role="dialog" aria-labelledby="modal-sched-title">
+    <div class="ug-modal-backdrop js-close-sched-modal"></div>
+    <div class="ug-modal-dialog">
+      <div class="ug-modal-header">
+        <div class="modal-title-wrap">
+          <i data-lucide="video" class="icon-md text-gold"></i>
+          <h2 class="heading-md" id="modal-sched-title">Schedule Live Virtual Class</h2>
+        </div>
+        <button type="button" class="btn-icon-subtle js-close-sched-modal" aria-label="Close dialog">
+          <i data-lucide="x" class="icon-sm"></i>
+        </button>
+      </div>
+      <form id="schedule-session-form">
+        <div class="ug-modal-body">
+          <div class="form-group mb-3">
+            <label class="form-label" for="sched-title">Session Topic / Title</label>
+            <input
+              type="text"
+              id="sched-title"
+              name="title"
+              class="form-input"
+              placeholder="e.g. Chapter 4: WebRTC Signaling &amp; Media Pipelines"
+              required
+            />
+          </div>
+
+          <div class="form-row-2 mb-3">
+            <div class="form-group">
+              <label class="form-label" for="sched-start-time">Start Time</label>
+              <input
+                type="datetime-local"
+                id="sched-start-time"
+                name="scheduled_start"
+                class="form-input"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sched-end-time">End Time</label>
+              <input
+                type="datetime-local"
+                id="sched-end-time"
+                name="scheduled_end"
+                class="form-input"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="sched-desc">Session Agenda (Optional)</label>
+            <textarea
+              id="sched-desc"
+              name="description"
+              class="form-input"
+              rows="2"
+              placeholder="Brief agenda for attendees..."
+            ></textarea>
+          </div>
+        </div>
+        <div class="ug-modal-footer">
+          <button type="button" class="btn btn-secondary js-close-sched-modal">Cancel</button>
+          <button type="submit" class="btn btn-gold" id="btn-save-schedule">
+            <span>Schedule Session</span>
+            <i data-lucide="calendar" class="icon-xs"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

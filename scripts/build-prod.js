@@ -97,6 +97,12 @@ const JS_FILES = [
   'src/js/modules/profileModule.js',
   'src/js/modules/searchModule.js',
   'src/js/modules/rtcModule.js',
+  'src/js/modules/classroomModule.js',
+  'src/js/modules/assignmentModule.js',
+  'src/js/modules/meetingModule.js',
+  'src/js/modules/directoryModule.js',
+  'src/js/modules/dashboardModule.js',
+  'src/js/modules/channelChatModule.js',
   'src/js/core/app-polling.js',
   'src/js/core/app.js'
 ];
@@ -121,7 +127,7 @@ async function bundleJavaScript() {
     },
     mangle: {
       toplevel: false,
-      reserved: ['UgnayraApp', 'UgnayraStore', 'UgnayraUI', 'UgnayraFormat', 'UgnayraServices', 'UgnayraTemplates', 'UgnayraTheme', 'UgnayraNetworkMonitor', 'UgnayraFirebaseChat', 'UgnayraAuthModule', 'UgnayraFeedModule', 'UgnayraMessagesModule', 'UgnayraCommunitiesModule', 'UgnayraAnnouncementsModule', 'UgnayraNotificationsModule', 'UgnayraProfileModule', 'UgnayraSearchModule', 'UgnayraRtcModule', 'UgnayraAppPolling', 'UGNAYRA_CONFIG', 'firebase']
+      reserved: ['UgnayraApp', 'UgnayraStore', 'UgnayraUI', 'UgnayraFormat', 'UgnayraServices', 'UgnayraTemplates', 'UgnayraTheme', 'UgnayraNetworkMonitor', 'UgnayraFirebaseChat', 'UgnayraAuthModule', 'UgnayraFeedModule', 'UgnayraMessagesModule', 'UgnayraCommunitiesModule', 'UgnayraAnnouncementsModule', 'UgnayraNotificationsModule', 'UgnayraProfileModule', 'UgnayraSearchModule', 'UgnayraRtcModule', 'UgnayraClassroomModule', 'UgnayraAssignmentModule', 'UgnayraMeetingModule', 'UgnayraDirectoryModule', 'UgnayraDashboardModule', 'UgnayraChannelChatModule', 'UgnayraAppPolling', 'UGNAYRA_CONFIG', 'firebase']
     },
     format: {
       comments: false

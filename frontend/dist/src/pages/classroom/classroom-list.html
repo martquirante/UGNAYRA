@@ -1,0 +1,201 @@
+<!-- ==========================================================================
+     UGNAYRA — Academic Classrooms Directory View
+     (frontend/src/pages/classroom/classroom-list.html)
+     ========================================================================== -->
+<div id="classroom-list-root" class="classroom-directory-container">
+  <header class="page-header-bar">
+    <div>
+      <div class="header-tag-pill mb-1">
+        <i data-lucide="graduation-cap" class="icon-xs"></i>
+        <span>Academic Learning Management</span>
+      </div>
+      <h1 class="heading-xl">UGNAYRA Classroom</h1>
+      <p class="text-secondary">
+        Access your enrolled courses, syllabus streams, classwork submissions, and live video sessions.
+      </p>
+    </div>
+    <div class="header-action-group">
+      <button type="button" class="btn btn-secondary" id="open-join-class-modal-btn">
+        <i data-lucide="key-round" class="icon-sm"></i>
+        <span>Join with Code</span>
+      </button>
+      <button type="button" class="btn btn-primary js-teacher-only hidden" id="open-create-class-modal-btn">
+        <i data-lucide="plus" class="icon-sm"></i>
+        <span>Create Class</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Filter & Search Bar -->
+  <div class="classroom-filter-bar mb-4">
+    <div class="filter-tabs" role="tablist" aria-label="Classroom filters">
+      <button type="button" class="filter-chip is-active js-classroom-filter" data-filter="all">All Classes</button>
+      <button type="button" class="filter-chip js-classroom-filter" data-filter="enrolled">Enrolled</button>
+      <button type="button" class="filter-chip js-classroom-filter js-teacher-only hidden" data-filter="teaching">Teaching</button>
+      <button type="button" class="filter-chip js-classroom-filter" data-filter="archived">Archived</button>
+    </div>
+    <div class="classroom-search-wrap">
+      <i data-lucide="search" class="icon-sm classroom-search-icon"></i>
+      <input
+        type="search"
+        id="classroom-search-input"
+        class="form-input form-input-sm"
+        placeholder="Search subject code, title, or instructor..."
+        autocomplete="off"
+      />
+    </div>
+  </div>
+
+  <!-- Classroom Cards Grid -->
+  <div id="classroom-cards-grid" class="cards-grid-2">
+    <div class="card-skeleton" style="height: 220px;"></div>
+    <div class="card-skeleton" style="height: 220px;"></div>
+  </div>
+
+  <!-- Join Class Modal -->
+  <div class="ug-modal hidden" id="join-classroom-modal" role="dialog" aria-labelledby="join-class-title">
+    <div class="ug-modal-backdrop js-close-join-modal"></div>
+    <div class="ug-modal-dialog">
+      <div class="ug-modal-header">
+        <div class="modal-title-wrap">
+          <i data-lucide="key-round" class="icon-md text-gold"></i>
+          <h2 class="heading-md" id="join-class-title">Join a Classroom</h2>
+        </div>
+        <button type="button" class="btn-icon-subtle js-close-join-modal" aria-label="Close dialog">
+          <i data-lucide="x" class="icon-sm"></i>
+        </button>
+      </div>
+      <form id="join-classroom-form">
+        <div class="ug-modal-body">
+          <p class="text-sm text-secondary mb-3">
+            Ask your professor or instructor for the 7-character class code (e.g. <code>UG-7X9B2</code>) and enter it below.
+          </p>
+          <div class="form-group">
+            <label class="form-label" for="join-class-code">Class Join Code</label>
+            <div class="input-wrapper has-left-icon">
+              <span class="input-icon-left">
+                <i data-lucide="hash" class="icon-sm"></i>
+              </span>
+              <input
+                type="text"
+                id="join-class-code"
+                name="code"
+                class="form-input text-uppercase font-mono"
+                placeholder="UG-XXXXX"
+                maxlength="10"
+                required
+              />
+            </div>
+            <div class="form-error"></div>
+          </div>
+        </div>
+        <div class="ug-modal-footer">
+          <button type="button" class="btn btn-secondary js-close-join-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="join-class-submit-btn">
+            <span>Join Class</span>
+            <i data-lucide="arrow-right" class="icon-xs"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Create Class Modal (Teachers & Admin) -->
+  <div class="ug-modal hidden" id="create-classroom-modal" role="dialog" aria-labelledby="create-class-title">
+    <div class="ug-modal-backdrop js-close-create-modal"></div>
+    <div class="ug-modal-dialog">
+      <div class="ug-modal-header">
+        <div class="modal-title-wrap">
+          <i data-lucide="plus-circle" class="icon-md text-primary"></i>
+          <h2 class="heading-md" id="create-class-title">Create New Classroom</h2>
+        </div>
+        <button type="button" class="btn-icon-subtle js-close-create-modal" aria-label="Close dialog">
+          <i data-lucide="x" class="icon-sm"></i>
+        </button>
+      </div>
+      <form id="create-classroom-form">
+        <div class="ug-modal-body">
+          <div class="form-group mb-3">
+            <label class="form-label" for="new-class-name">Subject / Course Title</label>
+            <input
+              type="text"
+              id="new-class-name"
+              name="name"
+              class="form-input"
+              placeholder="e.g. Advanced Web Applications"
+              required
+            />
+            <div class="form-error"></div>
+          </div>
+
+          <div class="form-row-2 mb-3">
+            <div class="form-group">
+              <label class="form-label" for="new-class-code">Course Code</label>
+              <input
+                type="text"
+                id="new-class-code"
+                name="subject_code"
+                class="form-input text-uppercase"
+                placeholder="e.g. IT 305W"
+                required
+              />
+              <div class="form-error"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="new-class-section">Academic Section</label>
+              <input
+                type="text"
+                id="new-class-section"
+                name="section"
+                class="form-input text-uppercase"
+                placeholder="e.g. BSIT 2D"
+                required
+              />
+              <div class="form-error"></div>
+            </div>
+          </div>
+
+          <div class="form-row-2 mb-3">
+            <div class="form-group">
+              <label class="form-label" for="new-class-room">Room / Laboratory</label>
+              <input
+                type="text"
+                id="new-class-room"
+                name="room"
+                class="form-input"
+                placeholder="e.g. CompLab 3 / Online"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="new-class-lab-batches">Lab Batches</label>
+              <select id="new-class-lab-batches" name="lab_batches" class="form-input">
+                <option value="0">Lecture Only (No Batches)</option>
+                <option value="2" selected>2 Batches (Batch 1 &amp; 2)</option>
+                <option value="3">3 Batches (Batch 1, 2, 3)</option>
+                <option value="4">4 Batches (Batch 1 to 4)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="new-class-desc">Description / Syllabus Overview</label>
+            <textarea
+              id="new-class-desc"
+              name="description"
+              class="form-input"
+              rows="3"
+              placeholder="Provide a brief overview of course expectations, lecture schedules, and room policies..."
+            ></textarea>
+          </div>
+        </div>
+        <div class="ug-modal-footer">
+          <button type="button" class="btn btn-secondary js-close-create-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="create-class-submit-btn">
+            <span>Publish Classroom</span>
+            <i data-lucide="check" class="icon-xs"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

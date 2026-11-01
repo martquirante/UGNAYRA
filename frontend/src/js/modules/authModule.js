@@ -377,6 +377,142 @@
     }
   ];
 
+  function updateDesignationPreview(prefix) {
+    var $dept = $('#' + prefix + '-department');
+    var $year = $('#' + prefix + '-year');
+    var $sec = $('#' + prefix + '-section');
+    var $batch = $('#' + prefix + '-lab-batch');
+    var $preview = $('#' + prefix + '-designation-preview');
+    var $badge = $('#' + prefix + '-designation-badge');
+    var $desc = $('#' + prefix + '-designation-desc');
+
+    var deptVal = ($dept.val() || '').trim();
+    var yearVal = ($year.val() || '').trim();
+    var secVal = ($sec.val() || '').trim();
+    var batchVal = ($batch.val() || '').trim();
+
+    if (!deptVal || !yearVal || !secVal) {
+      $preview.addClass('hidden');
+      return;
+    }
+
+    var yrMatch = yearVal.match(/\d+/);
+    var yrDigit = yrMatch ? yrMatch[0] : '1';
+    var cleanDept = deptVal.toUpperCase();
+    var cleanSec = secVal.toUpperCase();
+    var bNum = parseInt(batchVal, 10);
+
+    var designation = cleanDept + ' ' + yrDigit + cleanSec + (bNum > 0 ? bNum : '');
+    $badge.text(designation);
+    $desc.text(cleanDept + ' \u2022 Year ' + yrDigit + ' \u2022 Section ' + cleanSec + (bNum > 0 ? (' \u2022 Lab Batch ' + bNum) : ' \u2022 Lecture'));
+    $preview.removeClass('hidden');
+    if (window.UgnayraUI && typeof window.UgnayraUI.refreshIcons === 'function') {
+      window.UgnayraUI.refreshIcons($preview[0]);
+    }
+  }
+
+  function loadSectionsFor(prefix) {
+    var $form = prefix === 'reg' ? $('#register-form') : $('#google-onboarding-form');
+    var role = $form.find('input[name="role"]:checked').val() || 'student';
+    if (role !== 'student') {
+      $('#' + prefix + '-batch-row').addClass('hidden');
+      $('#' + prefix + '-designation-preview').addClass('hidden');
+      return;
+    }
+
+    var deptVal = ($('#' + prefix + '-department').val() || '').trim();
+    var yearVal = ($('#' + prefix + '-year').val() || '').trim();
+
+    if (!deptVal || !yearVal) {
+      UI.configureCombobox('#' + prefix + '-section-combo', {
+        items: [],
+        placeholder: 'Select program & year first',
+        searchable: false,
+        value: ''
+      });
+      $('#' + prefix + '-batch-row').addClass('hidden');
+      $('#' + prefix + '-designation-preview').addClass('hidden');
+      return;
+    }
+
+    Services.Academics.sections(deptVal, yearVal)
+      .then(function (res) {
+        var rows = (res && res.data && res.data.sections) || [];
+        var maxBatches = 2;
+        var sectionItems = [];
+
+        if (Array.isArray(rows) && rows.length > 0) {
+          sectionItems = rows.map(function (s) {
+            var letter = s.section_letter || s.code || s.name;
+            var numBatches = Number(s.default_lab_batches || 2);
+            if (numBatches > maxBatches) maxBatches = numBatches;
+            return {
+              value: letter,
+              label: 'Section ' + letter,
+              badge: numBatches > 0 ? (numBatches + ' Lab Batches') : 'Lecture Only',
+              subtext: deptVal.toUpperCase() + ' ' + letter
+            };
+          });
+        } else {
+          ['A', 'B', 'C', 'D', 'E'].forEach(function (ltr) {
+            sectionItems.push({
+              value: ltr,
+              label: 'Section ' + ltr,
+              badge: '2 Lab Batches',
+              subtext: deptVal.toUpperCase() + ' ' + ltr
+            });
+          });
+        }
+
+        var currentSec = $('#' + prefix + '-section').val() || '';
+        UI.configureCombobox('#' + prefix + '-section-combo', {
+          items: sectionItems,
+          placeholder: 'Select official section',
+          searchable: false,
+          value: currentSec
+        });
+
+        var batchItems = [
+          { value: '', label: 'Lecture Only (No Lab Batch)', badge: 'Default' }
+        ];
+        for (var b = 1; b <= maxBatches; b++) {
+          batchItems.push({
+            value: String(b),
+            label: 'Laboratory Batch ' + b,
+            badge: 'Batch ' + b
+          });
+        }
+
+        var currentBatch = $('#' + prefix + '-lab-batch').val() || '';
+        UI.configureCombobox('#' + prefix + '-batch-combo', {
+          items: batchItems,
+          placeholder: 'Select lab batch (if applicable)',
+          searchable: false,
+          value: currentBatch
+        });
+
+        $('#' + prefix + '-batch-row').removeClass('hidden');
+        updateDesignationPreview(prefix);
+      })
+      .catch(function () {
+        var sectionItems = ['A', 'B', 'C', 'D', 'E'].map(function (ltr) {
+          return {
+            value: ltr,
+            label: 'Section ' + ltr,
+            badge: 'Active Section'
+          };
+        });
+        UI.configureCombobox('#' + prefix + '-section-combo', {
+          items: sectionItems,
+          placeholder: 'Select section',
+          searchable: false,
+          value: $('#' + prefix + '-section').val() || ''
+        });
+        $('#' + prefix + '-batch-row').removeClass('hidden');
+        updateDesignationPreview(prefix);
+      });
+  }
+
   function syncRoleLabels(role, prefix, preserveSelection) {
     var idLabelSel = '#' + prefix + '-school-id-label';
     var idInputSel = '#' + prefix + '-school-id';
@@ -387,6 +523,7 @@
     var yearComboSel = '#' + prefix + '-year-combo';
     var extraRowSel = '#' + prefix + '-student-extra-row';
     var secLabelSel = '#' + prefix + '-section-label';
+    var secComboSel = '#' + prefix + '-section-combo';
     var secInputSel = '#' + prefix + '-section';
 
     var deptPlaceholder = 'Select your course or program';
@@ -404,7 +541,8 @@
       $(yearLabelSel).text('Academic Rank');
       yearPlaceholder = 'Select academic rank';
       $(secLabelSel).text('Advisory / Unit');
-      $(secInputSel).attr('placeholder', 'Enter advisory or unit');
+      $('#' + prefix + '-batch-row').addClass('hidden');
+      $('#' + prefix + '-designation-preview').addClass('hidden');
     } else if (role === 'personnel') {
       $(idLabelSel).html('Employee ID <span class="form-label-optional">Numbers only &middot; Optional</span>');
       $(idInputSel).attr('placeholder', 'Enter employee ID');
@@ -414,7 +552,8 @@
       $(yearGroupSel).addClass('hidden');
       $(extraRowSel).addClass('is-single-col');
       $(secLabelSel).text('Building / Unit');
-      $(secInputSel).attr('placeholder', 'Enter building or unit');
+      $('#' + prefix + '-batch-row').addClass('hidden');
+      $('#' + prefix + '-designation-preview').addClass('hidden');
     } else {
       $(idLabelSel).html('Student ID <span class="form-label-optional">Numbers only &middot; Optional</span>');
       $(idInputSel).attr('placeholder', 'Enter student ID');
@@ -426,7 +565,6 @@
       $(yearLabelSel).text('Year Level');
       yearPlaceholder = 'Select year level';
       $(secLabelSel).text('Section');
-      $(secInputSel).attr('placeholder', 'Enter section');
     }
 
     var currentDept = preserveSelection
@@ -450,6 +588,10 @@
       searchable: false,
       value: currentYear
     });
+
+    if (role === 'student') {
+      loadSectionsFor(prefix);
+    }
 
     // Synchronize Mobile Role Combobox Dropdown if present
     var roleComboSel = '#' + prefix + '-role-combo';
@@ -643,6 +785,21 @@
     }
   });
 
+  // Cascaded Dynamic Academic Comboboxes & Live Designation
+  $(document).on('change', '#reg-department, #reg-year', function () {
+    loadSectionsFor('reg');
+  });
+  $(document).on('change', '#reg-section, #reg-lab-batch', function () {
+    updateDesignationPreview('reg');
+  });
+
+  $(document).on('change', '#onboard-department, #onboard-year', function () {
+    loadSectionsFor('onboard');
+  });
+  $(document).on('change', '#onboard-section, #onboard-lab-batch', function () {
+    updateDesignationPreview('onboard');
+  });
+
   // Subtle field icon stroke replay on input focus
   $(document).on('focus', '.auth-card .form-input', function () {
     var $leadIcon = $(this).siblings('.auth-api-field-icon');
@@ -727,6 +884,9 @@
         showValidState: true,
         requiredMessage: 'Enter your class section.'
       },
+      lab_batch: {
+        required: false
+      },
       password: {
         required: true,
         minLength: 8,
@@ -792,6 +952,9 @@
         sectionCode: true,
         showValidState: true,
         requiredMessage: 'Enter your class section.'
+      },
+      lab_batch: {
+        required: false
       }
     };
   }

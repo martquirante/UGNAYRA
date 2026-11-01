@@ -1,0 +1,141 @@
+<!-- ==========================================================================
+     UGNAYRA — Unified Academic Cockpit (Role-Tailored Command Center)
+     (frontend/src/pages/dashboard/cockpit.html)
+     ========================================================================== -->
+<div id="cockpit-root" class="academic-cockpit-container">
+  <!-- Welcome Hero Banner -->
+  <header class="cockpit-hero mb-4">
+    <div class="cockpit-hero-inner">
+      <div class="cockpit-hero-left">
+        <div class="avatar-lg font-bold" id="cockpit-user-avatar">U</div>
+        <div class="cockpit-user-meta">
+          <div class="cockpit-tag-row mb-1">
+            <span class="role-badge" id="cockpit-role-badge">Student</span>
+            <span class="designation-chip" id="cockpit-designation-chip">BSIT 2D1</span>
+          </div>
+          <h1 class="heading-xl" id="cockpit-welcome-heading">Welcome back!</h1>
+          <p class="text-secondary text-sm" id="cockpit-term-label">
+            BulSU Academic Term: First Semester A.Y. 2024–2025
+          </p>
+        </div>
+      </div>
+
+      <div class="cockpit-hero-actions">
+        <a href="/classroom" class="btn btn-primary" id="cockpit-btn-classrooms">
+          <i data-lucide="graduation-cap" class="icon-sm"></i>
+          <span>My Classrooms</span>
+        </a>
+        <a href="/directory" class="btn btn-secondary">
+          <i data-lucide="users-round" class="icon-sm"></i>
+          <span>Directory</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dynamic Live Class Pulse Alert (Pops up when a live meeting starts in <= 15 mins) -->
+  <div class="live-class-alert-card hidden mb-4" id="cockpit-live-alert">
+    <div class="alert-pulse-icon">
+      <span class="live-pulsing-dot" aria-hidden="true"></span>
+      <i data-lucide="video" class="icon-md text-gold"></i>
+    </div>
+    <div class="alert-content">
+      <div class="alert-tag" id="cockpit-alert-tag">LIVE ONLINE CLASS NOW ACTIVE</div>
+      <h3 class="alert-title" id="cockpit-alert-title">Subject Lecture &amp; Discussion</h3>
+      <p class="alert-meta text-xs" id="cockpit-alert-meta">Room Code: ugn-xxxx-xxx &bull; Starts in 10 minutes</p>
+    </div>
+    <div class="alert-action">
+      <button type="button" class="btn btn-gold btn-lg" id="cockpit-btn-join-meeting">
+        <i data-lucide="video" class="icon-sm"></i>
+        <span>Join Live Meeting</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Key Academic Metrics Grid -->
+  <div class="stats-grid-4 mb-4" id="cockpit-stats-grid">
+    <div class="stat-card">
+      <div class="stat-card-header">
+        <span class="stat-card-label" id="stat-lbl-1">Enrolled Classes</span>
+        <i data-lucide="book-open" class="icon-sm text-primary"></i>
+      </div>
+      <div class="stat-card-value font-mono" id="stat-val-1">0</div>
+      <span class="stat-card-sub" id="stat-sub-1">Active course rooms</span>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card-header">
+        <span class="stat-card-label" id="stat-lbl-2">Assignments Due</span>
+        <i data-lucide="clipboard-list" class="icon-sm text-gold"></i>
+      </div>
+      <div class="stat-card-value font-mono text-gold" id="stat-val-2">0</div>
+      <span class="stat-card-sub" id="stat-sub-2">Pending deliverables</span>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card-header">
+        <span class="stat-card-label" id="stat-lbl-3">Turned In</span>
+        <i data-lucide="check-circle-2" class="icon-sm text-success"></i>
+      </div>
+      <div class="stat-card-value font-mono text-success" id="stat-val-3">0</div>
+      <span class="stat-card-sub" id="stat-sub-3">Graded &amp; submitted</span>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card-header">
+        <span class="stat-card-label" id="stat-lbl-4">Live Sessions</span>
+        <i data-lucide="calendar" class="icon-sm text-primary"></i>
+      </div>
+      <div class="stat-card-value font-mono" id="stat-val-4">0</div>
+      <span class="stat-card-sub" id="stat-sub-4">Scheduled today</span>
+    </div>
+  </div>
+
+  <!-- 2-Column Split: Classrooms & Schedule -->
+  <div class="cockpit-split-layout">
+    <!-- Left Column: Active Classrooms & Feed Highlights -->
+    <section class="cockpit-main-column">
+      <div class="section-header-bar mb-3">
+        <h2 class="heading-lg">Active Classrooms</h2>
+        <a href="/classroom" class="link-subtle text-xs">View All &rarr;</a>
+      </div>
+      <div id="cockpit-classes-container" class="cards-grid-2 mb-4">
+        <div class="card-skeleton" style="height: 160px;"></div>
+        <div class="card-skeleton" style="height: 160px;"></div>
+      </div>
+
+      <div class="section-header-bar mb-3">
+        <h2 class="heading-lg">Recent Academic Bulletins</h2>
+        <a href="/announcements" class="link-subtle text-xs">All Bulletins &rarr;</a>
+      </div>
+      <div id="cockpit-announcements-container" class="announcements-stack">
+        <p class="text-xs text-muted">Checking campus advisories...</p>
+      </div>
+    </section>
+
+    <!-- Right Column: Deadlines & Live Schedule -->
+    <aside class="cockpit-side-column">
+      <!-- Upcoming Deadlines -->
+      <div class="card p-4 mb-4">
+        <div class="side-card-header mb-3">
+          <i data-lucide="alert-circle" class="icon-xs text-gold"></i>
+          <h3 class="heading-md">Upcoming Deadlines</h3>
+        </div>
+        <div id="cockpit-deadlines-list" class="deadlines-list">
+          <p class="text-xs text-muted">No pending assignments due this week.</p>
+        </div>
+      </div>
+
+      <!-- Today's Live Sessions -->
+      <div class="card p-4 mb-4">
+        <div class="side-card-header mb-3">
+          <i data-lucide="video" class="icon-xs text-primary"></i>
+          <h3 class="heading-md">Today's Class Meetings</h3>
+        </div>
+        <div id="cockpit-sessions-list" class="live-sessions-timeline">
+          <p class="text-xs text-muted">No live classes scheduled for today.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

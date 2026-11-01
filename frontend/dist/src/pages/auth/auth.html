@@ -483,23 +483,80 @@
             </div>
             <div class="form-error"></div>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="reg-section" id="reg-section-label">Section</label>
-            <div class="input-wrapper has-left-icon">
-              <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:compass-twotone-loop">
-                <i data-lucide="users" class="icon-sm"></i>
-              </span>
-              <input
-                type="text"
-                id="reg-section"
-                name="section"
-                class="form-input"
-                placeholder="Enter section"
-                data-restrict="section"
-                maxlength="20"
-              />
+          <div class="form-group" id="reg-section-group">
+            <span class="form-label" id="reg-section-label">Section</span>
+            <div class="ug-combobox" id="reg-section-combo" data-searchable="false">
+              <input type="hidden" id="reg-section" name="section" value="" />
+              <button
+                type="button"
+                class="ug-combobox-trigger has-left-icon"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby="reg-section-label"
+              >
+                <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:compass-twotone-loop">
+                  <i data-lucide="users" class="icon-sm"></i>
+                </span>
+                <span class="ug-combobox-value is-placeholder" data-placeholder="Select section">
+                  Select section
+                </span>
+                <span class="ug-combobox-chevron" aria-hidden="true">
+                  <i data-lucide="chevron-down" class="icon-sm"></i>
+                </span>
+              </button>
+              <div class="ug-combobox-popover hidden" role="dialog" aria-label="Section options">
+                <div class="ug-combobox-search-wrap hidden">
+                  <input type="text" class="ug-combobox-search-input" autocomplete="off" />
+                </div>
+                <div class="ug-combobox-list" role="listbox"></div>
+              </div>
             </div>
             <div class="form-error"></div>
+          </div>
+        </div>
+
+        <div class="form-row-2 hidden" id="reg-batch-row">
+          <div class="form-group" id="reg-batch-group">
+            <span class="form-label" id="reg-batch-label">Laboratory Batch <span class="form-label-optional">&middot; If applicable</span></span>
+            <div class="ug-combobox" id="reg-batch-combo" data-searchable="false">
+              <input type="hidden" id="reg-lab-batch" name="lab_batch" value="" />
+              <button
+                type="button"
+                class="ug-combobox-trigger has-left-icon"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby="reg-batch-label"
+              >
+                <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:clipboard-check-twotone">
+                  <i data-lucide="flask-conical" class="icon-sm"></i>
+                </span>
+                <span class="ug-combobox-value" data-placeholder="Lecture Only / None">
+                  Lecture Only / None
+                </span>
+                <span class="ug-combobox-chevron" aria-hidden="true">
+                  <i data-lucide="chevron-down" class="icon-sm"></i>
+                </span>
+              </button>
+              <div class="ug-combobox-popover hidden" role="dialog" aria-label="Laboratory batch options">
+                <div class="ug-combobox-search-wrap hidden">
+                  <input type="text" class="ug-combobox-search-input" autocomplete="off" />
+                </div>
+                <div class="ug-combobox-list" role="listbox"></div>
+              </div>
+            </div>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group form-group-align-bottom">
+            <div class="academic-designation-preview hidden" id="reg-designation-preview">
+              <div class="designation-chip-header">
+                <i data-lucide="award" class="icon-xs"></i>
+                <span>Official Academic Section</span>
+              </div>
+              <div class="designation-chip-body">
+                <span class="designation-chip-badge" id="reg-designation-badge">BSIT 2D1</span>
+                <span class="designation-chip-meta" id="reg-designation-desc">Program + Year + Section + Batch</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -827,23 +884,80 @@
             </div>
             <div class="form-error"></div>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="onboard-section" id="onboard-section-label">Section</label>
-            <div class="input-wrapper has-left-icon">
-              <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:compass-twotone-loop">
-                <i data-lucide="users" class="icon-sm"></i>
-              </span>
-              <input
-                type="text"
-                id="onboard-section"
-                name="section"
-                class="form-input"
-                placeholder="Enter section"
-                data-restrict="section"
-                maxlength="20"
-              />
+          <div class="form-group" id="onboard-section-group">
+            <span class="form-label" id="onboard-section-label">Section</span>
+            <div class="ug-combobox" id="onboard-section-combo" data-searchable="false">
+              <input type="hidden" id="onboard-section" name="section" value="" />
+              <button
+                type="button"
+                class="ug-combobox-trigger has-left-icon"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby="onboard-section-label"
+              >
+                <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:compass-twotone-loop">
+                  <i data-lucide="users" class="icon-sm"></i>
+                </span>
+                <span class="ug-combobox-value is-placeholder" data-placeholder="Select section">
+                  Select section
+                </span>
+                <span class="ug-combobox-chevron" aria-hidden="true">
+                  <i data-lucide="chevron-down" class="icon-sm"></i>
+                </span>
+              </button>
+              <div class="ug-combobox-popover hidden" role="dialog" aria-label="Section options">
+                <div class="ug-combobox-search-wrap hidden">
+                  <input type="text" class="ug-combobox-search-input" autocomplete="off" />
+                </div>
+                <div class="ug-combobox-list" role="listbox"></div>
+              </div>
             </div>
             <div class="form-error"></div>
+          </div>
+        </div>
+
+        <div class="form-row-2 hidden" id="onboard-batch-row">
+          <div class="form-group" id="onboard-batch-group">
+            <span class="form-label" id="onboard-batch-label">Laboratory Batch <span class="form-label-optional">&middot; If applicable</span></span>
+            <div class="ug-combobox" id="onboard-batch-combo" data-searchable="false">
+              <input type="hidden" id="onboard-lab-batch" name="lab_batch" value="" />
+              <button
+                type="button"
+                class="ug-combobox-trigger has-left-icon"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby="onboard-batch-label"
+              >
+                <span class="input-icon-left auth-api-field-icon" data-api-icon="line-md:clipboard-check-twotone">
+                  <i data-lucide="flask-conical" class="icon-sm"></i>
+                </span>
+                <span class="ug-combobox-value" data-placeholder="Lecture Only / None">
+                  Lecture Only / None
+                </span>
+                <span class="ug-combobox-chevron" aria-hidden="true">
+                  <i data-lucide="chevron-down" class="icon-sm"></i>
+                </span>
+              </button>
+              <div class="ug-combobox-popover hidden" role="dialog" aria-label="Laboratory batch options">
+                <div class="ug-combobox-search-wrap hidden">
+                  <input type="text" class="ug-combobox-search-input" autocomplete="off" />
+                </div>
+                <div class="ug-combobox-list" role="listbox"></div>
+              </div>
+            </div>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group form-group-align-bottom">
+            <div class="academic-designation-preview hidden" id="onboard-designation-preview">
+              <div class="designation-chip-header">
+                <i data-lucide="award" class="icon-xs"></i>
+                <span>Official Academic Section</span>
+              </div>
+              <div class="designation-chip-body">
+                <span class="designation-chip-badge" id="onboard-designation-badge">BSIT 2D1</span>
+                <span class="designation-chip-meta" id="onboard-designation-desc">Program + Year + Section + Batch</span>
+              </div>
+            </div>
           </div>
         </div>
 

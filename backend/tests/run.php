@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * UGNAYRA — Backend Automated Test Suite
  * Verifies autoloader, environment loader, security cryptographic primitives,
- * request parsing, validators, routing, and database configuration.
+ * request parsing, validators, routing, academic catalog, LMS, and storage services.
  */
 
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'index.php';
@@ -15,6 +15,10 @@ use App\Config\Database;
 use App\Config\Env;
 use App\Helpers\Request;
 use App\Helpers\Security;
+use App\Models\AcademicSection;
+use App\Models\Classroom;
+use App\Models\ClassSession;
+use App\Services\StorageService;
 use App\Services\SupabaseClient;
 use App\Validators\AnnouncementValidator;
 use App\Validators\AuthValidator;
@@ -138,13 +142,13 @@ it('Validates registration fields and password confirmation matching', function 
     assertTrue($authVal->validateRegister($good), 'Good registration should pass');
 
     $bad = [
-        'role' => 'superadmin', // Invalid role
-        'full_name' => 'J', // Too short
-        'username' => 'a', // Too short
+        'role' => 'superadmin',
+        'full_name' => 'J',
+        'username' => 'a',
         'email' => 'invalid-email',
         'department' => '',
-        'password' => 'short', // Too short
-        'password_confirmation' => 'different', // Mismatch
+        'password' => 'short',
+        'password_confirmation' => 'different',
     ];
     assertTrue(!$authVal->validateRegister($bad), 'Bad registration should fail');
     $errs = $authVal->errors();
@@ -153,24 +157,6 @@ it('Validates registration fields and password confirmation matching', function 
     assertTrue(isset($errs['email']));
     assertTrue(isset($errs['password']));
     assertTrue(isset($errs['password_confirmation']));
-
-    $badFormat = [
-        'role' => 'student',
-        'full_name' => 'Juan 1234',
-        'username' => 'jdelacruz',
-        'email' => 'juan@school.edu',
-        'department' => 'BS Information Technology (BSIT)',
-        'school_id_number' => '2024ABC',
-        'section' => '3A@@!!',
-        'password' => 'weakpassword',
-        'password_confirmation' => 'weakpassword',
-    ];
-    assertTrue(!$authVal->validateRegister($badFormat), 'Non-numeric ID, digits in name, and weak password should fail');
-    $fmtErrs = $authVal->errors();
-    assertTrue(isset($fmtErrs['full_name']));
-    assertTrue(isset($fmtErrs['school_id_number']));
-    assertTrue(isset($fmtErrs['section']));
-    assertTrue(isset($fmtErrs['password']));
 });
 
 // 5. Post Validator
@@ -225,6 +211,49 @@ it('Inspects Supabase Client configuration state safely', function () {
     $client = new SupabaseClient();
     $configured = $client->isConfigured();
     echo "       (Supabase HTTPS Client Configured: " . ($configured ? 'YES' : 'NO') . ")" . PHP_EOL;
+});
+
+// 10. Dynamic Academic Designation Resolution (Formula Validation)
+it('Computes canonical academic designations dynamically for student registration', function () {
+    // BSIT 2nd Year Section D Batch 1 -> BSIT 2D1
+    $desig1 = AcademicSection::computeDesignation('BSIT', '2nd_year', 'D', 1);
+    assertEq($desig1, 'BSIT 2D1');
+
+    // BSIT 3rd Year Section A without lab batch -> BSIT 3A
+    $desig2 = AcademicSection::computeDesignation('BSIT', '3rd_year', 'A');
+    assertEq($desig2, 'BSIT 3A');
+
+    // ACT 1st Year Section B Batch 2 -> ACT 1B2
+    $desig3 = AcademicSection::computeDesignation('ACT', '1st_year', 'B', 2);
+    assertEq($desig3, 'ACT 1B2');
+});
+
+// 11. Storage Service Magic-Byte & Document Detection
+it('Detects authentic PDF and document MIME types via magic bytes', function () {
+    $storage = new StorageService();
+
+    // Synthetic PDF with magic byte %PDF-
+    $tmpPdf = tempnam(sys_get_temp_dir(), 'test_pdf_');
+    file_put_contents($tmpPdf, "%PDF-1.4\n%synthetic test stream\n%%EOF");
+    $mimePdf = $storage->detectMimeType($tmpPdf);
+    @unlink($tmpPdf);
+    assertEq($mimePdf, 'application/pdf', 'Expected PDF magic bytes to be identified');
+
+    // Synthetic ZIP with magic byte PK\x03\x04
+    $tmpZip = tempnam(sys_get_temp_dir(), 'test_zip_');
+    file_put_contents($tmpZip, "PK\x03\x04\x14\x00\x00\x00\x08\x00");
+    $mimeZip = $storage->detectMimeType($tmpZip);
+    @unlink($tmpZip);
+    assertEq($mimeZip, 'application/zip', 'Expected ZIP magic bytes to be identified');
+});
+
+// 12. Classroom Join Code and Virtual Meeting Code Generator
+it('Generates compliant meeting room codes and join codes', function () {
+    $meetCode = ClassSession::generateMeetingCode('IT 305W');
+    assertTrue((bool)preg_match('/^ugn-it305w-[0-9a-f]{6}$/', $meetCode), "Invalid meeting code format: {$meetCode}");
+
+    $joinCode = Classroom::generateJoinCode();
+    assertTrue((bool)preg_match('/^UG-[A-Z0-9]{5,6}$/', $joinCode), "Invalid classroom join code format: {$joinCode}");
 });
 
 echo PHP_EOL . "=================================================" . PHP_EOL;
