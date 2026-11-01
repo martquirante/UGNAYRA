@@ -803,10 +803,22 @@ html[data-theme="dark"] .msg-row.is-mine .msg-bubble {
   color: #ffffff;
 }
 
+html[data-theme="dark"] .msg-row.is-mine .msg-bubble a,
+html[data-theme="dark"] .msg-row.is-mine .msg-bubble .chat-link {
+  color: #ffffff !important;
+  text-decoration: underline !important;
+}
+
 html[data-theme="dark"] .msg-row:not(.is-mine) .msg-bubble {
   background-color: #18243c;
   color: #f1f5f9;
   border-color: #253654;
+}
+
+html[data-theme="dark"] .msg-row:not(.is-mine) .msg-bubble a,
+html[data-theme="dark"] .msg-row:not(.is-mine) .msg-bubble .chat-link {
+  color: #93c5fd !important;
+  text-decoration: underline !important;
 }
 
 html[data-theme="dark"] .chat-input-bar {

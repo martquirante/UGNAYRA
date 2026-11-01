@@ -588,12 +588,17 @@
 /* Compact Variant (For Dashboard Sidebars, Modals & Narrow Widgets) */
 .empty-state--compact {
   padding: var(--space-5) var(--space-4);
-  margin: 0;
+  margin: auto;
   box-shadow: none;
-  border: 1px dashed var(--color-border-subtle);
-  background-color: var(--color-surface-subtle);
+  border: none;
+  background-color: transparent;
   border-radius: var(--radius-md);
   gap: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .empty-state--compact .empty-state-stage {
@@ -620,19 +625,35 @@
 .empty-state--compact .empty-stage-badge svg,
 .empty-state--compact .empty-stage-badge .api-icon-svg,
 .empty-state--compact .empty-state-svg-art {
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
+}
+
+.empty-state--compact .empty-state-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--space-1) auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state--compact .empty-state-icon svg {
+  width: 32px;
+  height: 32px;
 }
 
 .empty-state--compact .empty-state-title {
   font-size: 0.95rem;
   font-weight: 600;
+  text-align: center;
 }
 
 .empty-state--compact .empty-state-desc {
   font-size: 0.8125rem;
   max-width: 280px;
   line-height: 1.45;
+  text-align: center;
 }
 
 .empty-state--compact .empty-stage-particle {
@@ -698,8 +719,8 @@ html[data-theme="dark"] .empty-state-tip-card svg {
 }
 
 html[data-theme="dark"] .empty-state--compact {
-  background-color: #080f1d;
-  border-color: #1e2b44;
+  background-color: transparent;
+  border: none;
 }
 
 @media (max-width: 767px) {

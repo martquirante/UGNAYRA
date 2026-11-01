@@ -1839,6 +1839,26 @@
 .conversation-list {
   flex: 1;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.conversation-list .conversation-row {
+  flex-shrink: 0;
+}
+
+.conversation-list .empty-state,
+.conversation-list .empty-state--compact {
+  margin: auto !important;
+  width: 100%;
+  max-width: 290px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+  align-self: center;
+  box-sizing: border-box;
 }
 
 .conversation-row {
@@ -1927,6 +1947,91 @@
   background-color: var(--color-navy-900);
   color: var(--color-ink-inverse);
   border-bottom-right-radius: 4px;
+}
+
+/* Global Autolinked Chat & Content Links */
+.chat-link {
+  color: var(--color-blue-700, #1d4ed8);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-all;
+  font-weight: 500;
+  transition: color var(--duration-fast, 150ms) ease;
+}
+
+.chat-link:hover {
+  color: var(--color-blue-900, #1e3a8a);
+}
+
+html[data-theme="dark"] .chat-link {
+  color: #93c5fd;
+}
+
+html[data-theme="dark"] .chat-link:hover {
+  color: #bfdbfe;
+}
+
+/* Links within message bubbles & chat contexts */
+.msg-bubble a,
+.msg-bubble .chat-link,
+.chat-message-bubble a,
+.chat-message-bubble .chat-link {
+  text-decoration: underline !important;
+  text-underline-offset: 2.5px;
+  word-break: break-all;
+  font-weight: 500;
+  transition: color var(--duration-fast, 150ms) ease, text-decoration-color var(--duration-fast, 150ms) ease;
+}
+
+/* My sent bubbles (Navy in light, Blue in dark) -> crisp white with soft yellow/gold hover */
+.msg-row.is-mine .msg-bubble a,
+.msg-row.is-mine .msg-bubble .chat-link,
+.chat-message-bubble.is-me a,
+.chat-message-bubble.is-me .chat-link {
+  color: #ffffff !important;
+  text-decoration-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.msg-row.is-mine .msg-bubble a:hover,
+.msg-row.is-mine .msg-bubble .chat-link:hover,
+.chat-message-bubble.is-me a:hover,
+.chat-message-bubble.is-me .chat-link:hover {
+  color: #fef08a !important; /* Soft warm gold */
+  text-decoration-color: #fef08a !important;
+}
+
+/* Incoming bubbles in daylight (light surface) -> vibrant royal blue */
+.msg-row:not(.is-mine) .msg-bubble a,
+.msg-row:not(.is-mine) .msg-bubble .chat-link,
+.chat-message-bubble:not(.is-me) a,
+.chat-message-bubble:not(.is-me) .chat-link {
+  color: var(--color-blue-700, #1d4ed8) !important;
+  text-decoration-color: rgba(29, 78, 216, 0.45) !important;
+}
+
+.msg-row:not(.is-mine) .msg-bubble a:hover,
+.msg-row:not(.is-mine) .msg-bubble .chat-link:hover,
+.chat-message-bubble:not(.is-me) a:hover,
+.chat-message-bubble:not(.is-me) .chat-link:hover {
+  color: var(--color-blue-900, #1e3a8a) !important;
+  text-decoration-color: var(--color-blue-900, #1e3a8a) !important;
+}
+
+/* Dark mode incoming bubbles (dark slate surface) -> bright sky blue for AAA contrast */
+html[data-theme="dark"] .msg-row:not(.is-mine) .msg-bubble a,
+html[data-theme="dark"] .msg-row:not(.is-mine) .msg-bubble .chat-link,
+html[data-theme="dark"] .chat-message-bubble:not(.is-me) a,
+html[data-theme="dark"] .chat-message-bubble:not(.is-me) .chat-link {
+  color: #93c5fd !important; /* Tailwind Blue 300 */
+  text-decoration-color: rgba(147, 197, 253, 0.6) !important;
+}
+
+html[data-theme="dark"] .msg-row:not(.is-mine) .msg-bubble a:hover,
+html[data-theme="dark"] .msg-row:not(.is-mine) .msg-bubble .chat-link:hover,
+html[data-theme="dark"] .chat-message-bubble:not(.is-me) a:hover,
+html[data-theme="dark"] .chat-message-bubble:not(.is-me) .chat-link:hover {
+  color: #bfdbfe !important;
+  text-decoration-color: #bfdbfe !important;
 }
 
 .msg-timestamp {

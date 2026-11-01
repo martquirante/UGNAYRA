@@ -21,26 +21,65 @@
   }
 
   /**
-   * Escapes raw text first, then safely converts URLs, @mentions, and #tags.
+   * Escapes raw text first, then safely converts URLs, www links, bare domains, emails, @mentions, and #tags.
    */
   function formatPostContent(rawText) {
     if (!rawText) return '';
     var safe = escapeHtml(rawText);
-    // Safe HTTPS/HTTP links
-    safe = safe.replace(
-      /\b(https?:\/\/[^\s<]+)/gi,
-      '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
-    );
+
+    // Single regex matching full URLs, www.*, email addresses, and bare domains with popular/academic TLDs
+    var linkRegex = /(https?:\/\/[^\s<]+|www\.[a-zA-Z0-9][-a-zA-Z0-9]*(?:\.[a-zA-Z0-9][-a-zA-Z0-9]*)+(?:\/[^\s<]*)?|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|\b[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.(?:com|org|net|edu|gov|mil|ph|edu\.ph|gov\.ph|org\.ph|com\.ph|io|app|dev|ai|co|info|biz|xyz|me|tv|tech|site|online|space|store|live|cloud|link|news|blog|us|uk|ca|au|jp|sg)(?::[0-9]{1,5})?(?:\/[^\s<]*)?)/gi;
+
+    safe = safe.replace(linkRegex, function (matched) {
+      var trailing = '';
+      var m = matched;
+
+      // Pop trailing punctuation or HTML entities
+      while (m.length > 0) {
+        if (/&(?:quot|amp|lt|gt|#39);$/i.test(m)) {
+          var entityMatch = m.match(/&(?:quot|amp|lt|gt|#39);$/i);
+          if (entityMatch) {
+            trailing = entityMatch[0] + trailing;
+            m = m.slice(0, -entityMatch[0].length);
+            continue;
+          }
+        }
+        var lastChar = m.charAt(m.length - 1);
+        if (/[.,;:!?')\]]/.test(lastChar)) {
+          trailing = lastChar + trailing;
+          m = m.slice(0, -1);
+        } else {
+          break;
+        }
+      }
+
+      if (!m) return matched;
+
+      // Email address match
+      if (m.indexOf('@') !== -1 && !/^https?:\/\//i.test(m) && !/^www\./i.test(m)) {
+        return '<a href="mailto:' + m + '" class="chat-link">' + m + '</a>' + trailing;
+      }
+
+      var href = m;
+      if (!/^https?:\/\//i.test(href)) {
+        href = 'https://' + href;
+      }
+
+      return '<a href="' + href + '" target="_blank" rel="noopener noreferrer" class="chat-link">' + m + '</a>' + trailing;
+    });
+
     // Highlight @username mentions
     safe = safe.replace(
       /(^|\s)@([a-zA-Z0-9._-]{3,32})/g,
       '$1<a href="/profile/$2" class="mention-link">@$2</a>'
     );
+
     // Highlight academic hashtags
     safe = safe.replace(
       /(^|\s)#([a-zA-Z0-9_]{2,40})/g,
       '$1<span style="color:var(--color-blue-700);font-weight:500;">#$2</span>'
     );
+
     return safe;
   }
 

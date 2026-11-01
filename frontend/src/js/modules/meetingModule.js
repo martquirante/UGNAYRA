@@ -338,6 +338,10 @@
     var $messages = $('#meeting-chat-messages');
     if (inMeetingChatMessages.length === 0) return;
 
+    var formatContent = (window.UgnayraFormat && typeof window.UgnayraFormat.formatPostContent === 'function')
+      ? window.UgnayraFormat.formatPostContent
+      : escapeHtml;
+
     var html = inMeetingChatMessages.map(function (m) {
       return (
         '<div class="chat-message-bubble ' + (m.isMe ? 'is-me' : '') + '">' +
@@ -345,7 +349,7 @@
             '<strong class="text-gold">' + escapeHtml(m.sender) + '</strong>' +
             '<span class="text-muted">' + escapeHtml(m.time) + '</span>' +
           '</div>' +
-          '<p class="text-sm mt-1">' + escapeHtml(m.text) + '</p>' +
+          '<div class="text-sm mt-1 chat-msg-text">' + formatContent(m.text) + '</div>' +
         '</div>'
       );
     }).join('');
