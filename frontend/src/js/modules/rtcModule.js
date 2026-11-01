@@ -105,7 +105,12 @@
               '<span class="rtc-badge-live"><span class="rtc-pulse-dot"></span> LIVE WebRTC</span>' +
               '<span class="rtc-badge-network">P2P Mesh Network</span>' +
             '</div>' +
-            '<span class="rtc-call-timer" id="rtc-call-timer">Connecting...</span>' +
+            '<div class="flex items-center gap-3">' +
+              '<span class="rtc-call-timer" id="rtc-call-timer">Connecting...</span>' +
+              '<button type="button" class="rtc-header-close-btn" id="rtc-header-close-btn" title="End Call" aria-label="End Call">' +
+                '<i data-lucide="x" class="icon-sm"></i>' +
+              '</button>' +
+            '</div>' +
           '</div>' +
 
           '<div class="rtc-call-stage ' + (isVideo ? 'is-video' : 'is-audio') + '" id="rtc-call-stage">' +
@@ -114,7 +119,7 @@
               '<video id="rtc-remote-video" class="rtc-remote-video" autoplay playsinline></video>' +
               '<div class="rtc-peer-poster" id="rtc-peer-poster">' +
                 '<div class="rtc-peer-avatar-wrap">' +
-                  (window.UgnayraFormat ? window.UgnayraFormat.renderAvatar(activeCall.peer, 'avatar-xl', true) : '') +
+                  (window.UgnayraFormat ? window.UgnayraFormat.renderAvatar(activeCall.peer, 'avatar-xl', false) : '') +
                   '<div class="rtc-soundwave-ring"></div>' +
                 '</div>' +
                 '<h3 class="rtc-peer-name">' + (window.UgnayraFormat ? window.UgnayraFormat.escapeHtml(peerName) : peerName) + '</h3>' +
@@ -156,6 +161,7 @@
 
     // Bind In-Call Toolbar buttons
     activeCall.$modal.on('click', '#rtc-btn-end-call', endCall);
+    activeCall.$modal.on('click', '#rtc-header-close-btn', endCall);
     activeCall.$modal.on('click', '#rtc-btn-toggle-mic', toggleMute);
     activeCall.$modal.on('click', '#rtc-btn-toggle-cam', toggleVideo);
 

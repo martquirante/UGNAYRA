@@ -82,8 +82,7 @@
             title: 'No Communities in This Category Yet',
             description: 'Create a community space for your academic college, student council, program section, or university club.',
             ctaHtml: '<button type="button" class="btn btn-primary" id="empty-create-community-btn"><i data-lucide="plus"></i><span>Create Community</span></button>',
-            tip: 'Academic communities let you collaborate with classmates and share study resources.',
-            apiBadge: 'BulSU Student Hub'
+            tip: 'Academic communities let you collaborate with classmates and share study resources.'
           }));
         } else {
           $grid.addClass('cards-grid-2').html(items.map(renderCommunityCard).join(''));

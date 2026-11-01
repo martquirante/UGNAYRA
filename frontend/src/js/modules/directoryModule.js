@@ -66,8 +66,7 @@
           icon: 'users',
           title: 'No Students Match Current Filters',
           description: 'Try adjusting your search query, selecting another year level or section, or searching by name or student ID number.',
-          ctaHtml: '<button type="button" class="btn btn-secondary js-reset-directory-filters"><i data-lucide="refresh-cw"></i><span>Reset Filters</span></button>',
-          apiBadge: 'BulSU Student Roster'
+          ctaHtml: '<button type="button" class="btn btn-secondary js-reset-directory-filters"><i data-lucide="refresh-cw"></i><span>Reset Filters</span></button>'
         })
       );
       UI.refreshIcons($grid[0]);

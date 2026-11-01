@@ -48,8 +48,7 @@
           icon: 'messages',
           title: 'No Conversations Found',
           description: 'Start a direct chat with a classmate, professor, or group project partner.',
-          ctaHtml: '<button type="button" class="btn btn-primary btn-sm" id="empty-new-chat-btn"><i data-lucide="plus"></i><span>New Message</span></button>',
-          apiBadge: 'Direct Messenger'
+          ctaHtml: '<button type="button" class="btn btn-primary btn-sm" id="empty-new-chat-btn"><i data-lucide="plus"></i><span>New Message</span></button>'
         })
       );
       UI.refreshIcons($box[0]);

@@ -82,10 +82,9 @@
         $grid.html(
           UI.renderEmptyState({
             icon: 'alert-circle',
-            title: 'Unable to Sync Classrooms',
-            description: escapeHtml(err.message || 'There was an issue contacting the BulSU classroom servers. Please check your network connection and retry.'),
-            ctaHtml: '<button type="button" class="btn btn-secondary js-retry-classrooms"><i data-lucide="refresh-cw"></i><span>Try Again</span></button>',
-            apiBadge: 'Connection Offline'
+            title: 'Unable to Load Classrooms',
+            description: escapeHtml(err.message || 'Unable to connect to your courses right now. Please check your internet connection and try again.'),
+            ctaHtml: '<button type="button" class="btn btn-secondary js-retry-classrooms"><i data-lucide="refresh-cw"></i><span>Try Again</span></button>'
           })
         );
         UI.refreshIcons($grid[0]);
@@ -103,8 +102,7 @@
             icon: 'search',
             title: 'No Classrooms Found',
             description: 'We couldn\'t find any courses matching "' + escapeHtml(searchQuery) + '". Try searching by subject code (e.g. IT 305W), course title, or instructor name.',
-            ctaHtml: '<button type="button" class="btn btn-secondary js-clear-classroom-search"><i data-lucide="x"></i><span>Clear Search</span></button>',
-            apiBadge: 'Search Query: ' + searchQuery
+            ctaHtml: '<button type="button" class="btn btn-secondary js-clear-classroom-search"><i data-lucide="x"></i><span>Clear Search</span></button>'
           })
         );
       } else if (currentFilter === 'archived') {
@@ -113,8 +111,7 @@
             icon: 'classroom',
             title: 'No Archived Classrooms',
             description: 'You do not have any archived course spaces from previous academic semesters on file.',
-            ctaHtml: '<button type="button" class="btn btn-secondary js-view-all-classes"><i data-lucide="arrow-left"></i><span>View Active Classes</span></button>',
-            apiBadge: 'BulSU Academic Cloud'
+            ctaHtml: '<button type="button" class="btn btn-secondary js-view-all-classes"><i data-lucide="arrow-left"></i><span>View Active Classes</span></button>'
           })
         );
       } else if (currentFilter === 'teaching') {
@@ -123,8 +120,7 @@
             icon: 'classroom',
             title: 'No Teaching Classrooms Yet',
             description: 'You have not created any course spaces yet. Create a course room to generate a 7-character invite code and manage syllabus streams and assignments.',
-            ctaHtml: '<button type="button" class="btn btn-primary js-trigger-create-class"><i data-lucide="plus"></i><span>Create Classroom</span></button>',
-            apiBadge: 'Faculty Academic Portal'
+            ctaHtml: '<button type="button" class="btn btn-primary js-trigger-create-class"><i data-lucide="plus"></i><span>Create Classroom</span></button>'
           })
         );
       } else {
@@ -135,8 +131,7 @@
             description: 'You have not joined or created any course classrooms yet for this semester. Enter your instructor\'s 7-character course code to access syllabus streams, classwork submissions, and live video sessions.',
             ctaHtml: '<button type="button" class="btn btn-primary" id="card-empty-join-btn"><i data-lucide="key-round"></i><span>Join Class with Code</span></button>',
             secondaryCtaHtml: isTeacher ? '<button type="button" class="btn btn-secondary js-trigger-create-class"><i data-lucide="plus"></i><span>Create Class</span></button>' : '',
-            tip: 'Ask your professor or subject instructor for the 7-character join code (e.g. UG-7X9B2).',
-            apiBadge: 'BulSU API \u2022 0 Enrolled Courses'
+            tip: 'Ask your professor or subject instructor for the 7-character join code (e.g. UG-7X9B2).'
           })
         );
       }
@@ -498,8 +493,7 @@
               title: 'No Coursework Assigned Yet',
               description: 'Course assignments, laboratory tasks, and syllabus deliverables will appear here once published by the faculty instructor.',
               ctaHtml: isTeacher ? '<button type="button" class="btn btn-primary" id="open-create-assignment-btn"><i data-lucide="plus"></i><span>Create Assignment</span></button>' : '',
-              tip: 'Upcoming deadlines will alert you directly on your student Cockpit dashboard.',
-              apiBadge: 'Classroom Syllabus Stream'
+              tip: 'Upcoming deadlines will alert you directly on your student Cockpit dashboard.'
             })
           );
           UI.refreshIcons($list[0]);

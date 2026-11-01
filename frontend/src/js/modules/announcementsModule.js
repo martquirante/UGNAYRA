@@ -88,8 +88,7 @@
             icon: 'announcements',
             title: 'No Announcements in This Category',
             description: 'Official school advisories, academic circulars, and departmental memos will appear on this bulletin board once published.',
-            tip: 'Urgent campus alerts will also highlight directly on your main dashboard.',
-            apiBadge: 'BulSU Official Gazette'
+            tip: 'Urgent campus alerts will also highlight directly on your main dashboard.'
           }));
         } else {
           $list.html(items.map(renderAnnouncementCard).join(''));

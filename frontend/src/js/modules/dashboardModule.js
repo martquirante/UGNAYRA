@@ -23,14 +23,32 @@
       var user = Store.getState().user || {};
       var isFaculty = isTeacherOrFaculty();
 
-      // Hydrate User Profile Meta
+      // Hydrate User Profile Meta (including Photo & Academic Profile)
       var fullName = user.full_name || 'Campus Member';
-      $('#cockpit-user-avatar').text(fullName.charAt(0).toUpperCase());
+      var $avatar = $('#cockpit-user-avatar');
+      var avatarSrc = '';
+      if (user.avatar_url) {
+        avatarSrc = (window.UgnayraEscape && window.UgnayraEscape.resolveMediaUrl)
+          ? window.UgnayraEscape.resolveMediaUrl(user.avatar_url)
+          : user.avatar_url;
+      }
+
+      if (avatarSrc) {
+        $avatar.html('<img src="' + escapeHtml(avatarSrc) + '" alt="' + escapeHtml(fullName) + '" loading="lazy" />');
+      } else {
+        var initial = (fullName.trim().charAt(0) || 'U').toUpperCase();
+        $avatar.html('<span class="avatar-initials">' + escapeHtml(initial) + '</span>');
+      }
+
       $('#cockpit-welcome-heading').text('Welcome back, ' + fullName.split(' ')[0] + '!');
       $('#cockpit-role-badge').text(isFaculty ? 'Faculty / Instructor' : 'Enrolled Student');
 
-      var designation = user.academic_designation || (user.department ? (user.department + ' ' + (user.section || '')) : 'BulSU Campus');
-      $('#cockpit-designation-chip').text(designation);
+      var designation = user.academic_designation || (user.department ? (user.department + (user.section ? ' (' + user.section + ')' : '')) : '');
+      if (designation) {
+        $('#cockpit-designation-chip').text(designation).show();
+      } else {
+        $('#cockpit-designation-chip').hide();
+      }
 
       // Customize Stat Card Labels by Role
       if (isFaculty) {
@@ -121,11 +139,10 @@
           $box.html(
             UI.renderEmptyState({
               icon: 'announcements',
-              title: 'No Active Campus Advisories',
-              description: 'All quiet across BulSU campuses. Official University bulletins and academic advisories will appear here once published.',
+              title: 'No Announcements at This Time',
+              description: 'Campus advisories and official bulletins will appear here once published.',
               ctaHtml: '<a href="/announcements" class="btn btn-secondary btn-sm"><i data-lucide="archive"></i><span>View Past Bulletins</span></a>',
-              variant: 'compact',
-              apiBadge: 'Campus Bulletin Stream'
+              variant: 'compact'
             })
           );
           UI.refreshIcons($box[0]);
@@ -177,8 +194,7 @@
           description: 'Enroll in your academic subjects using an instructor code to access syllabus streams, coursework, and live video sessions.',
           ctaHtml: '<a href="/classroom" class="btn btn-primary btn-sm"><i data-lucide="key-round"></i><span>Join Class with Code</span></a>',
           secondaryCtaHtml: '<a href="/classroom" class="btn btn-secondary btn-sm"><i data-lucide="graduation-cap"></i><span>Browse Classrooms</span></a>',
-          tip: 'Ask your professor or instructor for the 7-character join code.',
-          apiBadge: 'BulSU Academic Cloud'
+          tip: 'Ask your professor or instructor for the 7-character join code.'
         })
       );
       UI.refreshIcons($container[0]);
@@ -217,8 +233,7 @@
         UI.renderCompactEmptyState({
           icon: 'deadlines',
           title: 'All Caught Up!',
-          description: 'No pending assignments due this week. Excellent work!',
-          apiBadge: 'Zero Pending Tasks'
+          description: 'No pending assignments due this week. Excellent work!'
         })
       );
       UI.refreshIcons($list[0]);
@@ -246,8 +261,7 @@
         UI.renderCompactEmptyState({
           icon: 'calendar',
           title: 'Schedule Clear Today',
-          description: 'No live class meetings or video sessions scheduled for today.',
-          apiBadge: 'No Active Sessions'
+          description: 'No live class meetings or video sessions scheduled for today.'
         })
       );
       UI.refreshIcons($list[0]);

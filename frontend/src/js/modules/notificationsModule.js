@@ -80,8 +80,7 @@
             description: notifFilter === 'unread'
               ? 'There are zero unread activity alerts in your feed. New assignments, grades, and mentions will notify you here.'
               : 'Interactions on your posts, direct messages, and campus advisories will appear in this notification center.',
-            tip: 'You can customize your notification preferences anytime in Settings.',
-            apiBadge: 'Notification Inbox Clear'
+            tip: 'You can customize your notification preferences anytime in Settings.'
           }));
         } else {
           $box.html('<div class="panel" style="overflow:hidden;">' + items.map(renderNotificationRow).join('') + '</div>');
