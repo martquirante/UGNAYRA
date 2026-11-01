@@ -176,7 +176,7 @@
         $box.html(
           UI.renderCompactEmptyState({
             icon: 'bell',
-            title: 'Campus Advisories Synced',
+            title: 'Campus Advisories',
             description: 'No new urgent bulletins posted today.'
           })
         );

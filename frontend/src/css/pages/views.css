@@ -2002,42 +2002,6 @@
   line-height: 1;
 }
 
-/* Realtime Network Header Badge */
-.rtc-network-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 9px;
-  border-radius: 999px;
-  background-color: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #059669;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-
-html[data-theme="dark"] .rtc-network-pill {
-  background-color: rgba(16, 185, 129, 0.18);
-  border-color: rgba(52, 211, 153, 0.35);
-  color: #34d399;
-}
-
-.rtc-pulse-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background-color: #10b981;
-  box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
-  animation: rtcPulse 2s infinite;
-}
-
-@keyframes rtcPulse {
-  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-}
-
 @media (max-width: 640px) {
   .rtc-network-text {
     display: none;
@@ -2082,39 +2046,6 @@ html[data-theme="dark"] .rtc-network-pill {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.rtc-badge-live {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: rgba(239, 68, 68, 0.2);
-  color: #f87171;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
-.rtc-pulse-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: #ef4444;
-  animation: rtcPulseDot 1.4s infinite;
-}
-
-@keyframes rtcPulseDot {
-  0% { transform: scale(0.9); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.4; }
-  100% { transform: scale(0.9); opacity: 1; }
-}
-
-.rtc-badge-network {
-  font-size: 11px;
-  color: #94a3b8;
-  font-weight: 500;
 }
 
 .rtc-call-timer {

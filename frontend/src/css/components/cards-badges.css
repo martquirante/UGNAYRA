@@ -398,44 +398,43 @@
   100% { transform: translate(-2px, 3px) scale(0.95); }
 }
 
-/* Central Emblem Badge */
+/* Central Emblem Badge & Icon Stage (Clean & Human-Friendly) */
+.empty-state-icon,
 .empty-stage-badge {
   position: relative;
   z-index: 2;
-  width: 82px;
-  height: 82px;
-  border-radius: 22px;
-  background: linear-gradient(135deg, rgba(23, 59, 112, 0.08) 0%, rgba(245, 197, 24, 0.12) 100%);
-  border: 1.5px solid rgba(23, 59, 112, 0.14);
-  box-shadow: 0 10px 25px -4px rgba(23, 59, 112, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  width: 72px;
+  height: 72px;
+  margin: 0 auto var(--space-2) auto;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: ugBadgeFloat 4.2s ease-in-out infinite;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
 }
 
-.empty-state:hover .empty-stage-badge {
-  transform: translateY(-4px) scale(1.03);
-  box-shadow: 0 16px 32px -4px rgba(23, 59, 112, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.9);
-}
-
-@keyframes ugBadgeFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+.empty-stage-ambient-glow,
+.empty-stage-orbital-ring,
+.empty-stage-orbital-ring--outer,
+.empty-stage-particle,
+.empty-state-status-pill {
+  display: none !important;
 }
 
 /* SVG Artwork & Icon styles inside Badge */
 .empty-state-svg-art {
-  width: 58px;
-  height: 58px;
+  width: 68px;
+  height: 68px;
   display: block;
 }
 
+.empty-state-icon svg,
 .empty-stage-badge svg,
 .empty-stage-badge .api-icon-svg {
-  width: 48px;
-  height: 48px;
+  width: 68px;
+  height: 68px;
   color: var(--color-navy-900, #173b70);
   stroke: var(--color-navy-900, #173b70);
   fill: none;
@@ -655,13 +654,15 @@ html[data-theme="dark"] .empty-stage-orbital-ring--outer {
 }
 
 html[data-theme="dark"] .empty-stage-badge {
-  background: linear-gradient(135deg, rgba(30, 58, 138, 0.35) 0%, rgba(202, 138, 4, 0.25) 100%);
-  border-color: rgba(96, 165, 250, 0.3);
-  box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
+html[data-theme="dark"] .empty-state-icon svg,
 html[data-theme="dark"] .empty-stage-badge svg,
-html[data-theme="dark"] .empty-stage-badge .api-icon-svg {
+html[data-theme="dark"] .empty-stage-badge .api-icon-svg,
+html[data-theme="dark"] .empty-state-svg-art {
   color: #93c5fd;
   stroke: #93c5fd;
 }

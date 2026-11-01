@@ -504,7 +504,6 @@
     var ctaHtml = opts.ctaHtml || '';
     var secondaryCta = opts.secondaryCtaHtml || '';
     var tip = opts.tip || '';
-    var apiBadge = opts.apiBadge === true ? 'Live API Synced' : (opts.apiBadge || '');
     var extraClass = opts.containerClass || '';
 
     setTimeout(function () {
@@ -512,15 +511,6 @@
         refreshIcons();
       }
     }, 20);
-
-    var statusPillHtml = '';
-    if (apiBadge) {
-      statusPillHtml =
-        '<div class="empty-state-status-pill">' +
-          '<span class="empty-pulse-dot" aria-hidden="true"></span>' +
-          '<span>' + fmt.escapeHtml(apiBadge) + '</span>' +
-        '</div>';
-    }
 
     var tipHtml = '';
     if (tip && !isCompact) {
@@ -544,18 +534,9 @@
 
     return (
       '<div class="empty-state' + compactClass + (extraClass ? ' ' + extraClass : '') + '" role="region" aria-label="' + fmt.escapeHtml(title) + '">' +
-        '<div class="empty-state-stage" aria-hidden="true">' +
-          '<div class="empty-stage-ambient-glow"></div>' +
-          '<div class="empty-stage-orbital-ring"></div>' +
-          '<div class="empty-stage-orbital-ring empty-stage-orbital-ring--outer"></div>' +
-          '<span class="empty-stage-particle particle-1"></span>' +
-          '<span class="empty-stage-particle particle-2"></span>' +
-          '<span class="empty-stage-particle particle-3"></span>' +
-          '<div class="empty-stage-badge" data-api-icon="' + fmt.escapeHtml(apiSpec) + '">' +
-            bespokeSvg +
-          '</div>' +
+        '<div class="empty-state-icon" aria-hidden="true">' +
+          bespokeSvg +
         '</div>' +
-        statusPillHtml +
         '<h3 class="empty-state-title">' + fmt.escapeHtml(title) + '</h3>' +
         (description ? '<p class="empty-state-desc">' + fmt.escapeHtml(description) + '</p>' : '') +
         actionsHtml +

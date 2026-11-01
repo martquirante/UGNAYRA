@@ -493,7 +493,7 @@
               title: 'No Coursework Assigned Yet',
               description: 'Course assignments, laboratory tasks, and syllabus deliverables will appear here once published by the faculty instructor.',
               ctaHtml: isTeacher ? '<button type="button" class="btn btn-primary" id="open-create-assignment-btn"><i data-lucide="plus"></i><span>Create Assignment</span></button>' : '',
-              tip: 'Upcoming deadlines will alert you directly on your student Cockpit dashboard.'
+              tip: 'Upcoming deadlines will appear directly on your dashboard.'
             })
           );
           UI.refreshIcons($list[0]);

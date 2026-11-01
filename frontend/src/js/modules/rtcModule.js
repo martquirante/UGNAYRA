@@ -65,7 +65,7 @@
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 20px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('Campus WebRTC P2P Stream', canvas.width / 2, canvas.height / 2 + 100);
+      ctx.fillText('Campus Consultation', canvas.width / 2, canvas.height / 2 + 100);
 
       ctx.font = '14px sans-serif';
       ctx.fillStyle = '#94a3b8';
@@ -102,8 +102,7 @@
         '<div class="rtc-call-window">' +
           '<div class="rtc-call-header">' +
             '<div class="flex items-center gap-2">' +
-              '<span class="rtc-badge-live"><span class="rtc-pulse-dot"></span> LIVE WebRTC</span>' +
-              '<span class="rtc-badge-network">P2P Mesh Network</span>' +
+              '<span class="font-semibold text-white text-sm">' + (isVideo ? 'Video Call' : 'Voice Call') + '</span>' +
             '</div>' +
             '<div class="flex items-center gap-3">' +
               '<span class="rtc-call-timer" id="rtc-call-timer">Connecting...</span>' +
@@ -123,7 +122,7 @@
                   '<div class="rtc-soundwave-ring"></div>' +
                 '</div>' +
                 '<h3 class="rtc-peer-name">' + (window.UgnayraFormat ? window.UgnayraFormat.escapeHtml(peerName) : peerName) + '</h3>' +
-                '<p class="rtc-peer-sub" id="rtc-connection-status">Establishing encrypted WebRTC handshake via STUN...</p>' +
+                '<p class="rtc-peer-sub" id="rtc-connection-status">Connecting...</p>' +
               '</div>' +
             '</div>' +
 
@@ -219,13 +218,13 @@
           }
         };
 
-        // Track ICE connection state
+        // Track connection state
         pc.oniceconnectionstatechange = function () {
           var state = pc.iceConnectionState;
           if (state === 'connected' || state === 'completed') {
-            $('#rtc-connection-status').text('WebRTC P2P Peer Connection Active');
+            $('#rtc-connection-status').text('Connected');
           } else if (state === 'disconnected' || state === 'failed') {
-            $('#rtc-connection-status').text('P2P Connection Reconnecting...');
+            $('#rtc-connection-status').text('Reconnecting...');
           }
         };
 
@@ -247,7 +246,7 @@
 
         // 3. Start Live Call Duration Timer
         setTimeout(function () {
-          $('#rtc-connection-status').html('<span style="color:#34d399;font-weight:600;">● Connected (P2P Encrypted WebRTC)</span>');
+          $('#rtc-connection-status').html('<span style="color:#34d399;font-weight:600;">● Connected</span>');
           $('#rtc-call-timer').text('00:00');
           activeCall.timerInterval = setInterval(function () {
             activeCall.secondsElapsed++;
