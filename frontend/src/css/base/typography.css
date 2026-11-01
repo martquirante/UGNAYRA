@@ -10,6 +10,26 @@
   color: var(--color-navy-900);
 }
 
+.heading-xl,
+.heading-lg,
+.heading-md,
+.heading-sm {
+  margin: 0;
+}
+
+.heading-xl:has(svg),
+.heading-lg:has(svg),
+.heading-md:has(svg),
+.heading-sm:has(svg),
+.heading-xl:has(i),
+.heading-lg:has(i),
+.heading-md:has(i),
+.heading-sm:has(i) {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .heading-lg {
   font-size: var(--text-xl);
   font-weight: var(--weight-bold);

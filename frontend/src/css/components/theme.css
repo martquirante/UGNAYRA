@@ -637,6 +637,7 @@ html[data-theme="dark"] .mobile-topbar,
 html[data-theme="dark"] .mobile-bottom-nav,
 html[data-theme="dark"] .account-record-card,
 html[data-theme="dark"] .modal-dialog,
+html[data-theme="dark"] .ug-modal-dialog,
 html[data-theme="dark"] .drawer-content {
   background-color: #131c2e;
   border-color: #1e2b44;
@@ -644,6 +645,7 @@ html[data-theme="dark"] .drawer-content {
 
 html[data-theme="dark"] .panel-header,
 html[data-theme="dark"] .modal-header,
+html[data-theme="dark"] .ug-modal-header,
 html[data-theme="dark"] .record-card-header,
 html[data-theme="dark"] .composer-header,
 html[data-theme="dark"] .composer-footer,
@@ -723,12 +725,14 @@ html[data-theme="dark"] .comments-drawer {
   background-color: #0b1120;
 }
 
-html[data-theme="dark"] .modal-backdrop {
+html[data-theme="dark"] .modal-backdrop,
+html[data-theme="dark"] .ug-modal-backdrop {
   background-color: rgba(4, 8, 16, 0.75);
   backdrop-filter: blur(4px);
 }
 
-html[data-theme="dark"] .modal-footer {
+html[data-theme="dark"] .modal-footer,
+html[data-theme="dark"] .ug-modal-footer {
   background-color: #0d1526;
   border-top-color: #1e2b44;
 }

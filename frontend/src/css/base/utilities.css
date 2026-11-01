@@ -41,7 +41,7 @@
 .mb-2 { margin-bottom: var(--space-2); }
 .mb-4 { margin-bottom: var(--space-4); }
 
-.icon-xs { width: 14px; height: 14px; flex-shrink: 0; }
-.icon-sm { width: 16px; height: 16px; flex-shrink: 0; }
-.icon-md { width: 18px; height: 18px; flex-shrink: 0; }
-.icon-lg { width: 20px; height: 20px; flex-shrink: 0; }
+.icon-xs { width: 14px; height: 14px; flex-shrink: 0; display: inline-flex; vertical-align: middle; align-items: center; justify-content: center; }
+.icon-sm { width: 16px; height: 16px; flex-shrink: 0; display: inline-flex; vertical-align: middle; align-items: center; justify-content: center; }
+.icon-md { width: 18px; height: 18px; flex-shrink: 0; display: inline-flex; vertical-align: middle; align-items: center; justify-content: center; }
+.icon-lg { width: 20px; height: 20px; flex-shrink: 0; display: inline-flex; vertical-align: middle; align-items: center; justify-content: center; }
