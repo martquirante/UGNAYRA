@@ -265,8 +265,10 @@
         </div>
 
         <div class="form-group">
-          <span class="form-label">Campus Role</span>
-          <div class="role-selector">
+          <span class="form-label" id="reg-role-label">Campus Role</span>
+          
+          <!-- Desktop & Tablet Segmented Role Cards -->
+          <div class="role-selector role-desktop-selector">
             <label class="role-option">
               <input type="radio" name="role" value="student" checked />
               <span class="role-card">
@@ -294,6 +296,32 @@
                 <span class="role-card-title">Personnel</span>
               </span>
             </label>
+          </div>
+
+          <!-- Mobile Combobox / Dropdown (< 640px) -->
+          <div class="ug-combobox role-mobile-combobox" id="reg-role-combo" data-searchable="false">
+            <input type="hidden" id="reg-role-hidden" value="student" />
+            <button
+              type="button"
+              class="ug-combobox-trigger has-left-icon"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-labelledby="reg-role-label"
+            >
+              <span class="input-icon-left auth-api-field-icon" id="reg-role-combo-icon" data-api-icon="line-md:clipboard-check-twotone">
+                <i data-lucide="book-open" class="icon-sm"></i>
+              </span>
+              <span class="ug-combobox-value" data-placeholder="Select campus role">Student</span>
+              <span class="ug-combobox-chevron" aria-hidden="true">
+                <i data-lucide="chevron-down" class="icon-sm"></i>
+              </span>
+            </button>
+            <div class="ug-combobox-popover hidden" role="dialog" aria-label="Campus role options">
+              <div class="ug-combobox-search-wrap hidden">
+                <input type="text" class="ug-combobox-search-input" autocomplete="off" />
+              </div>
+              <div class="ug-combobox-list" role="listbox"></div>
+            </div>
           </div>
         </div>
 
@@ -604,8 +632,10 @@
         </div>
 
         <div class="form-group">
-          <span class="form-label">Select Your Campus Role</span>
-          <div class="role-selector">
+          <span class="form-label" id="onboard-role-label">Select Your Campus Role</span>
+          
+          <!-- Desktop & Tablet Segmented Role Cards -->
+          <div class="role-selector role-desktop-selector">
             <label class="role-option">
               <input type="radio" name="role" value="student" checked />
               <span class="role-card">
@@ -633,6 +663,32 @@
                 <span class="role-card-title">Personnel</span>
               </span>
             </label>
+          </div>
+
+          <!-- Mobile Combobox / Dropdown (< 640px) -->
+          <div class="ug-combobox role-mobile-combobox" id="onboard-role-combo" data-searchable="false">
+            <input type="hidden" id="onboard-role-hidden" value="student" />
+            <button
+              type="button"
+              class="ug-combobox-trigger has-left-icon"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-labelledby="onboard-role-label"
+            >
+              <span class="input-icon-left auth-api-field-icon" id="onboard-role-combo-icon" data-api-icon="line-md:clipboard-check-twotone">
+                <i data-lucide="book-open" class="icon-sm"></i>
+              </span>
+              <span class="ug-combobox-value" data-placeholder="Select campus role">Student</span>
+              <span class="ug-combobox-chevron" aria-hidden="true">
+                <i data-lucide="chevron-down" class="icon-sm"></i>
+              </span>
+            </button>
+            <div class="ug-combobox-popover hidden" role="dialog" aria-label="Campus role options">
+              <div class="ug-combobox-search-wrap hidden">
+                <input type="text" class="ug-combobox-search-input" autocomplete="off" />
+              </div>
+              <div class="ug-combobox-list" role="listbox"></div>
+            </div>
           </div>
         </div>
 

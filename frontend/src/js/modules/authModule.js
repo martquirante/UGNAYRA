@@ -356,6 +356,27 @@
       });
   }
 
+  var CAMPUS_ROLE_OPTIONS = [
+    {
+      value: 'student',
+      label: 'Student',
+      badge: 'Coursework',
+      subtext: 'Enrolled student taking academic courses'
+    },
+    {
+      value: 'teacher',
+      label: 'Teacher / Faculty',
+      badge: 'Faculty',
+      subtext: 'Professors, instructors & advisers'
+    },
+    {
+      value: 'personnel',
+      label: 'School Personnel',
+      badge: 'Staff',
+      subtext: 'Authorized campus administration & offices'
+    }
+  ];
+
   function syncRoleLabels(role, prefix, preserveSelection) {
     var idLabelSel = '#' + prefix + '-school-id-label';
     var idInputSel = '#' + prefix + '-school-id';
@@ -429,6 +450,26 @@
       searchable: false,
       value: currentYear
     });
+
+    // Synchronize Mobile Role Combobox Dropdown if present
+    var roleComboSel = '#' + prefix + '-role-combo';
+    var $roleCombo = $(roleComboSel);
+    if ($roleCombo.length) {
+      UI.setComboboxValue($roleCombo, role, true);
+      var roleIconMap = {
+        student: { icon: 'book-open', apiIcon: 'line-md:clipboard-check-twotone' },
+        teacher: { icon: 'graduation-cap', apiIcon: 'line-md:briefcase-check-twotone' },
+        personnel: { icon: 'user-check', apiIcon: 'line-md:account' }
+      };
+      var targetRole = roleIconMap[role] || roleIconMap.student;
+      var $iconSpan = $('#' + prefix + '-role-combo-icon');
+      if ($iconSpan.length) {
+        $iconSpan.attr('data-api-icon', targetRole.apiIcon);
+        $iconSpan.html('<i data-lucide="' + targetRole.icon + '" class="icon-sm"></i>');
+        UI.refreshIcons($iconSpan[0]);
+        UI.hydrateApiIcons($iconSpan[0]);
+      }
+    }
   }
 
   function mountAuthScreen() {
@@ -446,6 +487,21 @@
       // Hydrate comboboxes immediately at 0ms, then sync DB catalog seamlessly
       var initRegRole = $('#register-form input[name="role"]:checked').val() || 'student';
       var initOnbRole = $('#google-onboarding-form input[name="role"]:checked').val() || 'student';
+
+      // Initialize Mobile Role Dropdowns (< 640px)
+      UI.configureCombobox('#reg-role-combo', {
+        items: CAMPUS_ROLE_OPTIONS,
+        placeholder: 'Select campus role',
+        searchable: false,
+        value: initRegRole
+      });
+      UI.configureCombobox('#onboard-role-combo', {
+        items: CAMPUS_ROLE_OPTIONS,
+        placeholder: 'Select campus role',
+        searchable: false,
+        value: initOnbRole
+      });
+
       syncRoleLabels(initRegRole, 'reg', false);
       syncRoleLabels(initOnbRole, 'onboard', false);
 
@@ -570,6 +626,21 @@
     var $icon = $(this).siblings('.role-card').find('[data-api-icon]');
     if ($icon.length) UI.replayApiIcon($icon[0]);
     syncRoleLabels(role, 'onboard');
+  });
+
+  // Mobile Role Combobox Selection -> Synchronize with Form's Radio Input
+  $(document).on('change', '#reg-role-combo input[type="hidden"]', function () {
+    var val = $(this).val();
+    if (val) {
+      $('#register-form input[name="role"][value="' + val + '"]').prop('checked', true).trigger('change');
+    }
+  });
+
+  $(document).on('change', '#onboard-role-combo input[type="hidden"]', function () {
+    var val = $(this).val();
+    if (val) {
+      $('#google-onboarding-form input[name="role"][value="' + val + '"]').prop('checked', true).trigger('change');
+    }
   });
 
   // Subtle field icon stroke replay on input focus

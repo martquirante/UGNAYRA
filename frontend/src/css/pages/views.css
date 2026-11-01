@@ -755,6 +755,42 @@
   color: var(--color-navy-950);
 }
 
+/* Responsive Campus Role Selector (Desktop Segmented Cards vs Mobile Combobox) */
+.role-mobile-combobox {
+  display: none;
+}
+
+.role-mobile-combobox .ug-combobox-trigger {
+  width: 100%;
+}
+
+.role-mobile-combobox .ug-combobox-popover {
+  max-height: 250px;
+}
+
+.role-mobile-combobox .ug-combobox-option {
+  padding: 10px 14px;
+}
+
+.role-mobile-combobox .ug-combobox-option-text {
+  font-weight: 700;
+  color: var(--color-ink-900);
+}
+
+.role-mobile-combobox .ug-combobox-option-sub {
+  font-size: 0.785rem;
+  color: var(--color-ink-500);
+}
+
+@media (max-width: 640px) {
+  .role-desktop-selector {
+    display: none !important;
+  }
+  .role-mobile-combobox {
+    display: block !important;
+  }
+}
+
 /* Primary Submit Button */
 .auth-submit-btn {
   height: 48px;
