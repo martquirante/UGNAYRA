@@ -206,6 +206,21 @@
       syncUnreadBadges();
       dispatchRoute();
       window.UgnayraPolling.start();
+
+      // Initialize Firebase Realtime & WebRTC Real-Time Incoming Call Listener
+      if (window.UgnayraFirebaseChat && typeof window.UgnayraFirebaseChat.init === 'function') {
+        window.UgnayraFirebaseChat.init().then(function () {
+          if (window.UgnayraRtcModule && typeof window.UgnayraRtcModule.initIncomingListener === 'function') {
+            window.UgnayraRtcModule.initIncomingListener();
+          }
+        }).catch(function () {
+          if (window.UgnayraRtcModule && typeof window.UgnayraRtcModule.initIncomingListener === 'function') {
+            window.UgnayraRtcModule.initIncomingListener();
+          }
+        });
+      } else if (window.UgnayraRtcModule && typeof window.UgnayraRtcModule.initIncomingListener === 'function') {
+        window.UgnayraRtcModule.initIncomingListener();
+      }
     });
   }
 

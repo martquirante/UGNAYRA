@@ -330,7 +330,13 @@
     },
 
     Rtc: {
-      createSession: function (conversationId) { return api.post('/rtc/sessions', { conversation_id: conversationId }); },
+      createSession: function (targetOrConvId, callType) {
+        return api.post('/rtc/sessions', {
+          conversation_id: targetOrConvId,
+          target_user_id: targetOrConvId,
+          call_type: callType || 'audio'
+        });
+      },
       sendSignal: function (sessionId, type, payload) {
         return api.post('/rtc/sessions/' + encodeURIComponent(sessionId) + '/signal', {
           signal_type: type,

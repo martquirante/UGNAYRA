@@ -679,10 +679,23 @@
   $(document).on('click', '.js-start-rtc-call', function () {
     var callType = $(this).attr('data-call-type') || 'audio';
     var conv = chatState.conversations.find(function (c) { return c.id === chatState.activeId; });
-    var peer = (conv && conv.peer) || {
-      full_name: $('#thread-peer-name').text() || 'Classmate',
-      role: 'student'
-    };
+    var peer = (conv && conv.peer) ? Object.assign({}, conv.peer) : {};
+
+    if (!peer.id && conv) {
+      peer.id = conv.peer_id || conv.target_user_id || conv.receiver_id || null;
+    }
+
+    if (!peer.id) {
+      var profileHref = $('#thread-peer-link').attr('href') || '';
+      var peerIdFromHref = profileHref.replace(/^\/profile\//, '');
+      if (peerIdFromHref) {
+        peer.id = peerIdFromHref;
+      }
+    }
+
+    peer.full_name = peer.full_name || $('#thread-peer-name').text() || 'Classmate';
+    peer.role = peer.role || 'student';
+
     if (window.UgnayraRtcModule) {
       window.UgnayraRtcModule.startCall(peer, callType, chatState.activeId);
     }

@@ -245,6 +245,7 @@
   window.UgnayraFirebaseChat = {
     init: initFirebase,
     isAvailable: isAvailable,
+    getDb: function () { return firestoreDb; },
     listenToThread: listenToThread,
     stopThreadListener: stopThreadListener,
     listenToTyping: listenToTyping,
