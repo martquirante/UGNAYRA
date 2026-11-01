@@ -171,7 +171,7 @@ UGNAYRA is engineered with security and privacy by design:
 
 ## Academic Compliance &amp; Evaluation Rubrics
 
-This project is submitted as the **Final Compilation Project** for the academic course:
+This project is submitted as the **Final Course Project &amp; Term Compilation** for the academic course:
 
 <div align="center">
 
@@ -179,10 +179,11 @@ This project is submitted as the **Final Compilation Project** for the academic 
 |:---|:---|
 | **Course Code &amp; Title** | **IT 305W &mdash; Advanced Web Application** |
 | **Curricular Level** | 3rd Year &mdash; 1st Semester |
+| **Project Category** | Final Course Project Compilation (Major Subject Requirement) |
 | **Project Nomenclature** | UGNAYRA: School-Based Social Networking Platform |
 | **Student Proponent** | **Raymart Quirante** |
 | **Architecture Specification** | Decoupled Client-Server Monorepo (Static SPA + PHP 8.2+ REST API + Supabase PostgreSQL) |
-| **Compliance Status** | 100% Fully Compliant across all core and elective rubrics |
+| **Compliance Status** | 100% Fully Compliant across all course project rubrics |
 
 </div>
 
@@ -208,7 +209,7 @@ The platform is engineered to fulfill and exceed the rigorous assessment standar
     <strong>UGNAYRA</strong> &bull; School-Based Social Networking Platform
   </p>
   <p>
-    Final Compilation Project submitted in partial fulfillment of the requirements for<br />
+    Final Course Project submitted in partial fulfillment of the course requirements for<br />
     <strong>IT 305W &mdash; Advanced Web Application</strong> (3rd Year, 1st Semester)
   </p>
   <p>
