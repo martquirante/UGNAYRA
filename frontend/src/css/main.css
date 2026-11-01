@@ -3,15 +3,15 @@
    School-Based Social Networking Platform
    ========================================================================== */
 
-@import url('./base/tokens.css?v=38');
-@import url('./base/reset.css?v=38');
-@import url('./base/typography.css?v=38');
-@import url('./base/utilities.css?v=38');
+@import url('./base/tokens.css?v=47');
+@import url('./base/reset.css?v=47');
+@import url('./base/typography.css?v=47');
+@import url('./base/utilities.css?v=47');
 
-@import url('./components/buttons.css?v=38');
-@import url('./components/forms.css?v=38');
-@import url('./components/cards-badges.css?v=38');
-@import url('./components/theme.css?v=38');
+@import url('./components/buttons.css?v=47');
+@import url('./components/forms.css?v=47');
+@import url('./components/cards-badges.css?v=47');
+@import url('./components/theme.css?v=47');
 
-@import url('./layouts/app-shell.css?v=38');
-@import url('./pages/views.css?v=38');
+@import url('./layouts/app-shell.css?v=47');
+@import url('./pages/views.css?v=47');

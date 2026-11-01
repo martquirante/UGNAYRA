@@ -561,25 +561,27 @@
   flex-wrap: wrap;
 }
 
-/* Institutional Tip Banner */
+/* Institutional Tip Banner (Clean informative text, no button-like background) */
 .empty-state-tip-card {
-  margin-top: var(--space-4);
-  padding: 8px 14px;
-  border-radius: var(--radius-md);
-  background: rgba(245, 197, 24, 0.09);
-  border: 1px solid rgba(200, 157, 10, 0.22);
-  color: var(--color-ink-700);
+  margin-top: var(--space-3);
+  padding: 0;
+  border-radius: 0;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--color-ink-500, #64748b);
   font-size: 0.8125rem;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  text-align: left;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
   line-height: 1.45;
 }
 
 .empty-state-tip-card i,
 .empty-state-tip-card svg {
-  color: var(--color-yellow-600, #c89d0a);
+  color: var(--color-ink-400, #94a3b8);
   flex-shrink: 0;
 }
 
@@ -684,9 +686,15 @@ html[data-theme="dark"] .empty-state-status-pill {
 }
 
 html[data-theme="dark"] .empty-state-tip-card {
-  background: rgba(234, 179, 8, 0.1);
-  border-color: rgba(234, 179, 8, 0.25);
-  color: #fef08a;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] .empty-state-tip-card i,
+html[data-theme="dark"] .empty-state-tip-card svg {
+  color: #64748b;
 }
 
 html[data-theme="dark"] .empty-state--compact {
@@ -731,8 +739,9 @@ html[data-theme="dark"] .empty-state--compact {
   }
   .empty-state-tip-card {
     font-size: 0.78rem;
-    padding: 8px 10px;
+    padding: 0;
     width: 100%;
+    justify-content: center;
     box-sizing: border-box;
   }
 }
