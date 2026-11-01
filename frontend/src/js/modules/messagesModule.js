@@ -38,7 +38,7 @@
     var filtered = chatState.conversations.filter(function (c) {
       if (!q) return true;
       var peerName = (c.peer && c.peer.full_name) ? c.peer.full_name.toLowerCase() : '';
-      var preview = (c.last_message_preview || '').toLowerCase();
+      var preview = ((c.last_message && c.last_message.body) || c.last_message_preview || '').toLowerCase();
       return peerName.indexOf(q) !== -1 || preview.indexOf(q) !== -1;
     });
 
@@ -59,6 +59,8 @@
       var peer = c.peer || {};
       var active = c.id === chatState.activeId;
       var unread = Number(c.unread_count || 0);
+      var lastPreview = (c.last_message && c.last_message.body) || c.last_message_preview || 'Start the conversation...';
+      var lastTime = (c.last_message && c.last_message.created_at) || c.last_message_at || c.created_at;
       return (
         '<button type="button" class="conversation-row js-select-conversation ' +
           (active ? 'is-active ' : '') + (unread > 0 ? 'has-unread' : '') + '" ' +
@@ -69,11 +71,11 @@
               '<span class="text-sm truncate conversation-peer-name" style="color:var(--color-ink-900);">' +
                 fmt.escapeHtml(peer.full_name || c.title || 'Campus Conversation') +
               '</span>' +
-              '<span class="text-xs-muted">' + fmt.escapeHtml(fmt.timeAgo(c.last_message_at || c.created_at)) + '</span>' +
+              '<span class="text-xs-muted">' + fmt.escapeHtml(lastTime ? fmt.timeAgo(lastTime) : '') + '</span>' +
             '</div>' +
             '<div class="flex items-center justify-between gap-2" style="margin-top:2px;">' +
               '<span class="text-xs-muted truncate conversation-preview">' +
-                fmt.escapeHtml(c.last_message_preview || 'Start the conversation...') +
+                fmt.escapeHtml(lastPreview) +
               '</span>' +
               (unread > 0 ? '<span class="unread-pill">' + unread + '</span>' : '') +
             '</div>' +
@@ -238,7 +240,7 @@
     Services.Messages.listMessages(conversationId, { limit: 60 })
       .then(function (res) {
         if (chatState.activeId !== conversationId) return;
-        var items = (res.data && res.data.items) || [];
+        var items = (res.data && (res.data.messages || res.data.items)) || [];
         chatState.messages = items;
         var $scroll = $('#thread-messages-scroll');
         if (!items.length) {
@@ -352,7 +354,7 @@
       })
         .then(function (res) {
           if (chatState.activeId !== conversationId) return;
-          var incoming = (res.data && res.data.items) || [];
+          var incoming = (res.data && (res.data.messages || res.data.items)) || [];
           var peerTyping = Boolean(res.data && res.data.peer_is_typing);
           var peerName = (res.data && res.data.peer_name) || 'Classmate';
 
@@ -409,7 +411,7 @@
   function loadConversations(initialTargetId) {
     Services.Messages.listConversations()
       .then(function (res) {
-        chatState.conversations = (res.data && res.data.items) || [];
+        chatState.conversations = (res.data && (res.data.conversations || res.data.items)) || [];
         renderConversationList();
         var pickId = initialTargetId || (window.innerWidth >= 1024 && chatState.conversations[0] && chatState.conversations[0].id);
         if (pickId) openThread(pickId);
@@ -628,6 +630,7 @@
 
           if (conv) {
             conv.last_message_preview = body;
+            conv.last_message = { body: body, created_at: realMsg.created_at, is_mine: true };
             conv.last_message_at = realMsg.created_at;
             renderConversationList();
           }

@@ -26,7 +26,10 @@ class MessageController
         $limit = min(50, max(1, (int)$request->query('limit', 30)));
 
         $list = Conversation::listUserConversations($user['id'], $limit);
-        JsonResponse::success(['conversations' => $list], 'Conversations retrieved.');
+        JsonResponse::success([
+            'conversations' => $list,
+            'items' => $list,
+        ], 'Conversations retrieved.');
     }
 
     public function openConversation(Request $request): void
@@ -56,7 +59,10 @@ class MessageController
         $limit = min(100, max(1, (int)$request->query('limit', 40)));
 
         $messages = Message::listMessages($convId, $after, $before, $limit);
-        JsonResponse::success(['messages' => $messages], 'Messages retrieved.');
+        JsonResponse::success([
+            'messages' => $messages,
+            'items' => $messages,
+        ], 'Messages retrieved.');
     }
 
     public function sendMessage(Request $request): void

@@ -94,6 +94,9 @@ class Conversation
                     'created_at' => $r['last_message_time'],
                     'is_mine' => ($r['last_message_sender_id'] === $userId),
                 ] : null,
+                'last_message_preview' => $r['last_message_body'] ?? null,
+                'last_message_at' => $r['last_message_time'] ?? $r['last_message_at'] ?? $r['created_at'],
+                'created_at' => $r['created_at'],
                 'peer' => !empty($r['peer_id']) ? [
                     'id' => $r['peer_id'],
                     'full_name' => $r['peer_name'] ?? 'Classmate',
@@ -250,6 +253,8 @@ class Conversation
         return [
             'id' => $r['id'],
             'is_group' => (bool)$r['is_group'],
+            'created_at' => $r['created_at'] ?? null,
+            'last_message_at' => $r['last_message_at'] ?? $r['created_at'] ?? null,
             'peer' => !empty($r['peer_id']) ? [
                 'id' => $r['peer_id'],
                 'full_name' => $r['peer_name'] ?? 'Classmate',
