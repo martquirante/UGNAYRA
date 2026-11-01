@@ -3830,3 +3830,42 @@ html[data-theme="dark"] #classroom-search-input {
 [data-theme="dark"] .roster-divider {
   background: #1e293b;
 }
+
+/* Side Card Headers (Icon + Title Horizontal Alignment with Clean Spacing) */
+.side-card-header,
+.card-header-icon-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.side-card-header i,
+.side-card-header svg,
+.card-header-icon-row i,
+.card-header-icon-row svg {
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
+}
+
+.side-card-header h1,
+.side-card-header h2,
+.side-card-header h3,
+.side-card-header h4,
+.side-card-header .heading-md,
+.side-card-header .heading-sm,
+.card-header-icon-row h1,
+.card-header-icon-row h2,
+.card-header-icon-row h3,
+.card-header-icon-row h4 {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.25 !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+}

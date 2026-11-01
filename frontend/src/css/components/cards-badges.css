@@ -886,18 +886,26 @@ html[data-theme="dark"] .empty-state--compact {
   gap: var(--space-3);
 }
 
-/* Modal Title & Leading Icon Layout — Always Side by Side Horizontal Flex with Clean Spacing */
-.modal-title-wrap {
-  display: inline-flex !important;
+/* Headers with Leading Icon Layout — Always Side by Side Horizontal Flex with Clean Spacing */
+.modal-title-wrap,
+.side-card-header,
+.card-title-wrap,
+.heading-with-icon {
+  display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  gap: 10px !important;
+  gap: 8px !important;
   min-width: 0;
-  flex: 1;
 }
 
 .modal-title-wrap i,
-.modal-title-wrap svg {
+.modal-title-wrap svg,
+.side-card-header i,
+.side-card-header svg,
+.card-title-wrap i,
+.card-title-wrap svg,
+.heading-with-icon i,
+.heading-with-icon svg {
   flex-shrink: 0 !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -913,7 +921,21 @@ html[data-theme="dark"] .empty-state--compact {
 .modal-title-wrap h4,
 .modal-title-wrap .modal-title,
 .modal-title-wrap .heading-md,
-.modal-title-wrap .heading-lg {
+.modal-title-wrap .heading-lg,
+.side-card-header h1,
+.side-card-header h2,
+.side-card-header h3,
+.side-card-header h4,
+.side-card-header .heading-md,
+.side-card-header .heading-sm,
+.card-title-wrap h1,
+.card-title-wrap h2,
+.card-title-wrap h3,
+.card-title-wrap h4,
+.heading-with-icon h1,
+.heading-with-icon h2,
+.heading-with-icon h3,
+.heading-with-icon h4 {
   margin: 0 !important;
   padding: 0 !important;
   line-height: 1.25 !important;
