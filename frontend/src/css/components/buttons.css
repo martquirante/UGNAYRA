@@ -34,22 +34,77 @@
 /* Primary Royal Blue CTA */
 .btn-primary {
   background-color: var(--color-blue-700);
-  color: var(--color-ink-inverse);
+  color: var(--color-ink-inverse, #ffffff);
   box-shadow: var(--shadow-xs);
 }
 
 .btn-primary:hover:not(:disabled) {
   background-color: var(--color-navy-900);
+  color: var(--color-ink-inverse, #ffffff);
 }
 
 /* Deep Navy Institutional CTA */
 .btn-navy {
   background-color: var(--color-navy-900);
-  color: var(--color-ink-inverse);
+  color: var(--color-ink-inverse, #ffffff);
 }
 
 .btn-navy:hover:not(:disabled) {
   background-color: var(--color-navy-950);
+  color: var(--color-ink-inverse, #ffffff);
+}
+
+/* Explicit Anchor Link Button Contrast Safeguards */
+a.btn {
+  text-decoration: none;
+}
+
+a.btn-primary,
+a.btn-primary:hover,
+a.btn-primary:focus,
+a.btn-primary:active,
+a.btn-primary:visited {
+  color: var(--color-ink-inverse, #ffffff) !important;
+}
+
+a.btn-navy,
+a.btn-navy:hover,
+a.btn-navy:focus,
+a.btn-navy:active,
+a.btn-navy:visited {
+  color: var(--color-ink-inverse, #ffffff) !important;
+}
+
+a.btn-danger,
+a.btn-danger:hover,
+a.btn-danger:focus,
+a.btn-danger:active,
+a.btn-danger:visited {
+  color: var(--color-ink-inverse, #ffffff) !important;
+}
+
+a.btn-secondary,
+a.btn-secondary:hover,
+a.btn-secondary:focus,
+a.btn-secondary:active,
+a.btn-secondary:visited {
+  color: var(--color-ink-900, #0f172a) !important;
+}
+
+a.btn-accent,
+a.btn-accent:hover,
+a.btn-accent:focus,
+a.btn-accent:active,
+a.btn-accent:visited {
+  color: var(--color-navy-950, #091326) !important;
+}
+
+a.btn-soft,
+a.btn-soft:hover,
+a.btn-soft:focus,
+a.btn-soft:active,
+a.btn-soft:visited {
+  color: var(--color-navy-900, #173b70) !important;
 }
 
 /* Brand Highlight — Warm Yellow + Deep Navy Ink (High Contrast) */

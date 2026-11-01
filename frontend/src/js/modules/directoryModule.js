@@ -1,30 +1,35 @@
 /**
  * UGNAYRA — Academic Student Directory & Cohort Filter Module
- * Cascading Filters (College -> Program -> Year Level -> Section -> Lab Batch),
- * Multi-Student Selection & Bulk Group Chat Provisioning.
+ * Complies with Section 6.D / 6.E: Cascading cohort filtering by College,
+ * Program, Year Level, and Section, with bulk selection for Section GCs.
  */
 (function (window, $) {
   'use strict';
 
   var Services = window.UgnayraServices;
   var UI = window.UgnayraUI;
-  var Templates = window.UgnayraTemplates;
-  var escapeHtml = window.UgnayraEscape ? window.UgnayraEscape.escapeHtml : function (s) { return s || ''; };
+  var escapeHtml = (window.UgnayraFormat && window.UgnayraFormat.escapeHtml) || function (s) { return String(s || ''); };
 
-  var selectedStudentIds = [];
   var currentRosterList = [];
+  var selectedStudentIds = [];
 
   function mountDirectory() {
-    selectedStudentIds = [];
-    return Templates.renderInto('#main-stage', Templates.VIEWS.STUDENT_DIRECTORY).then(function () {
-      loadDirectoryStudents();
-      bindDirectoryEvents();
-    });
+    UI.renderInto('#app-content', 'src/pages/directory/student-directory.html')
+      .then(function () {
+        bindDirectoryEvents();
+        loadDirectoryStudents();
+      })
+      .catch(function (err) {
+        console.error('Failed to load student directory view:', err);
+      });
   }
 
   function loadDirectoryStudents() {
     var $grid = $('#dir-students-grid');
-    $grid.html('<div class="card-skeleton" style="height: 100px;"></div><div class="card-skeleton" style="height: 100px;"></div>');
+    $grid.html(
+      '<div class="card-skeleton" style="height: 100px;"></div>' +
+      '<div class="card-skeleton" style="height: 100px;"></div>'
+    );
 
     var query = ($('#dir-search-input').val() || '').trim();
     var college = $('#dir-college-select').val();
@@ -42,13 +47,18 @@
       lab_batch: batch
     };
 
-    // Update active cohort badge
-    var cohortLabel = (program || 'All') + ' ' + (yearLevel ? yearLevel.replace('_', ' ') : '') + (section ? (' Section ' + section) : '');
-    $('#dir-cohort-text').text('Filtered by: ' + cohortLabel);
+    // Update active cohort label
+    var parts = [];
+    if (program) parts.push(program);
+    if (yearLevel) parts.push(yearLevel.replace('_', ' '));
+    if (section) parts.push('Section ' + section);
+    var cohortLabel = parts.length > 0 ? ('Filtered by: ' + parts.join(' • ')) : 'All Students';
+    $('#dir-cohort-text').text(cohortLabel);
 
     Services.Directory.list(params)
       .then(function (res) {
-        var students = (res && res.data && res.data.students) || [];
+        var raw = res && res.data;
+        var students = (raw && (raw.students || (Array.isArray(raw) ? raw : []))) || [];
         currentRosterList = students;
         $('#dir-results-count').text(students.length);
         renderStudentCards(students);
@@ -64,9 +74,9 @@
       $grid.html(
         UI.renderEmptyState({
           icon: 'users',
-          title: 'No Students Match Current Filters',
-          description: 'Try adjusting your search query, selecting another year level or section, or searching by name or student ID number.',
-          ctaHtml: '<button type="button" class="btn btn-secondary js-reset-directory-filters"><i data-lucide="refresh-cw"></i><span>Reset Filters</span></button>'
+          title: 'No Students Found',
+          description: 'Try adjusting your search query, selecting another year level or section, or search by student name.',
+          ctaHtml: '<button type="button" class="btn btn-secondary js-reset-directory-filters"><i data-lucide="rotate-ccw"></i><span>Reset Filters</span></button>'
         })
       );
       UI.refreshIcons($grid[0]);
@@ -76,24 +86,26 @@
     var html = students.map(function (s) {
       var id = escapeHtml(s.id);
       var name = escapeHtml(s.full_name || 'Student');
-      var initial = name.charAt(0).toUpperCase();
-      var schoolId = escapeHtml(s.school_id_number || 'N/A');
-      var designation = escapeHtml(s.academic_designation || (s.department + ' ' + (s.section || '')));
+      var schoolId = escapeHtml(s.school_id_number || '');
+      var designation = escapeHtml(s.academic_designation || ((s.department || 'Student') + (s.section ? ' • Section ' + s.section : '')));
       var isChecked = selectedStudentIds.indexOf(s.id) !== -1;
+      var avatarHtml = (window.UgnayraFormat && window.UgnayraFormat.renderAvatar)
+        ? window.UgnayraFormat.renderAvatar(s, 'avatar-sm', false)
+        : ('<div class="avatar-sm font-semibold">' + name.charAt(0).toUpperCase() + '</div>');
 
       return (
         '<div class="student-roster-card" data-student-id="' + id + '">' +
           '<div class="student-roster-left">' +
-            '<input type="checkbox" class="js-select-student-check" data-id="' + id + '" ' + (isChecked ? 'checked' : '') + ' />' +
-            '<div class="avatar-sm font-semibold">' + initial + '</div>' +
-            '<div>' +
-              '<div class="font-semibold text-sm">' + name + '</div>' +
-              '<div class="text-xs text-muted">ID: ' + schoolId + ' &bull; <strong class="text-gold">' + designation + '</strong></div>' +
+            '<input type="checkbox" class="js-select-student-check custom-checkbox" data-id="' + id + '" ' + (isChecked ? 'checked' : '') + ' aria-label="Select student" />' +
+            avatarHtml +
+            '<div class="student-roster-info">' +
+              '<div class="font-semibold text-sm student-roster-name">' + name + '</div>' +
+              '<div class="text-xs text-secondary">' + (schoolId ? ('ID: ' + schoolId + ' &bull; ') : '') + designation + '</div>' +
             '</div>' +
           '</div>' +
           '<div class="student-roster-right">' +
-            '<a href="/messages?to=' + id + '" class="btn btn-secondary btn-sm" title="Message">' +
-              '<i data-lucide="message-square" class="icon-xs"></i>' +
+            '<a href="/messages?to=' + id + '" class="btn btn-secondary btn-sm" title="Send Message" aria-label="Send Message">' +
+              '<i data-lucide="message-square" class="icon-xs"></i><span>Message</span>' +
             '</a>' +
           '</div>' +
         '</div>'

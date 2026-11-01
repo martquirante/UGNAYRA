@@ -185,10 +185,12 @@
   color: var(--color-navy-900);
 }
 
-.filter-chip.is-active {
-  background-color: var(--color-navy-900);
-  color: var(--color-ink-inverse);
-  border-color: var(--color-navy-900);
+.filter-chip.is-active,
+.filter-chip.is-active:hover,
+.filter-chip.is-active:focus {
+  background-color: var(--color-navy-900) !important;
+  color: var(--color-ink-inverse, #ffffff) !important;
+  border-color: var(--color-navy-900) !important;
   box-shadow: inset 0 -2px 0 var(--color-yellow-400);
 }
 

@@ -62,7 +62,7 @@ a {
   transition: color var(--duration-fast) var(--ease-standard);
 }
 
-a:hover {
+a:not(.btn):hover {
   color: var(--color-navy-900);
 }
 

@@ -2986,10 +2986,10 @@ html[data-theme="dark"] #classroom-search-input {
   align-items: center;
   gap: 8px;
   font-size: 0.85rem;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 4px 12px;
-  border-radius: 9999px;
-  color: #e2e8f0;
+  background: none;
+  padding: 2px 0;
+  border-radius: 0;
+  color: #cbd5e1;
 }
 
 /* Dynamic Live Meeting Banner */
@@ -3256,9 +3256,9 @@ html[data-theme="dark"] #classroom-search-input {
   gap: 6px;
   font-size: 0.82rem;
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 4px 10px;
-  border-radius: 9999px;
+  background: none;
+  padding: 2px 6px;
+  border-radius: 4px;
   color: #e2e8f0;
 }
 
@@ -3598,6 +3598,19 @@ html[data-theme="dark"] #classroom-search-input {
   }
 }
 
+.cockpit-hero-actions .btn-primary,
+.cockpit-hero-actions .btn-primary:hover,
+.cockpit-hero-actions .btn-primary:focus {
+  color: #ffffff !important;
+}
+
+.cockpit-hero-actions .btn-primary i,
+.cockpit-hero-actions .btn-primary svg,
+.cockpit-hero-actions .btn-primary span {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
 .stats-grid-4 {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -3675,6 +3688,92 @@ html[data-theme="dark"] #classroom-search-input {
   }
 }
 
+/* ==========================================================================
+   Student & Cohort Directory Layout & Roster Styling
+   ========================================================================== */
+.directory-filters-card {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border-subtle, #e2e8f0);
+  border-radius: var(--radius-lg, 14px);
+}
+
+.directory-search-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.directory-search-input-wrap {
+  flex: 1;
+}
+
+.directory-filters-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 1024px) {
+  .directory-filters-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .directory-filters-grid {
+    grid-template-columns: 1fr;
+  }
+  .directory-search-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.roster-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border-subtle, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
+  gap: 16px;
+}
+
+.roster-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.roster-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--color-border-subtle, #e2e8f0);
+}
+
+.select-all-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+}
+
+.roster-count-text {
+  color: var(--color-text-secondary, #64748b);
+  font-size: 0.875rem;
+}
+
+.roster-cohort-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary, #64748b);
+}
+
 .student-roster-card {
   display: flex;
   align-items: center;
@@ -3683,16 +3782,51 @@ html[data-theme="dark"] #classroom-search-input {
   border-radius: var(--radius-md, 12px);
   background: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border-subtle, #e2e8f0);
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
 .student-roster-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  border-color: var(--color-border-strong, #cbd5e1);
 }
 
 .student-roster-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  min-width: 0;
+}
+
+.student-roster-info {
+  min-width: 0;
+}
+
+.student-roster-name {
+  color: var(--color-text-primary, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-roster-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .directory-filters-card,
+[data-theme="dark"] .roster-toolbar,
+[data-theme="dark"] .student-roster-card {
+  background: var(--color-surface, #131d2e);
+  border-color: var(--color-border-subtle, #1e293b);
+}
+
+[data-theme="dark"] .student-roster-name {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .roster-divider {
+  background: #1e293b;
 }
