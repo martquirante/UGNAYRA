@@ -312,6 +312,16 @@
         $list.find('.js-no-comments').remove();
 
         if (comment) {
+          if (!comment.author || !comment.author.full_name) {
+            comment.author = Object.assign({
+              id: me ? me.id : null,
+              full_name: me ? (me.full_name || me.name) : 'Campus Member',
+              username: me ? me.username : 'user',
+              role: me ? me.role : 'student',
+              avatar_url: me ? me.avatar_url : null,
+              department: me ? me.department : null
+            }, comment.author || {});
+          }
           var $newEl = $(renderCommentItem(comment, me)).hide();
           $list.append($newEl);
           $newEl.fadeIn(160);

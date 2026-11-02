@@ -242,6 +242,17 @@ class PostController
             return;
         }
 
+        if (empty($comment['author']) || empty($comment['author']['full_name'])) {
+            $comment['author'] = [
+                'id' => $user['id'],
+                'full_name' => $user['full_name'] ?? 'Campus Member',
+                'username' => $user['username'] ?? 'user',
+                'role' => $user['role'] ?? 'student',
+                'avatar_url' => $user['avatar_url'] ?? null,
+                'department' => $user['department'] ?? null,
+            ];
+        }
+
         NotificationService::notifyComment($postId, $user['id'], (string)$body['content']);
 
         JsonResponse::success(['comment' => $comment], 'Comment posted successfully.', 201);

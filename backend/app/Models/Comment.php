@@ -103,7 +103,20 @@ class Comment
         $sb = new SupabaseClient();
         if ($sb->isConfigured()) {
             $res = $sb->queryTable('comments', [], 'POST', $params);
-            return (!empty($res) && isset($res[0])) ? $res[0] : null;
+            $createdRow = (!empty($res) && isset($res[0])) ? $res[0] : null;
+            if ($createdRow !== null) {
+                $u = User::findById($data['author_id']);
+                $createdRow['author'] = [
+                    'id' => $u['id'] ?? $data['author_id'],
+                    'full_name' => $u['full_name'] ?? 'Campus Member',
+                    'username' => $u['username'] ?? 'user',
+                    'role' => $u['role'] ?? 'student',
+                    'avatar_url' => $u['avatar_url'] ?? null,
+                    'department' => $u['department'] ?? null,
+                ];
+                return $createdRow;
+            }
+            return null;
         }
 
         return null;
