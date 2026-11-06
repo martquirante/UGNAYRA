@@ -30,4 +30,4 @@ RUN mkdir -p storage/logs storage/rate_limits storage/uploads \
 
 EXPOSE 80
 
-CMD ["sh", "-c", "if [ \"$SEED_DEMO_ACCOUNTS\" = \"true\" ]; then php scripts/seed_demo_accounts.php; fi; exec apache2-foreground"]
+CMD ["sh", "-c", "if [ \"$SEED_DEMO_ACCOUNTS\" != \"false\" ]; then php scripts/seed_demo_accounts.php; fi; exec apache2-foreground"]
