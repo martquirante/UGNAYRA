@@ -30,15 +30,15 @@ if (defined('UGNAYRA_DEMO_ACCOUNTS_SEEDED')) {
 define('UGNAYRA_DEMO_ACCOUNTS_SEEDED', true);
 
 $accounts = [
-    ['admin.ugnayra@bulsu.edu.ph', 'bulsu_admin', 'Engr. Ernesto M. Santos', 'personnel'],
-    ['prof.delacruz@bulsu.edu.ph', 'prof_delacruz', 'Prof. Maria Elena Dela Cruz', 'teacher'],
-    ['sir.ramirez@bulsu.edu.ph', 'sir_ramirez', 'Engr. Arnel Ramirez', 'teacher'],
-    ['raymart.student@bulsu.edu.ph', 'raymart_q', 'Raymart Quirante', 'student'],
-    ['juan.luna@bulsu.edu.ph', 'juan_luna', 'Juan D. Luna', 'student'],
-    ['bea.reyes@bulsu.edu.ph', 'bea_reyes', 'Bea Bianca Reyes', 'student'],
+    ['admin.ugnayra@bulsu.edu.ph', 'bulsu_admin', 'Engr. Ernesto M. Santos', 'personnel', 'EMP-2015-0891'],
+    ['prof.delacruz@bulsu.edu.ph', 'prof_delacruz', 'Prof. Maria Elena Dela Cruz', 'teacher', 'FAC-2018-0412'],
+    ['sir.ramirez@bulsu.edu.ph', 'sir_ramirez', 'Engr. Arnel Ramirez', 'teacher', 'FAC-2019-0523'],
+    ['raymart.student@bulsu.edu.ph', 'raymart_q', 'Raymart Quirante', 'student', '2022-108921'],
+    ['juan.luna@bulsu.edu.ph', 'juan_luna', 'Juan D. Luna', 'student', '2022-104412'],
+    ['bea.reyes@bulsu.edu.ph', 'bea_reyes', 'Bea Bianca Reyes', 'student', '2022-109934'],
 ];
 
-foreach ($accounts as [$email, $username, $fullName, $role]) {
+foreach ($accounts as [$email, $username, $fullName, $role, $schoolId]) {
     try {
         $existing = User::findByIdentifier($email);
         $data = [
@@ -48,6 +48,10 @@ foreach ($accounts as [$email, $username, $fullName, $role]) {
             'full_name' => $fullName,
             'role' => $role,
             'is_active' => true,
+            'school_id_number' => $schoolId,
+            'department' => $role === 'student' ? 'CICT' : ($role === 'teacher' ? 'CICT' : 'ADMIN'),
+            'year_or_grade' => $role === 'student' ? '3rd Year' : 'Faculty',
+            'section' => $role === 'student' ? 'BSIT 3A' : 'Staff',
         ];
 
         if ($existing === null) {
@@ -59,6 +63,10 @@ foreach ($accounts as [$email, $username, $fullName, $role]) {
                 'full_name' => $fullName,
                 'role' => $role,
                 'is_active' => true,
+                'school_id_number' => $schoolId,
+                'department' => $data['department'],
+                'year_or_grade' => $data['year_or_grade'],
+                'section' => $data['section'],
             ]);
         }
     } catch (Throwable $e) {

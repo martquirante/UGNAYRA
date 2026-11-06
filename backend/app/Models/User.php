@@ -130,7 +130,7 @@ class User
 
     public static function update(string $id, array $fields): ?array
     {
-        $allowed = ['full_name', 'department', 'year_or_grade', 'section', 'bio', 'avatar_url', 'cover_url', 'preferences', 'last_seen_at'];
+        $allowed = ['username', 'password_hash', 'role', 'is_active', 'school_id_number', 'full_name', 'department', 'year_or_grade', 'section', 'bio', 'avatar_url', 'cover_url', 'preferences', 'last_seen_at'];
         $updates = [];
         $params = ['id' => $id];
 
