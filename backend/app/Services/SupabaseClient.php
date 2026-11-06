@@ -31,6 +31,11 @@ class SupabaseClient
         return !empty($this->url) && !empty($this->serviceKey);
     }
 
+    public function isReachable(): bool
+    {
+        return $this->queryTable('profiles', ['select' => 'id', 'limit' => 1]) !== null;
+    }
+
     /**
      * Upload binary data or file to Supabase Storage
      */

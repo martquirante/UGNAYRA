@@ -220,14 +220,6 @@
       if (span) span.textContent = 'Checking...';
     }
 
-    if (!navigator.onLine) {
-      setTimeout(function () {
-        checkingConnection = false;
-        showOffline();
-      }, 350);
-      return;
-    }
-
     var pingUrl = (window.UGNAYRA_CONFIG && window.UGNAYRA_CONFIG.API_BASE_URL)
       ? window.UGNAYRA_CONFIG.API_BASE_URL + '/health'
       : '/api/v1/health';
@@ -259,10 +251,11 @@
       checkConnection(false);
     });
 
-    // Boot check
-    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
-      showOffline();
-    }
+    // Verify the API directly; navigator.onLine can be false in restricted
+    // browsers even when the application endpoint is reachable.
+    setTimeout(function () {
+      checkConnection(false);
+    }, 0);
   }
 
   // Initialize as soon as DOM is ready
@@ -283,4 +276,3 @@
     }
   };
 })(window, window.jQuery);
-
