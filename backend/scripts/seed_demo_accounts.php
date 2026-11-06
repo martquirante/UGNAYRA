@@ -20,7 +20,7 @@ if (!class_exists(User::class)) {
 
 \App\Config\Env::load(dirname(__DIR__) . DIRECTORY_SEPARATOR . '.env');
 
-if (\App\Config\Env::get('SEED_DEMO_ACCOUNTS', false) !== true) {
+if (\App\Config\Env::get('SEED_DEMO_ACCOUNTS', true) !== true) {
     return;
 }
 
